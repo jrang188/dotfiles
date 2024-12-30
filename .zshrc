@@ -21,8 +21,6 @@ plugins=(
   zsh-autosuggestions
   fnm
   bun
-  brew
-  macos
   helm
   kubectl
   aws
@@ -30,6 +28,13 @@ plugins=(
   docker
   docker-compose
 )
+
+# Detect OS and add platform-specific plugins
+if [[ "$(uname)" == "Linux" ]]; then
+  plugins+=(ubuntu)
+elif [[ "$(uname)" == "Darwin" ]]; then
+  plugins+=(macos brew)
+fi
 
 source $ZSH/oh-my-zsh.sh
 

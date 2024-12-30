@@ -112,3 +112,4 @@ install_neovim
 echo "Installation complete!"
 echo "Please restart your terminal for changes to take effect."
 echo "You may need to manually select FiraCode Nerd Font in your terminal preferences."
+echo "Don't forget to run stow ."

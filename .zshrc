@@ -27,6 +27,7 @@ plugins=(
   keychain
   docker
   docker-compose
+  terraform
 )
 
 # Detect OS and add platform-specific plugins

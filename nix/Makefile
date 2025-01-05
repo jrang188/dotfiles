@@ -1,7 +1,7 @@
 # Careful about copy/pasting, Makefiles want tabs!
 .PHONY: deploy
 deploy:
-	darwin-rebuild switch --flake .
+	sudo darwin-rebuild switch --flake .
 
 .PHONY: clean
 clean:

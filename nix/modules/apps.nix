@@ -26,31 +26,44 @@
     ];
 
     # `brew install`
-    # TODO Feel free to add your favorite apps here.
     brews = [
       "btop"
       "fastfetch"
       "ffmpeg"
-      "fnm"
-      "gh"
-      "helm"
       "neofetch"
       "stow"
-      "tenv"
       "wget"
       "curl"
-      "defanglabs/defang/defang"
+
+      # Programming Languages
+      "fnm"
+      "uv"
+      "go"
+      "rustup"
       "oven-sh/bun/bun"
+
+      # Dev Tools
+      "gh"
       "stripe/stripe-cli/stripe"
+
+      # DevOps
+      "tenv"
+      "helm"
+      "defanglabs/defang/defang"
+      "kubectl"
+      "kubectx"
+      "k9s"
+      "awscli"
+      "pulumi"
     ];
 
     # `brew install --cask`
-    # TODO Feel free to add your favorite apps here.
     casks = [
       "1password-cli"
       "raycast"
       "scroll-reverser"
       "warp"
+      "google-cloud-sdk"
     ];
   };
 }

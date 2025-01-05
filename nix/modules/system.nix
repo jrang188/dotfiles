@@ -18,7 +18,8 @@
     '';
 
     defaults = {
-      menuExtraClock.Show24Hour = true; # show 24 hour clock
+      # menuExtraClock.Show24Hour = true; # show 24 hour clock
+      dock.autohide = true;
 
       # other macOS's defaults configuration.
       # ......

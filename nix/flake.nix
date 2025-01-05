@@ -53,6 +53,6 @@
       ];
     };
     # nix code formatter
-    formatter.${system} = nixpkgs.${system}.alejandra;
+    formatter.${system} = nixpkgs.${system}.nixfmt-rfc-style;
   };
 }

@@ -64,6 +64,7 @@
       "scroll-reverser"
       "warp"
       "google-cloud-sdk"
+      "ghostty"
     ];
   };
 }

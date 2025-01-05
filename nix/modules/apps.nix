@@ -39,6 +39,9 @@
       "tenv"
       "wget"
       "curl"
+      "defanglabs/defang/defang"
+      "oven-sh/bun/bun"
+      "stripe/stripe-cli/stripe"
     ];
 
     # `brew install --cask`

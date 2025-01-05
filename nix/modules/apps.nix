@@ -1,7 +1,8 @@
-{ pkgs, ...}: {
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     git
     nil
+    alejandra
   ];
 
   # The apps installed by homebrew are not managed by nix, and not reproducible!
@@ -27,27 +28,26 @@
     # `brew install`
     # TODO Feel free to add your favorite apps here.
     brews = [
-      btop
-      fastfetch
-      ffmpeg
-      fnm
-      gh
-      helm
-      neofetch
-      stow
-      tenv
-      wget
-      curl
+      "btop"
+      "fastfetch"
+      "ffmpeg"
+      "fnm"
+      "gh"
+      "helm"
+      "neofetch"
+      "stow"
+      "tenv"
+      "wget"
+      "curl"
     ];
 
     # `brew install --cask`
     # TODO Feel free to add your favorite apps here.
     casks = [
-      1password-cli
-      raycast
-      scroll-reverser
-      warp
-      ghostty
+      "1password-cli"
+      "raycast"
+      "scroll-reverser"
+      "warp"
     ];
   };
 }

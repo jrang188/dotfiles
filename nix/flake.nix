@@ -12,8 +12,11 @@
   # parameters in `outputs` are defined in `inputs` and can be referenced by their names.
   # However, `self` is an exception, this special parameter points to the `outputs` itself (self-reference)
   # The `@` syntax here is used to alias the attribute set of the inputs's parameter, making it convenient to use inside the function.
-  outputs = inputs@{ self, nix-darwin, nixpkgs }:
-  let
+  outputs = inputs @ {
+    self,
+    nix-darwin,
+    nixpkgs,
+  }: let
     username = "sirwayne";
     system = "aarch64-darwin"; # aarch64-darwin or x86_64-darwin
     hostname = "Sterling-MBP";
@@ -34,7 +37,6 @@
       ];
     };
     # nix code formatter
-    formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
+    formatter.${system} = nixpkgs.${system}.alejandra;
   };
-
 }

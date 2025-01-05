@@ -3,4 +3,4 @@
     enable = true;
     enableZshIntegration = true;
     useTheme = "night_owl";
-};
+}

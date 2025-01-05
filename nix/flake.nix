@@ -7,37 +7,34 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
+  # The `outputs` function will return all the build results of the flake.
+  # A flake can have many use cases and different types of outputs,
+  # parameters in `outputs` are defined in `inputs` and can be referenced by their names.
+  # However, `self` is an exception, this special parameter points to the `outputs` itself (self-reference)
+  # The `@` syntax here is used to alias the attribute set of the inputs's parameter, making it convenient to use inside the function.
   outputs = inputs@{ self, nix-darwin, nixpkgs }:
   let
-    configuration = { pkgs, ... }: {
-      # List packages installed in system profile. To search by name, run:
-      # $ nix-env -qaP | grep wget
-      environment.systemPackages =
-        [ pkgs.vim
-        ];
+    username = "sirwayne";
+    system = "aarch64-darwin"; # aarch64-darwin or x86_64-darwin
+    hostname = "Sterling-MBP";
 
-      # Necessary for using flakes on this system.
-      nix.settings.experimental-features = "nix-command flakes";
-
-      # Enable alternative shell support in nix-darwin.
-      # programs.fish.enable = true;
-
-      # Set Git commit hash for darwin-version.
-      system.configurationRevision = self.rev or self.dirtyRev or null;
-
-      # Used for backwards compatibility, please read the changelog before changing.
-      # $ darwin-rebuild changelog
-      system.stateVersion = 5;
-
-      # The platform the configuration will be used on.
-      nixpkgs.hostPlatform = "aarch64-darwin";
+    specialArgs =
+      inputs
+      // {
+        inherit username hostname;
+      };
+  in {
+    darwinConfigurations."${hostname}" = nix-darwin.lib.darwinSystem {
+      inherit system specialArgs;
+      modules = [
+        ./modules/nix-core.nix
+        ./modules/system.nix
+        ./modules/apps.nix
+        ./modules/host-users.nix
+      ];
     };
-  in
-  {
-    # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#Sterling-MBP
-    darwinConfigurations."Sterling-MBP" = nix-darwin.lib.darwinSystem {
-      modules = [ configuration ];
-    };
+    # nix code formatter
+    formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
   };
+
 }

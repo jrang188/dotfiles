@@ -2,10 +2,14 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   nix.settings = {
     # enable flakes globally
-    experimental-features = ["nix-command" "flakes"];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
   };
 
   # Allow unfree packages

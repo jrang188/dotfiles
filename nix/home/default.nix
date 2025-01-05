@@ -1,4 +1,5 @@
-{username, ...}: {
+{ username, ... }:
+{
   # import sub modules
   imports = [
     ./zsh.nix

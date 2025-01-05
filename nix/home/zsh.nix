@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   ## MUST SET ZSH AS DEFAULT SHELL
   programs.zsh = {
     enable = true;

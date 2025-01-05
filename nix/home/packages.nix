@@ -7,5 +7,6 @@
     ripgrep
     lazygit
     tree
+    rustup
   ];
 }

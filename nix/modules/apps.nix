@@ -39,7 +39,6 @@
       "fnm"
       "uv"
       "go"
-      "rustup"
       "oven-sh/bun/bun"
 
       # Dev Tools

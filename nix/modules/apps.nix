@@ -35,6 +35,7 @@
       "stow"
       "wget"
       "curl"
+      "htop"
 
       # Programming Languages
       "fnm"

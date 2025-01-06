@@ -24,12 +24,6 @@
     syntaxHighlighting.enable = true;
     autosuggestion.enable = true;
 
-    # Use .exe if not Darwin
-    shellAliases = {
-      ssh = "ssh";
-      ssh-add = "ssh-add";
-    };
-
     # The command for UV can be removed when oh-my-zsh nixpkg is updated
     initExtra = ''
       eval "$(fnm env --use-on-cd --shell zsh)"

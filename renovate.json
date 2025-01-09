@@ -2,5 +2,19 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "nix": {
+    "enable": true
+  },
+  "packageRules": [
+    {
+      "matchPaths": [
+        "nix/**"
+      ],
+      "autoMerge": true
+    }
+  ],
+  "ignorePaths": [
+    "**"
   ]
 }

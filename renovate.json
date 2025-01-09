@@ -11,7 +11,7 @@
       "matchPaths": [
         "nix/**"
       ],
-      "automgerge": true
+      "automerge": true
     }
   ],
   "ignorePaths": [

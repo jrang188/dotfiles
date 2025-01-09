@@ -4,14 +4,14 @@
     "config:recommended"
   ],
   "nix": {
-    "enable": true
+    "enabled": true
   },
   "packageRules": [
     {
       "matchPaths": [
         "nix/**"
       ],
-      "autoMerge": true
+      "automgerge": true
     }
   ],
   "ignorePaths": [

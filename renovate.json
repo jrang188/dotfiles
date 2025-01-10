@@ -8,7 +8,7 @@
   },
   "packageRules": [
     {
-      "matchPaths": [
+      "matchFileNames": [
         "nix/**"
       ],
       "automerge": true

@@ -27,7 +27,6 @@
     kubectl
     kubectx
     k9s
-    awscli
     pulumi
     awscli2
     google-cloud-sdk

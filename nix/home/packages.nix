@@ -9,6 +9,7 @@
     ripgrep
     lazygit
     tree
+    cmatrix
 
     # Programming Languages
     fnm

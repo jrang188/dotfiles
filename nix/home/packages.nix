@@ -8,5 +8,7 @@
     lazygit
     tree
     rustup
+    k9s
+    1password-cli
   ];
 }

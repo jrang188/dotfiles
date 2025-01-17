@@ -2,8 +2,6 @@
 {
   environment.systemPackages = with pkgs; [
     git
-    nil
-    nixfmt-rfc-style
   ];
 
   # The apps installed by homebrew are not managed by nix, and not reproducible!

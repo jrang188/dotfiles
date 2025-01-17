@@ -20,6 +20,7 @@
     # Dev Tools
     gh
     stripe-cli
+    _1password-cli
 
     # DevOps
     tenv
@@ -30,6 +31,5 @@
     pulumi
     awscli2
     google-cloud-sdk
-    _1password-cli
   ];
 }

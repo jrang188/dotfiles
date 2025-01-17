@@ -2,6 +2,11 @@
 {
   environment.systemPackages = with pkgs; [
     git
+    btop
+    fastfetch
+    ffmpeg
+    wget
+    curl
   ];
 
   # The apps installed by homebrew are not managed by nix, and not reproducible!
@@ -18,51 +23,50 @@
 
     taps = [
       "homebrew/services"
-      "defanglabs/defang"
-      "jandedobbeleer/oh-my-posh"
-      "oven-sh/bun"
-      "stripe/stripe-cli"
+      # "defanglabs/defang"
+      # "oven-sh/bun"
+      # "stripe/stripe-cli"
     ];
 
     # `brew install`
     brews = [
-      "btop"
-      "fastfetch"
-      "ffmpeg"
-      "neofetch"
-      "stow"
-      "wget"
-      "curl"
-      "htop"
+      # "btop"
+      # "fastfetch"
+      # "ffmpeg"
+      # "neofetch"
+      # "stow"
+      # "wget"
+      # "curl"
+      # "htop"
 
       # Programming Languages
-      "fnm"
-      "uv"
-      "go"
-      "oven-sh/bun/bun"
+      # "fnm"
+      # "uv"
+      # "go"
+      # "oven-sh/bun/bun"
 
       # Dev Tools
-      "gh"
-      "stripe/stripe-cli/stripe"
+      # "gh"
+      # "stripe/stripe-cli/stripe"
 
       # DevOps
-      "tenv"
-      "helm"
-      "defanglabs/defang/defang"
-      "kubectl"
-      "kubectx"
-      "k9s"
-      "awscli"
-      "pulumi"
+      # "tenv"
+      # "helm"
+      # "defanglabs/defang/defang"
+      # "kubectl"
+      # "kubectx"
+      # "k9s"
+      # "awscli"
+      # "pulumi"
     ];
 
     # `brew install --cask`
     casks = [
-      "1password-cli"
+      # "1password-cli"
       "raycast"
       "scroll-reverser"
       "warp"
-      "google-cloud-sdk"
+      # "google-cloud-sdk"
       "ghostty"
     ];
   };

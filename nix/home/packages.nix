@@ -23,7 +23,7 @@
 
     # DevOps
     tenv
-    helm
+    kubernetes-helm
     kubectl
     kubectx
     k9s

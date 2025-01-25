@@ -19,10 +19,23 @@
 
     defaults = {
       # menuExtraClock.Show24Hour = true; # show 24 hour clock
-      dock.autohide = true;
-
-      # other macOS's defaults configuration.
-      # ......
+      dock = {
+        autohide = false;
+        tilesize = 48;
+        persistent-apps = [
+          "/Applications/Zen Browser.app"
+          "/Applications/Ghostty.app"
+          "/Applications/Cursor.app"
+          "/Applications/Visual Studio Code.app"
+          "/Applications/Obsidian.app"
+          "/Applications/TickTick.app"
+          "/Applications/Discord.app"
+          "/Applications/Spotify.app"
+          "/System/Applications/System Settings.app"
+        ];
+        wvous-br-corner = 1; # Avoid triggering quick note when hovering at bottom right corner
+      };
+      NSGlobalDomain.KeyRepeat = 2;
     };
   };
 

@@ -21,6 +21,12 @@
     options = lib.mkDefault "--delete-older-than 7d";
   };
 
+  # Fonts
+  fonts.packages = with pkgs; [
+    nerd-fonts.fira-code
+    nerd-fonts.jetbrains-mono
+  ];
+
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;

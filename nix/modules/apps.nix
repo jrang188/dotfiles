@@ -23,50 +23,17 @@
 
     taps = [
       "homebrew/services"
-      # "defanglabs/defang"
-      # "oven-sh/bun"
-      # "stripe/stripe-cli"
     ];
 
     # `brew install`
     brews = [
-      # "btop"
-      # "fastfetch"
-      # "ffmpeg"
-      # "neofetch"
-      # "stow"
-      # "wget"
-      # "curl"
-      # "htop"
-
-      # Programming Languages
-      # "fnm"
-      # "uv"
-      # "go"
-      # "oven-sh/bun/bun"
-
-      # Dev Tools
-      # "gh"
-      # "stripe/stripe-cli/stripe"
-
-      # DevOps
-      # "tenv"
-      # "helm"
-      # "defanglabs/defang/defang"
-      # "kubectl"
-      # "kubectx"
-      # "k9s"
-      # "awscli"
-      # "pulumi"
     ];
 
     # `brew install --cask`
     casks = [
-      # "1password-cli"
       "raycast"
       "scroll-reverser"
       "warp"
-      # "google-cloud-sdk"
       "ghostty"
     ];
   };

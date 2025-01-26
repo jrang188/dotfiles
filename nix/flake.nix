@@ -51,6 +51,10 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = inputs // {
+              inherit username;
+              hostname = "Sterling-MBP";
+            };
             home-manager.users.${username} = import ./home;
           }
         ];
@@ -69,6 +73,10 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = inputs // {
+              inherit username;
+              hostname = "your-nixos-host";
+            };
             home-manager.users.${username} = import ./home;
           }
         ];

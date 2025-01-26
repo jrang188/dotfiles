@@ -1,7 +1,10 @@
-{ username, system, ... }:
+{ username, pkgs, ... }:
 let
   homeDirectory =
-    if (builtins.match ".*darwin" system) != null then "/Users/${username}" else "/home/${username}";
+    if pkgs.system == "aarch64-darwin" || "x86_64-darwin" then
+      "/Users/${username}"
+    else
+      "/home/${username}";
 in
 {
   # import sub modules

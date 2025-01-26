@@ -1,4 +1,8 @@
-{ username, ... }:
+{ username, system, ... }:
+let
+  homeDirectory =
+    if (builtins.match ".*darwin" system) != null then "/Users/${username}" else "/home/${username}";
+in
 {
   # import sub modules
   imports = [
@@ -12,8 +16,7 @@
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home = {
-    inherit username;
-    homeDirectory = "/Users/${username}";
+    inherit username homeDirectory;
 
     # This value determines the Home Manager release that your
     # configuration is compatible with. This helps avoid breakage

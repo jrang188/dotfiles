@@ -1,12 +1,18 @@
 {
-  description = "Example nix-darwin system flake";
+  description = "My Nix System Configurations";
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
+
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixos = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,39 +27,51 @@
   outputs =
     inputs@{
       self,
-      darwin,
       nixpkgs,
+      darwin,
+      nixos,
       home-manager,
+      ...
     }:
     let
       username = "sirwayne";
-      system = "aarch64-darwin"; # aarch64-darwin or x86_64-darwin
-      hostname = "Sterling-MBP";
-
-      specialArgs = inputs // {
-        inherit username hostname;
-      };
+      darwinSystem = "aarch64-darwin";
+      nixosSystem = "x86_64-linux"; # adjust according to your needs
     in
     {
-      darwinConfigurations."${hostname}" = darwin.lib.darwinSystem {
-        inherit system specialArgs;
+      darwinConfigurations."Sterling-MBP" = darwin.lib.darwinSystem {
+        system = darwinSystem;
+        specialArgs = inputs // {
+          inherit username;
+          hostname = "Sterling-MBP";
+        };
         modules = [
-          ./modules/nix-core.nix
-          ./modules/system.nix
-          ./modules/apps.nix
-          ./modules/host-users.nix
-
-          # home manager
+          ./hosts/darwin/Sterling-MBP
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = specialArgs;
             home-manager.users.${username} = import ./home;
           }
         ];
       };
-      # nix code formatter
-      formatter.${system} = nixpkgs.${system}.nixfmt-rfc-style;
+
+      # Example NixOS configuration
+      nixosConfigurations."your-nixos-host" = nixos.lib.nixosSystem {
+        system = nixosSystem;
+        specialArgs = inputs // {
+          inherit username;
+          hostname = "your-nixos-host";
+        };
+        modules = [
+          ./hosts/nixos/your-nixos-host
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.${username} = import ./home;
+          }
+        ];
+      };
     };
 }

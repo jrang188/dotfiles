@@ -1,8 +1,15 @@
 { pkgs, ... }:
 {
-  programs.zsh.oh-my-zsh.plugins = [
-    "ubuntu"
-  ];
+  programs.zsh = {
+    oh-my-zsh.plugins = [
+      "ubuntu"
+    ];
+    # Use .exe if using WSL
+    shellAliases = {
+      ssh = "ssh.exe";
+      ssh-add = "ssh-add.exe";
+    };
+  };
 
   home.packages = with pkgs; [
     git
@@ -19,11 +26,4 @@
       core.sshCommand = "ssh.exe";
     };
   };
-
-  # Use .exe if using WSL
-  shellAliases = {
-    ssh = "ssh.exe";
-    ssh-add = "ssh-add.exe";
-  };
-
 }

@@ -22,6 +22,7 @@
     gh
     stripe-cli
     _1password-cli
+    gnumake
 
     # DevOps
     tenv

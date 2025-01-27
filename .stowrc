@@ -2,3 +2,4 @@
 --ignore=DS_Store
 --ignore='^nix$'
 --ignore='^archive$'
+--ignore=.stowrc

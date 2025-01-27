@@ -13,4 +13,5 @@
     curl
   ];
 
+  nixpkgs.config.allowUnfree = true;
 }

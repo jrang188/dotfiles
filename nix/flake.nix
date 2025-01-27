@@ -87,7 +87,7 @@
 
       # Ubuntu WSL Configuration
       homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs;
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = inputs // {
           inherit username;
           hostname = "GHOST-MACHINE";
@@ -97,7 +97,6 @@
           ./home/ubuntu
         ];
       };
-
     };
 
 }

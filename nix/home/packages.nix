@@ -18,6 +18,7 @@
     go
     bun
     rustup
+    clang
 
     # Dev Tools
     gh

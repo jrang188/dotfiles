@@ -10,6 +10,7 @@
     lazygit
     tree
     cmatrix
+    stow
 
     # Programming Languages
     fnm

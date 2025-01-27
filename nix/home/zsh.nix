@@ -16,7 +16,6 @@
         "helm"
         "terraform"
         "aws"
-        "macos"
         # "uv" oh-my-zsh plugin is not installed in latest nixpkg version
       ];
     };

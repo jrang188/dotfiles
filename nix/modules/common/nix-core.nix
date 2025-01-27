@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  system,
   ...
 }:
 {
@@ -24,4 +25,6 @@
   ];
 
   nix.package = pkgs.nix;
+
+  formatter.${system} = pkgs.nixfmt-rfc-style;
 }

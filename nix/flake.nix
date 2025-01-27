@@ -55,7 +55,10 @@
               inherit username;
               hostname = "Sterling-MBP";
             };
-            home-manager.users.${username} = import ./home;
+            home-manager.users.${username} = import [
+              ./home
+              ./home/darwin
+            ];
           }
         ];
       };
@@ -81,5 +84,20 @@
           }
         ];
       };
+
+      # Ubuntu WSL Configuration
+      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs;
+        extraSpecialArgs = inputs // {
+          inherit username;
+          hostname = "GHOST-MACHINE";
+        };
+        modules = [
+          ./home
+          ./home/ubuntu
+        ];
+      };
+
     };
+
 }

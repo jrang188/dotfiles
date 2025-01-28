@@ -55,7 +55,7 @@
               inherit username;
               hostname = "Sterling-MBP";
             };
-            home-manager.users.${username} = { 
+            home-manager.users.${username} = {
               imports = [
                 ./home
                 ./home/darwin
@@ -65,24 +65,29 @@
         ];
       };
 
-      # Example NixOS configuration
-      nixosConfigurations."your-nixos-host" = nixos.lib.nixosSystem {
+      # WSL NixOS configuration
+      nixosConfigurations."nixos-wsl" = nixos.lib.nixosSystem {
         system = nixosSystem;
         specialArgs = inputs // {
           inherit username;
-          hostname = "your-nixos-host";
+          hostname = "nixos-wsl";
         };
         modules = [
-          ./hosts/nixos/your-nixos-host
+          ./hosts/nixos/nixos-wsl
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = inputs // {
               inherit username;
-              hostname = "your-nixos-host";
+              hostname = "nixos-wsl";
             };
-            home-manager.users.${username} = import ./home;
+            home-manager.users.${username} = {
+              imports = [
+                ./home
+                ./home/nixos/wsl
+              ];
+            };
           }
         ];
       };

@@ -11,6 +11,12 @@
 
     nixos = {
       url = "github:nixos/nixpkgs/nixos-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
@@ -30,6 +36,7 @@
       nixpkgs,
       darwin,
       nixos,
+      nixos-wsl,
       home-manager,
       ...
     }:
@@ -55,7 +62,7 @@
               inherit username;
               hostname = "Sterling-MBP";
             };
-            home-manager.users.${username} = { 
+            home-manager.users.${username} = {
               imports = [
                 ./home
                 ./home/darwin
@@ -65,24 +72,30 @@
         ];
       };
 
-      # Example NixOS configuration
-      nixosConfigurations."your-nixos-host" = nixos.lib.nixosSystem {
+      # WSL NixOS configuration
+      nixosConfigurations."nixos-wsl" = nixos.lib.nixosSystem {
         system = nixosSystem;
         specialArgs = inputs // {
           inherit username;
-          hostname = "your-nixos-host";
+          hostname = "nixos-wsl";
         };
         modules = [
-          ./hosts/nixos/your-nixos-host
+          nixos-wsl.nixosModules.default
+          ./hosts/nixos/nixos-wsl
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = inputs // {
               inherit username;
-              hostname = "your-nixos-host";
+              hostname = "nixos-wsl";
             };
-            home-manager.users.${username} = import ./home;
+            home-manager.users.${username} = {
+              imports = [
+                ./home
+                ./home/nixos/wsl
+              ];
+            };
           }
         ];
       };

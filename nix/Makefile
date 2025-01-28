@@ -13,7 +13,7 @@ darwin:
 	darwin-rebuild switch --flake .#Sterling-MBP
 
 nixos:
-	nixos-rebuild switch --flake .#your-nixos-host
+	sudo nixos-rebuild switch --flake .#nixos-wsl
 
 ubuntu:
 	home-manager switch --flake .#sirwayne

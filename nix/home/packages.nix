@@ -32,7 +32,7 @@
     kubectl
     kubectx
     k9s
-    pulumi
+    pulumi-bin
     awscli2
     google-cloud-sdk
   ];

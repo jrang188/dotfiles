@@ -35,4 +35,6 @@
     enable = true;
     package = pkgs.nix-ld-rs; # only for NixOS 24.05
   };
+
+  system.stateVersion = "24.05"; # Did you read the comment?
 }

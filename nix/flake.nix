@@ -11,6 +11,12 @@
 
     nixos = {
       url = "github:nixos/nixpkgs/nixos-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
@@ -30,6 +36,7 @@
       nixpkgs,
       darwin,
       nixos,
+      nixos-wsl,
       home-manager,
       ...
     }:
@@ -73,6 +80,7 @@
           hostname = "nixos-wsl";
         };
         modules = [
+          nixos-wsl.nixosModules.default
           ./hosts/nixos/nixos-wsl
           home-manager.nixosModules.home-manager
           {

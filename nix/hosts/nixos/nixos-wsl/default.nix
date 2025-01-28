@@ -36,5 +36,9 @@
     package = pkgs.nix-ld-rs; # only for NixOS 24.05
   };
 
+  # Set default shell TODO: Refactor this into the nixos module
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
+
   system.stateVersion = "24.05"; # Did you read the comment?
 }

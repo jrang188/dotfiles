@@ -24,5 +24,4 @@
   ];
 
   nix.package = pkgs.nix;
-
 }

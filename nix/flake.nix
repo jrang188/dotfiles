@@ -55,10 +55,12 @@
               inherit username;
               hostname = "Sterling-MBP";
             };
-            home-manager.users.${username} = import [
-              ./home
-              ./home/darwin
-            ];
+            home-manager.users.${username} = { 
+              imports = [
+                ./home
+                ./home/darwin
+              ];
+            };
           }
         ];
       };
@@ -97,6 +99,9 @@
           ./home/ubuntu
         ];
       };
+      formatter = {
+        darwinSystem = nixpkgs.darwinSystem.nixfmt-rfc-style;
+        nixosSystem = nixpkgs.nixosSystem.nixfmt-rfc-style;
+      };
     };
-
 }

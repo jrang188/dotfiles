@@ -1,5 +1,4 @@
 {
-  inputs,
   username,
   hostname,
   pkgs,
@@ -52,6 +51,11 @@
     randomizedDelaySec = "45min";
     persistent = true;
   };
+
+  # WSL Utilities (e.g. allows opening web urls)
+  environment.systemPackages = with pkgs; [
+    wslu
+  ];
 
   system.stateVersion = "24.05"; # Did you read the comment?
 }

@@ -1,13 +1,12 @@
 {
+  inputs,
   username,
   hostname,
   pkgs,
   ...
 }:
 {
-  imports = [
-    ../../../modules/common
-  ];
+  imports = [ ../../../modules/common ];
   #############################################################
   #
   #  Host & Users configuration
@@ -39,6 +38,20 @@
   # Set default shell TODO: Refactor this into the nixos module
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
+
+  # Enable autoupgrade
+  system.autoUpgrade = {
+    enable = true;
+    flake = "~/dotfiles/nix";
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "-L" # print build logs
+    ];
+    dates = "23:00";
+    randomizedDelaySec = "45min";
+    persistent = true;
+  };
 
   system.stateVersion = "24.05"; # Did you read the comment?
 }

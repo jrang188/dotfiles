@@ -12,13 +12,10 @@
       cleanup = "zap";
     };
 
-    taps = [
-      "homebrew/services"
-    ];
+    taps = [ "homebrew/services" ];
 
     # `brew install`
-    brews = [
-    ];
+    brews = [ ];
 
     # `brew install --cask`
     casks = [

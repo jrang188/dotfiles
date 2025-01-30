@@ -9,10 +9,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos = {
-      url = "github:nixos/nixpkgs/nixos-unstable";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixos.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
@@ -113,8 +110,8 @@
         ];
       };
       formatter = {
-        darwinSystem = nixpkgs.darwinSystem.nixfmt-rfc-style;
-        nixosSystem = nixpkgs.nixosSystem.nixfmt-rfc-style;
+        ${darwinSystem} = nixpkgs.legacyPackages.${darwinSystem}.nixfmt;
+        ${nixosSystem} = nixpkgs.legacyPackages.${nixosSystem}.nixfmt;
       };
     };
 }

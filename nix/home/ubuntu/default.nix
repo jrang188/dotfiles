@@ -1,9 +1,7 @@
 { pkgs, ... }:
 {
   programs.zsh = {
-    oh-my-zsh.plugins = [
-      "ubuntu"
-    ];
+    oh-my-zsh.plugins = [ "ubuntu" ];
     # Use .exe if using WSL
     shellAliases = {
       ssh = "ssh.exe";

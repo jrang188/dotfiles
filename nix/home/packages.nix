@@ -19,6 +19,7 @@
     bun
     rustup
     clang
+    python3
 
     # Dev Tools
     gh

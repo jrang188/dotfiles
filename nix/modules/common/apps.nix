@@ -7,5 +7,7 @@
     ffmpeg
     wget
     curl
+    zip
+    unzip
   ];
 }

@@ -41,7 +41,7 @@
   # Enable autoupgrade
   system.autoUpgrade = {
     enable = true;
-    flake = "~/dotfiles/nix";
+    flake = "/home/${username}/dotfiles/nix";
     flags = [
       "--update-input"
       "nixpkgs"

@@ -20,6 +20,7 @@
     rustup
     clang
     python3
+    temurin-bin
 
     # Dev Tools
     gh

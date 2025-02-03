@@ -26,6 +26,7 @@
     stripe-cli
     _1password-cli
     gnumake
+    golangci-lint
 
     # DevOps
     tenv

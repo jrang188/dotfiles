@@ -43,7 +43,7 @@
     enable = true;
     flake = "/home/${username}/dotfiles/nix";
     flags = [
-      "--update-input"
+      "flake update"
       "nixpkgs"
       "-L" # print build logs
     ];
@@ -55,6 +55,7 @@
   # WSL Utilities (e.g. allows opening web urls)
   environment.systemPackages = with pkgs; [
     wslu
+    socat
   ];
 
   system.stateVersion = "24.05"; # Did you read the comment?

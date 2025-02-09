@@ -12,7 +12,7 @@
       cleanup = "zap";
     };
 
-    taps = [ "homebrew/services" ];
+    taps = [ ];
 
     # `brew install`
     brews = [ ];
@@ -23,6 +23,7 @@
       "scroll-reverser"
       "warp"
       "ghostty"
+      "nikitabobko/tap/aerospace"
     ];
   };
 }

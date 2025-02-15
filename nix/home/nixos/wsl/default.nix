@@ -18,6 +18,9 @@
           else
               command nvim "$@"
           fi
+
+          # Stop socat after nvim exits if we started it
+          pkill -x socat
       }
 
       vim() { nvim "$@"; }

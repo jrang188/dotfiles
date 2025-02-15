@@ -2,6 +2,7 @@
   username,
   hostname,
   pkgs,
+  pkgs-unstable,
   ...
 }:
 {
@@ -53,7 +54,7 @@
   # };
 
   # WSL Utilities (e.g. allows opening web urls)
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs-unstable; [
     wslu
     socat
   ];

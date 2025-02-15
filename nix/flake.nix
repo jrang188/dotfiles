@@ -2,14 +2,13 @@
   description = "My Nix System Configurations";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "nixpkgs/release-24.11";
+    nixpkgs-unstable.url = "nixpkgs/nixpkgs-unstable";
 
     darwin = {
-      url = "github:LnL7/nix-darwin/master";
+      url = "github:LnL7/nix-darwin/nix-darwin-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    nixos.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
@@ -17,7 +16,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/master";
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -31,8 +30,8 @@
     inputs@{
       self,
       nixpkgs,
+      nixpkgs-unstable,
       darwin,
-      nixos,
       nixos-wsl,
       home-manager,
       ...
@@ -40,7 +39,7 @@
     let
       username = "sirwayne";
       darwinSystem = "aarch64-darwin";
-      nixosSystem = "x86_64-linux"; # adjust according to your needs
+      nixosSystem = "x86_64-linux";
     in
     {
       darwinConfigurations."Sterling-MBP" = darwin.lib.darwinSystem {
@@ -48,6 +47,14 @@
         specialArgs = inputs // {
           inherit username;
           hostname = "Sterling-MBP";
+          pkgs-unstable = import nixpkgs-unstable {
+            # Refer to the `system` parameter from
+            # the outer scope recursively
+            system = darwinSystem;
+            # To use Chrome, we need to allow the
+            # installation of non-free software.
+            config.allowUnfree = true;
+          };
         };
         modules = [
           ./hosts/darwin/Sterling-MBP
@@ -58,6 +65,14 @@
             home-manager.extraSpecialArgs = inputs // {
               inherit username;
               hostname = "Sterling-MBP";
+              pkgs-unstable = import nixpkgs-unstable {
+                # Refer to the `system` parameter from
+                # the outer scope recursively
+                system = darwinSystem;
+                # To use Chrome, we need to allow the
+                # installation of non-free software.
+                config.allowUnfree = true;
+              };
             };
             home-manager.users.${username} = {
               imports = [
@@ -70,11 +85,19 @@
       };
 
       # WSL NixOS configuration
-      nixosConfigurations."nixos-wsl" = nixos.lib.nixosSystem {
+      nixosConfigurations."nixos-wsl" = nixpkgs.lib.nixosSystem {
         system = nixosSystem;
         specialArgs = inputs // {
           inherit username;
           hostname = "nixos-wsl";
+          pkgs-unstable = import nixpkgs-unstable {
+            # Refer to the `system` parameter from
+            # the outer scope recursively
+            system = nixosSystem;
+            # To use Chrome, we need to allow the
+            # installation of non-free software.
+            config.allowUnfree = true;
+          };
         };
         modules = [
           nixos-wsl.nixosModules.default
@@ -86,6 +109,14 @@
             home-manager.extraSpecialArgs = inputs // {
               inherit username;
               hostname = "nixos-wsl";
+              pkgs-unstable = import nixpkgs-unstable {
+                # Refer to the `system` parameter from
+                # the outer scope recursively
+                system = nixosSystem;
+                # To use Chrome, we need to allow the
+                # installation of non-free software.
+                config.allowUnfree = true;
+              };
             };
             home-manager.users.${username} = {
               imports = [
@@ -103,6 +134,14 @@
         extraSpecialArgs = inputs // {
           inherit username;
           hostname = "GHOST-MACHINE";
+          pkgs-unstable = import nixpkgs-unstable {
+            # Refer to the `system` parameter from
+            # the outer scope recursively
+            system = nixosSystem;
+            # To use Chrome, we need to allow the
+            # installation of non-free software.
+            config.allowUnfree = true;
+          };
         };
         modules = [
           ./home

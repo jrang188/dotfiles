@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs-unstable, ... }:
 {
   programs.zsh = {
     oh-my-zsh.plugins = [ "ubuntu" ];
@@ -25,7 +25,7 @@
     '';
   };
 
-  home.packages = with pkgs; [
+  home.packages = with pkgs-unstable; [
     git
     btop
     fastfetch

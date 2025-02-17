@@ -24,7 +24,7 @@
         autohide-delay = 0.0;
         tilesize = 48;
         persistent-apps = [
-          "/Applications/Launchpad.app"
+          "System/Applications/Launchpad.app"
           "/Applications/Zen Browser.app"
           "/Applications/Ghostty.app"
           "/Applications/Cursor.app"

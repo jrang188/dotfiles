@@ -28,6 +28,7 @@
     initExtra = ''
       eval "$(fnm env --use-on-cd --shell zsh)"
       eval "$(uv generate-shell-completion zsh)"
+      export PATH="$HOME/.local/bin:$PATH"
     '';
   };
 }

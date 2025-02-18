@@ -11,6 +11,7 @@
     tree
     cmatrix
     stow
+    bat
 
     # Programming Languages
     fnm

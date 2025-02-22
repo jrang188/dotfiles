@@ -39,20 +39,6 @@
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  # TODO: FIX THIS Enable autoupgrade
-  # system.autoUpgrade = {
-  #   enable = true;
-  #   flake = "/home/${username}/dotfiles/nix";
-  #   flags = [
-  #     "flake update"
-  #     "nixpkgs"
-  #     "-L" # print build logs
-  #   ];
-  #   dates = "22:00";
-  #   randomizedDelaySec = "45min";
-  #   persistent = true;
-  # };
-
   # WSL Utilities (e.g. allows opening web urls)
   environment.systemPackages = with pkgs-unstable; [
     wslu

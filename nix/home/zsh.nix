@@ -29,6 +29,8 @@
       eval "$(fnm env --use-on-cd --shell zsh)"
       eval "$(uv generate-shell-completion zsh)"
       export PATH="$HOME/.local/bin:$PATH"
+      export GOPATH=$HOME/go  
+      export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
     '';
   };
 }

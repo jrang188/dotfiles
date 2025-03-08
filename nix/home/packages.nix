@@ -19,7 +19,6 @@
     go
     bun
     rustup
-    clang
     python3
     temurin-bin
 

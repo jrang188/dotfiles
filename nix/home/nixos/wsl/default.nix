@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs-unstable, ... }:
 {
   programs.zsh = {
     # Use .exe if using WSL
@@ -33,4 +33,7 @@
       core.sshCommand = "ssh.exe";
     };
   };
+  home.packages = with pkgs-unstable; [
+    clang
+  ];
 }

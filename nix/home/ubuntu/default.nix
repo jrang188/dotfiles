@@ -33,6 +33,7 @@
     wget
     curl
     socat
+    clang
   ];
 
   nixpkgs.config.allowUnfree = true;

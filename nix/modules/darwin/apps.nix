@@ -12,7 +12,10 @@
       cleanup = "zap";
     };
 
-    taps = [ ];
+    taps = [
+      "nikitabobko/tap"
+      "FelixKratz/formulae"
+    ];
 
     # `brew install`
     brews = [ ];
@@ -24,6 +27,10 @@
       "warp"
       "ghostty"
       "loop"
+      "aerospace"
+      "karabiner-elements"
+      "sketchybar"
+      "jankyborders"
     ];
   };
 }

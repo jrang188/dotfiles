@@ -15,6 +15,7 @@
     taps = [
       "nikitabobko/tap"
       "FelixKratz/formulae"
+      "homebrew/services"
     ];
 
     # `brew install`

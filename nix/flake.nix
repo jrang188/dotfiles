@@ -10,6 +10,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,6 +37,7 @@
       nixpkgs,
       nixpkgs-unstable,
       darwin,
+      mac-app-util,
       nixos-wsl,
       home-manager,
       ...
@@ -58,6 +64,9 @@
         };
         modules = [
           ./hosts/darwin/Sterling-MBP
+
+          mac-app-util.darwinModules.default
+
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -78,6 +87,7 @@
               imports = [
                 ./home
                 ./home/darwin
+                mac-app-util.homeModules.default
               ];
             };
           }

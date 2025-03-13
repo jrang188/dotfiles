@@ -20,7 +20,7 @@
     # `brew install`
     brews = [
       "sketchybar"
-      "jankyborders"
+      "borders"
     ];
 
     # `brew install --cask`

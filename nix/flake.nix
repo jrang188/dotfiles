@@ -87,7 +87,7 @@
               imports = [
                 ./home
                 ./home/darwin
-                mac-app-util.homeModules.default
+                mac-app-util.homeManagerModules.default
               ];
             };
           }

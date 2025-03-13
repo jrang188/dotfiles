@@ -192,9 +192,17 @@ shift-down = ['volume set 0', 'mode main']
 
 
 [workspace-to-monitor-force-assignment]
+1 = 'primary'
+2 = 'secondary'
 Browser = 'primary'
 IDE = 'primary'
 Media = 'secondary'
 Notes = 'primary'
-Terminal = ['primary']
+Terminal = ['secondary']
 Communications = 'secondary'
+
+
+# Current Ghostty Workaround on opening new tabs
+[[on-window-detected]]
+if.app-id = "com.mitchellh.ghostty"
+run = ["layout tiling"]

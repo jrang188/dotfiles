@@ -18,7 +18,10 @@
     ];
 
     # `brew install`
-    brews = [ ];
+    brews = [
+      "sketchybar"
+      "jankyborders"
+    ];
 
     # `brew install --cask`
     casks = [
@@ -29,8 +32,6 @@
       "loop"
       "aerospace"
       "karabiner-elements"
-      "sketchybar"
-      "jankyborders"
     ];
   };
 }

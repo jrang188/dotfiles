@@ -30,7 +30,6 @@
       "scroll-reverser"
       "warp"
       "ghostty"
-      "loop"
       "aerospace"
       "karabiner-elements"
     ];

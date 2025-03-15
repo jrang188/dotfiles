@@ -13,6 +13,14 @@ after-startup-command = [
   # JankyBorders has a built-in detection of already running process,
   # so it won't be run twice on AeroSpace restart
   'exec-and-forget borders active_color=0xffc0caf5 inactive_color=0xff414868 style=round width=7.0',
+  # 'exec-and-forget sketchybar',
+]
+
+# Notify Sketchybar about workspace change
+exec-on-workspace-change = [
+  # '/bin/zsh',
+  # '-c',
+  # 'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
 ]
 
 # Start AeroSpace at login
@@ -66,6 +74,7 @@ inner.horizontal = 10
 inner.vertical = 10
 outer.left = 10
 outer.bottom = 10
+# outer.top = [{ monitor.built-in = 20 }, 50]
 outer.top = 10
 outer.right = 10
 

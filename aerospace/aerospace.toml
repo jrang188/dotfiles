@@ -198,11 +198,11 @@ Browser = 'primary'
 IDE = 'primary'
 Media = 'secondary'
 Notes = 'primary'
-Terminal = ['secondary']
+Terminal = 'secondary'
 Communications = 'secondary'
 
 
 # Current Ghostty Workaround on opening new tabs
 [[on-window-detected]]
 if.app-id = "com.mitchellh.ghostty"
-run = ["layout tiling"]
+run = ["layout floating"]

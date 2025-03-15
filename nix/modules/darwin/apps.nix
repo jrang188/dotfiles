@@ -32,6 +32,7 @@
       "ghostty"
       "aerospace"
       "karabiner-elements"
+      "sf-symbols" # font for sketchybar
     ];
   };
 }

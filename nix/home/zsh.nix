@@ -31,6 +31,14 @@
       export PATH="$HOME/.local/bin:$PATH"
       export GOPATH=$HOME/go  
       export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+
+      function brew() {
+        command brew "$@" 
+
+        if [[ $* =~ "upgrade" ]] || [[ $* =~ "update" ]] || [[ $* =~ "outdated" ]]; then
+          sketchybar --trigger brew_update
+        fi
+      }
     '';
   };
 }

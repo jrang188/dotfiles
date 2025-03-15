@@ -74,8 +74,8 @@ inner.horizontal = 10
 inner.vertical = 10
 outer.left = 10
 outer.bottom = [{ monitor.primary = 20 }, 10]
-# outer.top = [{ monitor.built-in = 20 }, 50]
-outer.top = [{ monitor.primary = 20 }, 10]
+outer.top = [{ monitor.built-in = 20 }, 50]
+# outer.top = [{ monitor.primary = 20 }, 10]
 outer.right = 10
 
 # 'main' binding mode declaration
@@ -202,7 +202,15 @@ shift-down = ['volume set 0', 'mode main']
 
 [workspace-to-monitor-force-assignment]
 1 = 'primary'
-2 = 'secondary'
+2 = 'primary'
+3 = 'primary'
+4 = 'primary'
+5 = 'primary'
+6 = 'secondary'
+7 = 'secondary'
+8 = 'secondary'
+9 = 'secondary'
+10 = 'secondary'
 Browser = 'primary'
 IDE = 'primary'
 Media = 'secondary'

@@ -13,14 +13,21 @@ after-startup-command = [
   # JankyBorders has a built-in detection of already running process,
   # so it won't be run twice on AeroSpace restart
   'exec-and-forget borders active_color=0xffc0caf5 inactive_color=0xff414868 style=round width=7.0',
-  # 'exec-and-forget sketchybar',
+  'exec-and-forget sketchybar >> $HOME/.sketchybar/service.log 2>&1',
 ]
 
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = [
-  # '/bin/zsh',
-  # '-c',
-  # 'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
+  '/bin/zsh',
+  '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE FOCUSED_DISPLAY=$(aerospace list-monitors --focused | awk "{print $1}")',
+]
+
+# Notify Sketchybar about focuse change
+# See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
+on-focus-changed = [
+  'move-mouse window-lazy-center',
+  'exec-and-forget sketchybar --trigger aerospace_focus_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
 ]
 
 # Start AeroSpace at login
@@ -49,7 +56,6 @@ default-root-container-orientation = 'auto'
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-on-focus-changed = ['move-mouse window-lazy-center']
 
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
 # Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
@@ -141,12 +147,6 @@ alt-7 = 'workspace 7'
 alt-8 = 'workspace 8'
 alt-9 = 'workspace 9'
 alt-0 = 'workspace 10'
-alt-b = 'workspace Browser'        # Browser
-alt-c = 'workspace Communications' # Communications
-alt-i = 'workspace IDE'            # IDE 
-alt-m = 'workspace Media'          # Media
-alt-n = 'workspace Notes'          # Notes
-alt-t = 'workspace Terminal'       # Terminal
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-1 = 'move-node-to-workspace 1'
@@ -159,12 +159,6 @@ alt-shift-7 = 'move-node-to-workspace 7'
 alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-0 = 'move-node-to-workspace 10'
-alt-shift-b = 'move-node-to-workspace Browser'        # Browser
-alt-shift-c = 'move-node-to-workspace Communications' # Communications
-alt-shift-i = 'move-node-to-workspace IDE'            # IDE
-alt-shift-m = 'move-node-to-workspace Media'          # Media
-alt-shift-n = 'move-node-to-workspace Notes'          # Notes 
-alt-shift-t = 'move-node-to-workspace Terminal'       # Terminal
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
@@ -172,20 +166,32 @@ alt-tab = 'workspace-back-and-forth'
 alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
-alt-shift-semicolon = 'mode service'
+alt-shift-semicolon = [
+  'mode service',
+  'exec-and-forget sketchybar --trigger aerospace_enter_service_mode',
+]
 
 alt-f = 'fullscreen'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
-esc = ['reload-config', 'mode main']
+esc = [
+  'reload-config',
+  'mode main',
+  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
+]
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 f = [
   'layout floating tiling',
   'mode main',
+  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
 ] # Toggle between floating and tiling layout
-backspace = ['close-all-windows-but-current', 'mode main']
+backspace = [
+  'close-all-windows-but-current',
+  'mode main',
+  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
+]
 
 # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 #s = ['layout sticky tiling', 'mode main']
@@ -199,6 +205,26 @@ down = 'volume down'
 up = 'volume up'
 shift-down = ['volume set 0', 'mode main']
 
+alt-shift-left = [
+  'join-with left',
+  'mode main',
+  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
+]
+alt-shift-down = [
+  'join-with down',
+  'mode main',
+  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
+]
+alt-shift-up = [
+  'join-with up',
+  'mode main',
+  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
+]
+alt-shift-right = [
+  'join-with right',
+  'mode main',
+  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
+]
 
 [workspace-to-monitor-force-assignment]
 1 = 'primary'
@@ -211,13 +237,6 @@ shift-down = ['volume set 0', 'mode main']
 8 = 'secondary'
 9 = 'secondary'
 10 = 'secondary'
-Browser = 'primary'
-IDE = 'primary'
-Media = 'secondary'
-Notes = 'primary'
-Terminal = 'secondary'
-Communications = 'secondary'
-
 
 # Current Ghostty Workaround on opening new tabs
 [[on-window-detected]]

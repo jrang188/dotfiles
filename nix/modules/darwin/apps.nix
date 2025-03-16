@@ -22,6 +22,7 @@
     brews = [
       "sketchybar"
       "borders"
+      "lua"
     ];
 
     # `brew install --cask`
@@ -33,6 +34,8 @@
       "aerospace"
       "karabiner-elements"
       "sf-symbols" # font for sketchybar
+      "font-sf-mono"
+      "font-sf-pro"
     ];
   };
 }

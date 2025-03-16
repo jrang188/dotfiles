@@ -4,9 +4,11 @@ return {
     apple = "",
     rebel = "",
     empire = "",
+    torii = "",
     gear = "􀍟",
     cpu = "􀫥",
     nuke = "",
+    rocket = "󱓞",
     clipboard = "􀉄",
 
     switch = {

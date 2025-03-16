@@ -7,11 +7,11 @@ return {
     modes = {
         main = {
             icon = icons.rebel,
-            color = colors.rainbow[1]
+            color = colors.red
         },
         service = {
             icon = icons.nuke,
-            color = 0xffff9e64
+            color = colors.orange
         }
     },
     bar = {
@@ -32,13 +32,14 @@ return {
             bottom = 0
         },
         default_color = function(workspace)
-            return colors.rainbow[workspace + 1]
+            -- return colors.rainbow[workspace + 1]
+            return colors.white
         end,
         highlight_color = function(workspace)
-            return colors.yellow
+            return colors.blue
         end,
         colors = {
-            background = colors.bg1
+            background = colors.bg2
         },
         corner_radius = 6
     },

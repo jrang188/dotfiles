@@ -30,7 +30,8 @@ local cal = sbar.add("item", {
     padding_right = 1,
     background = {
         color = colors.bg2,
-        border_color = colors.rainbow[#colors.rainbow],
+        -- border_color = colors.rainbow[#colors.rainbow],
+        border_color = colors.magenta,
         border_width = 1
     }
 })

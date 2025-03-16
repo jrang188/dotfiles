@@ -18,7 +18,7 @@ after-startup-command = [
 
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = [
-  '/bin/zsh',
+  '/bin/bash',
   '-c',
   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE FOCUSED_DISPLAY=$(aerospace list-monitors --focused | awk "{print $1}")',
 ]
@@ -26,7 +26,6 @@ exec-on-workspace-change = [
 # Notify Sketchybar about focuse change
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
 on-focus-changed = [
-  'move-mouse window-lazy-center',
   'exec-and-forget sketchybar --trigger aerospace_focus_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
 ]
 
@@ -204,27 +203,6 @@ alt-shift-l = ['join-with right', 'mode main']
 down = 'volume down'
 up = 'volume up'
 shift-down = ['volume set 0', 'mode main']
-
-alt-shift-left = [
-  'join-with left',
-  'mode main',
-  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
-]
-alt-shift-down = [
-  'join-with down',
-  'mode main',
-  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
-]
-alt-shift-up = [
-  'join-with up',
-  'mode main',
-  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
-]
-alt-shift-right = [
-  'join-with right',
-  'mode main',
-  'exec-and-forget sketchybar --trigger aerospace_leave_service_mode',
-]
 
 [workspace-to-monitor-force-assignment]
 1 = 'primary'

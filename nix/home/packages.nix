@@ -35,8 +35,9 @@
     kubectl
     kubectx
     k9s
-    pulumi-bin
+    pulumi
     awscli2
     google-cloud-sdk
+    oci-cli
   ];
 }

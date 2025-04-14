@@ -19,7 +19,6 @@
     go
     bun
     rustup
-    python3
     temurin-bin
 
     # Dev Tools
@@ -35,9 +34,9 @@
     kubectl
     kubectx
     k9s
-    pulumi
     awscli2
     google-cloud-sdk
     oci-cli
+    pulumi-bin
   ];
 }

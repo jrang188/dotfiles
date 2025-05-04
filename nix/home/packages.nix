@@ -20,6 +20,8 @@
     bun
     rustup
     temurin-bin
+    gradle
+    maven
 
     # Dev Tools
     gh

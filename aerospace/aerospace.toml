@@ -142,6 +142,16 @@ alt-3 = 'workspace 3'
 alt-4 = 'workspace 4'
 alt-5 = 'workspace 5'
 alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+alt-c = 'workspace Comms'
+alt-w = 'workspace Web'
+alt-d = 'workspace Dev'
+alt-n = 'workspace Note'
+alt-m = 'workspace Media'
+alt-s = 'workspace Shell'
+alt-u = 'workspace Utility'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-1 = 'move-node-to-workspace 1'
@@ -150,6 +160,17 @@ alt-shift-3 = 'move-node-to-workspace 3'
 alt-shift-4 = 'move-node-to-workspace 4'
 alt-shift-5 = 'move-node-to-workspace 5'
 alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-c = 'move-node-to-workspace Comms'
+alt-shift-w = 'move-node-to-workspace Web'
+alt-shift-d = 'move-node-to-workspace Dev'
+alt-shift-n = 'move-node-to-workspace Note'
+alt-shift-m = 'move-node-to-workspace Media'
+alt-shift-s = 'move-node-to-workspace Shell'
+alt-shift-u = 'move-node-to-workspace Utility'
+
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
@@ -196,15 +217,80 @@ down = 'volume down'
 up = 'volume up'
 shift-down = ['volume set 0', 'mode main']
 
-[workspace-to-monitor-force-assignment]
-1 = 'primary'
-2 = 'primary'
-3 = 'primary'
-4 = 'secondary'
-5 = 'secondary'
-6 = 'secondary'
 
-# Current Ghostty Workaround on opening new tabs
+[workspace-to-monitor-force-assignment]
+Dev = 'primary'
+Web = 'primary'
+Shell = 'primary'
+Comms = 'secondary'
+Note = 'secondary'
+Utility = 'secondary'
+Media = 'secondary'
+
+# Current Ghostty Workaround on open;fing new tabs
 [[on-window-detected]]
 if.app-id = "com.mitchellh.ghostty"
 run = ["layout floating"]
+
+# Utility
+[[on-window-detected]]
+if.app-id = 'com.1password.1password'
+run = 'move-node-to-workspace Utility'
+[[on-window-detected]]
+if.app-id = 'com.nordvpn.NordVPN'
+run = 'move-node-to-workspace Utility'
+
+# Comms
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace Comms'
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = 'move-node-to-workspace Comms'
+[[on-window-detected]]
+if.app-id = 'com.facebook.archon.developerID'
+run = 'move-node-to-workspace Comms'
+[[on-window-detected]]
+if.app-id = 'us.zoom.xos'
+run = 'move-node-to-workspace Comms'
+[[on-window-detected]]
+if.app-id = 'com.apple.FaceTime'
+run = 'move-node-to-workspace Comms'
+[[on-window-detected]]
+if.app-id = 'com.apple.mail'
+run = 'move-node-to-workspace Comms'
+[[on-window-detected]]
+if.app-id = 'com.apple.MobileSMS'
+run = 'move-node-to-workspace Comms'
+[[on-window-detected]]
+if.app-id = 'com.microsoft.Outlook'
+run = 'move-node-to-workspace Comms'
+
+# Note
+[[on-window-detected]]
+if.app-id = 'com.anytype.anytype'
+run = 'move-node-to-workspace Note'
+[[on-window-detected]]
+if.app-id = 'io.capacities.app'
+run = 'move-node-to-workspace Note'
+[[on-window-detected]]
+if.app-id = 'notion.id'
+run = 'move-node-to-workspace Note'
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = 'move-node-to-workspace Note'
+[[on-window-detected]]
+if.app-id = 'com.apple.Notes'
+run = 'move-node-to-workspace Note'
+[[on-window-detected]]
+if.app-id = 'com.apple.Stickies'
+run = 'move-node-to-workspace Note'
+[[on-window-detected]]
+if.app-id = 'com.electron.logseq'
+run = 'move-node-to-workspace Note'
+
+# Media
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = 'move-node-to-workspace Media'
+

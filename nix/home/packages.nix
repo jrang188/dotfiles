@@ -29,6 +29,7 @@
     _1password-cli
     gnumake
     golangci-lint
+    spring-boot-cli
 
     # DevOps
     tenv

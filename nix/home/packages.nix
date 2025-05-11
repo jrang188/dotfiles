@@ -16,6 +16,7 @@
     # Programming Languages
     fnm
     uv
+    python3
     go
     bun
     rustup

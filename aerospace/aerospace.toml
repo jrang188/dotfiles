@@ -234,9 +234,6 @@ run = ["layout floating"]
 
 # Utility
 [[on-window-detected]]
-if.app-id = 'com.1password.1password'
-run = 'move-node-to-workspace Utility'
-[[on-window-detected]]
 if.app-id = 'com.nordvpn.NordVPN'
 run = 'move-node-to-workspace Utility'
 
@@ -293,4 +290,3 @@ run = 'move-node-to-workspace Note'
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
 run = 'move-node-to-workspace Media'
-

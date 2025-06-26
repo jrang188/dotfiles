@@ -26,10 +26,10 @@
         persistent-apps = [
           "System/Applications/Launchpad.app"
           "/Applications/Zen Browser.app"
+          "/Applications/Ghostty.app"
           "/Applications/Warp.app"
           "/Applications/Cursor.app"
           "/Applications/Obsidian.app"
-          "/Applications/TickTick.app"
           "/Applications/Discord.app"
           "/Applications/Spotify.app"
           "/System/Applications/System Settings.app"

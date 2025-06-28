@@ -10,7 +10,7 @@ default:
 	@echo "  make update  - Update flake inputs"
 
 darwin:
-	darwin-rebuild switch --flake .#Sterling-MBP
+	sudo darwin-rebuild switch --flake .#Sterling-MBP
 
 nixos:
 	sudo nixos-rebuild switch --flake .#nixos-wsl

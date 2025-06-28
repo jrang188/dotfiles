@@ -23,6 +23,7 @@
       "sketchybar"
       "borders"
       "lua"
+      "kafka"
     ];
 
     # `brew install --cask`

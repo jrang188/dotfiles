@@ -7,7 +7,7 @@
       ssh = "ssh.exe";
       ssh-add = "ssh-add.exe";
     };
-    initExtra = ''
+    initContent = ''
       nvim() {
           if ! pidof socat > /dev/null 2>&1; then
               [ -e /tmp/discord-ipc-0 ] && rm -f /tmp/discord-ipc-0

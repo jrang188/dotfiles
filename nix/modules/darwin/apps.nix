@@ -24,6 +24,7 @@
       "borders"
       "lua"
       "kafka"
+      "orbstack"
     ];
 
     # `brew install --cask`

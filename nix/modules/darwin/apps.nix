@@ -24,7 +24,6 @@
       "borders"
       "lua"
       "kafka"
-      "orbstack"
     ];
 
     # `brew install --cask`
@@ -38,6 +37,7 @@
       "sf-symbols" # font for sketchybar
       "font-sf-mono"
       "font-sf-pro"
+      "orbstack"
     ];
   };
 }

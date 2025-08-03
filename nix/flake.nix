@@ -42,6 +42,7 @@
       mac-app-util,
       nixos-wsl,
       home-manager,
+      zen-browser,
       ...
     }:
     let

@@ -4,7 +4,7 @@
     enable = true;
     lfs.enable = true;
     userName = "Justin Ang";
-    userEmail = "justinray8823@gmail.com";
+    userEmail = "justinang177@gmail.com";
     ignores = [ ".DS_Store" ];
 
     extraConfig = {

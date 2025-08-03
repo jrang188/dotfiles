@@ -23,6 +23,7 @@
     temurin-bin
     gradle
     maven
+    gcc
 
     # Dev Tools
     gh

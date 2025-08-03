@@ -12,8 +12,11 @@ default:
 darwin:
 	sudo darwin-rebuild switch --flake .#Sterling-MBP
 
+wsl:
+	sudo nixos-rebuild switch --flake .#wsl
+
 nixos:
-	sudo nixos-rebuild switch --flake .#nixos-wsl
+	sudo nixos-rebuild switch --flake .#kirby
 
 ubuntu:
 	home-manager switch --flake .#sirwayne

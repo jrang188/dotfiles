@@ -95,7 +95,7 @@
       };
 
       # WSL NixOS configuration
-      nixosConfigurations."nixos-wsl" = nixpkgs.lib.nixosSystem {
+      nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem {
         system = nixosSystem;
         specialArgs = inputs // {
           inherit username;
@@ -111,7 +111,7 @@
         };
         modules = [
           nixos-wsl.nixosModules.default
-          ./hosts/nixos/nixos-wsl
+          ./hosts/nixos/wsl
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -158,6 +158,42 @@
           ./home/ubuntu
         ];
       };
+
+      # AND FINALLY, THE OG, NIXOS
+      nixosConfigurations."kirby" = nixpkgs.lib.nixosSystem {
+        system = nixosSystem;
+        specialArgs = inputs // {
+          inherit username;
+          hostname = "kirby-machine";
+          pkgs-unstable = import nixpkgs-unstable {
+            system = nixosSystem;
+            config.allowUnfree = true;
+          };
+        };
+        modules = [
+          ./hosts/nixos/kirby
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
+            home-manager.extraSpecialArgs = inputs // {
+              inherit username;
+              hostname = "nixos";
+              pkgs-unstable = import nixpkgs-unstable {
+                system = nixosSystem;
+                config.allowUnfree = true;
+              };
+            };
+            home-manager.users.${username} = {
+              imports = [
+                ./home
+              ];
+            };
+          }
+        ];
+      };
+
       formatter = {
         ${darwinSystem} = nixpkgs.legacyPackages.${darwinSystem}.nixfmt;
         ${nixosSystem} = nixpkgs.legacyPackages.${nixosSystem}.nixfmt;

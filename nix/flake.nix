@@ -168,6 +168,7 @@
         specialArgs = inputs // {
           inherit username;
           hostname = "kirby-machine";
+          inherit zen-browser;
           pkgs-unstable = import nixpkgs-unstable {
             system = nixosSystem;
             config.allowUnfree = true;

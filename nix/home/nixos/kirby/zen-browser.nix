@@ -1,7 +1,7 @@
-{ inputs, pkgs-unstable, ... }:
+{ zen-browser, pkgs-unstable, ... }:
 {
   imports = [
-    inputs.zen-browser.homeModules.beta
+    zen-browser.homeModules.beta
   ];
 
   programs.zen-browser = {

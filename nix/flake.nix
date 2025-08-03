@@ -24,6 +24,10 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    inputs = {
+      zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.

@@ -1,6 +1,10 @@
 -- Options are automatically loaded before lazy.nvim startup
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
+local opt = vim.opt
+
 if not vim.g.vscode then
-  vim.opt.winbar = "%=%m %f"
+  opt.winbar = "%=%m %f"
 end
+
+opt.clipboard = "unnamedplus"

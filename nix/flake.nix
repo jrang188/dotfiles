@@ -179,7 +179,7 @@
             home-manager.backupFileExtension = "backup";
             home-manager.extraSpecialArgs = inputs // {
               inherit username;
-              hostname = "nixos";
+              hostname = "kirby-machine";
               pkgs-unstable = import nixpkgs-unstable {
                 system = nixosSystem;
                 config.allowUnfree = true;

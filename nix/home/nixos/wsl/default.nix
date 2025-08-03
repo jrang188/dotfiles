@@ -33,7 +33,7 @@
       core.sshCommand = "ssh.exe";
     };
   };
-  home.packages = with pkgs-unstable; [
-    clang
+  imports = [
+    ../clang.nix
   ];
 }

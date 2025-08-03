@@ -2,7 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{
+  username,
+  hostname,
+  pkgs,
+  pkgs-unstable,
+  config,
+  ...
+}:
 
 {
   imports = [
@@ -11,19 +18,35 @@
     ./hardware-configuration.nix
   ];
 
+  #############################################################
+  #
+  #  Host & Users configuration
+  #
+  #############################################################
+  networking.hostName = hostname;
+
+  users.users.${username} = {
+    home = "/home/${username}";
+    description = username;
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
+    packages = with pkgs; [
+      kdePackages.kate
+      #  thunderbird
+    ];
+    isNormalUser = true;
+  };
+
+  nix.settings.trusted-users = [ username ];
+
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.device = "nodev";
   boot.loader.grub.useOSProber = true;
   boot.loader.grub.efiSupport = true;
-
-  networking.hostName = "kirby-machine"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -69,20 +92,6 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.sirwayne = {
-    isNormalUser = true;
-    description = "sirwayne";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-    ];
-    packages = with pkgs; [
-      kdePackages.kate
-      #  thunderbird
-    ];
-  };
 
   # Install firefox.
   programs.firefox.enable = true;

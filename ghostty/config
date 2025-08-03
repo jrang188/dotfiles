@@ -2,3 +2,4 @@ font-family = JetBrainsMono Nerd Font Mono Ret
 theme = tokyonight_night
 background-opacity = 0.88
 background-blur = true
+shell-integration = zsh

@@ -5,9 +5,6 @@
 {
   username,
   hostname,
-  pkgs,
-  pkgs-unstable,
-  config,
   ...
 }:
 
@@ -32,10 +29,6 @@
     extraGroups = [
       "networkmanager"
       "wheel"
-    ];
-    packages = with pkgs; [
-      kdePackages.kate
-      #  thunderbird
     ];
     isNormalUser = true;
   };

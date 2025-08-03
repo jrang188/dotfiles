@@ -29,8 +29,6 @@
     startMenuLaunchers = true;
   };
 
-  # Set default shell TODO: Refactor this into the nixos module
-  programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
   # WSL Utilities (e.g. allows opening web urls)

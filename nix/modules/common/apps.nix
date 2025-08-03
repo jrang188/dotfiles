@@ -9,6 +9,5 @@
     curl
     zip
     unzip
-    w
   ];
 }

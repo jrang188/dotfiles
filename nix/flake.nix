@@ -188,6 +188,7 @@
             home-manager.users.${username} = {
               imports = [
                 ./home
+                ./home/nixos/kirby
               ];
             };
           }

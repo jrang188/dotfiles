@@ -29,12 +29,6 @@
     startMenuLaunchers = true;
   };
 
-  # Needed for VScode in WSL (Workaround)
-  programs.nix-ld = {
-    enable = true;
-    package = pkgs.nix-ld-rs; # only for NixOS 24.05
-  };
-
   # Set default shell TODO: Refactor this into the nixos module
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;

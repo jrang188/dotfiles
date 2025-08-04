@@ -40,9 +40,17 @@
   system.autoUpgrade.enable = true;
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot";
+  boot.loader = {
+    systemd-boot = {
+      enable = true;
+      consoleMode = "max";
+    };
+    efi = {
+      canTouchEfiVariables = true;
+      efiSysMountPoint = "/boot";
+    };
+    timeout = 7;
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;

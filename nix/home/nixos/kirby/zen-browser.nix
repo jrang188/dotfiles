@@ -24,10 +24,10 @@
         Fingerprinting = true;
       };
     };
-    nativeMessagingHosts = [
-      pkgs-unstable.firefoxpwa
-      pkgs-unstable._1password-gui
-      pkgs-unstable._1password
-    ];
+    # nativeMessagingHosts = [
+    #   pkgs-unstable.firefoxpwa
+    #   pkgs-unstable._1password-gui
+    #   pkgs-unstable._1password
+    # ];
   };
 }

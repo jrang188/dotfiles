@@ -31,6 +31,7 @@
     gnumake
     golangci-lint
     spring-boot-cli
+    claude-code
 
     # DevOps
     tenv
@@ -42,5 +43,6 @@
     google-cloud-sdk
     oci-cli
     pulumi-bin
+    lazydocker
   ];
 }

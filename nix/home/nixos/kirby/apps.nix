@@ -9,7 +9,7 @@
     httpie
     warp-terminal
 
-    xournalapp # PDF Editor
+    xournalpp # PDF Editor
     spotify
     zoom-us
     libreoffice

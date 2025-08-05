@@ -15,7 +15,7 @@
     libreoffice
     localsend
     obsidian
-    notion-app
+    notion-app-enhanced
     chatgpt
     discord
     ticktick

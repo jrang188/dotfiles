@@ -16,7 +16,6 @@
     localsend
     obsidian
     notion-app-enhanced
-    chatgpt
     discord
     ticktick
   ];

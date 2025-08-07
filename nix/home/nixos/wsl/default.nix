@@ -1,4 +1,4 @@
-{ pkgs-unstable, ... }:
+{ ... }:
 {
   programs.zsh = {
     # Use .exe if using WSL

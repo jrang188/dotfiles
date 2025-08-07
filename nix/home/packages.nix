@@ -32,6 +32,8 @@
     golangci-lint
     spring-boot-cli
     claude-code
+    nixfmt-tree
+    pre-commit
 
     # DevOps
     tenv

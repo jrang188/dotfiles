@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ ... }:
 
 let
   # Common configuration for unstable packages

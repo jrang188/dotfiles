@@ -27,7 +27,6 @@
     '';
   };
 
-  nixpkgs.config.allowUnfree = true;
   programs.git = {
     extraConfig = {
       core.sshCommand = "ssh.exe";

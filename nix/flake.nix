@@ -29,211 +29,183 @@
 
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.2";
-
-      # Optional but recommended to limit the size of your system closure.
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  # The `outputs` function will return all the build results of the flake.
-  # A flake can have many use cases and different types of outputs,
-  # parameters in `outputs` are defined in `inputs` and can be referenced by their names.
-  # However, `self` is an exception, this special parameter points to the `outputs` itself (self-reference)
-  # The `@` syntax here is used to alias the attribute set of the inputs's parameter, making it convenient to use inside the function.
   outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      nixpkgs-unstable,
-      darwin,
-      mac-app-util,
-      nixos-wsl,
-      home-manager,
-      zen-browser,
-      lanzaboote,
-      ...
-    }:
+    inputs@{ self, nixpkgs, ... }:
     let
+      # Common variables
       username = "sirwayne";
       darwinSystem = "aarch64-darwin";
       nixosSystem = "x86_64-linux";
-    in
-    {
-      darwinConfigurations."Sterling-MBP" = darwin.lib.darwinSystem {
-        system = darwinSystem;
-        specialArgs = inputs // {
-          inherit username;
-          hostname = "Sterling-MBP";
-          pkgs-unstable = import nixpkgs-unstable {
-            # Refer to the `system` parameter from
-            # the outer scope recursively
-            system = darwinSystem;
-            # To use Chrome, we need to allow the
-            # installation of non-free software.
-            config.allowUnfree = true;
+
+      # Helper function to create unstable packages
+      mkUnstablePkgs =
+        { system, nixpkgs-unstable }:
+        import nixpkgs-unstable {
+          inherit system;
+          config.allowUnfree = true;
+        };
+
+      # Helper function to create specialArgs
+      mkSpecialArgs =
+        {
+          hostname,
+          system,
+          extraArgs ? { },
+        }:
+        inputs
+        // {
+          inherit username hostname;
+          pkgs-unstable = mkUnstablePkgs {
+            inherit system;
+            inherit (inputs) nixpkgs-unstable;
+          };
+        }
+        // extraArgs;
+
+      # Helper function to create home-manager configuration
+      mkHomeManagerConfig =
+        {
+          hostname,
+          system,
+          homeImports,
+          extraArgs ? { },
+        }:
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = mkSpecialArgs { inherit hostname system extraArgs; };
+          home-manager.users.${username} = {
+            imports = homeImports;
           };
         };
-        modules = [
-          ./hosts/darwin/Sterling-MBP
 
-          mac-app-util.darwinModules.default
+      # Helper function to create system configurations
+      mkSystem =
+        {
+          hostname,
+          system,
+          modules,
+          homeImports,
+          extraArgs ? { },
+        }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = mkSpecialArgs { inherit hostname system extraArgs; };
+          modules = modules ++ [
+            inputs.home-manager.nixosModules.home-manager
+            (mkHomeManagerConfig {
+              inherit
+                hostname
+                system
+                homeImports
+                extraArgs
+                ;
+            })
+          ];
+        };
 
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = inputs // {
-              inherit username;
-              hostname = "Sterling-MBP";
-              pkgs-unstable = import nixpkgs-unstable {
-                # Refer to the `system` parameter from
-                # the outer scope recursively
-                system = darwinSystem;
-                # To use Chrome, we need to allow the
-                # installation of non-free software.
-                config.allowUnfree = true;
-              };
-            };
-            home-manager.users.${username} = {
-              imports = [
-                ./home
-                ./home/darwin
-                mac-app-util.homeManagerModules.default
-              ];
-            };
-          }
+      # Helper function to create Darwin configurations
+      mkDarwin =
+        {
+          hostname,
+          modules,
+          homeImports,
+          extraArgs ? { },
+        }:
+        inputs.darwin.lib.darwinSystem {
+          system = darwinSystem;
+          specialArgs = mkSpecialArgs {
+            inherit hostname;
+            system = darwinSystem;
+            inherit extraArgs;
+          };
+          modules = modules ++ [
+            inputs.mac-app-util.darwinModules.default
+            inputs.home-manager.darwinModules.home-manager
+            (mkHomeManagerConfig {
+              inherit hostname;
+              system = darwinSystem;
+              inherit homeImports extraArgs;
+            })
+          ];
+        };
+
+      # Helper function to create Home Manager configurations
+      mkHome =
+        {
+          hostname,
+          modules,
+          extraArgs ? { },
+        }:
+        inputs.home-manager.lib.homeManagerConfiguration {
+          pkgs = inputs.nixpkgs.legacyPackages.${nixosSystem};
+          extraSpecialArgs = mkSpecialArgs {
+            inherit hostname;
+            system = nixosSystem;
+            inherit extraArgs;
+          };
+          inherit modules;
+        };
+
+    in
+    {
+      # Darwin configuration
+      darwinConfigurations."Sterling-MBP" = mkDarwin {
+        hostname = "Sterling-MBP";
+        modules = [ ./hosts/darwin/Sterling-MBP ];
+        homeImports = [
+          ./home
+          ./home/darwin
+          inputs.mac-app-util.homeManagerModules.default
         ];
       };
 
       # WSL NixOS configuration
-      nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem {
+      nixosConfigurations."wsl" = mkSystem {
+        hostname = "nixos-wsl";
         system = nixosSystem;
-        specialArgs = inputs // {
-          inherit username;
-          hostname = "nixos-wsl";
-          pkgs-unstable = import nixpkgs-unstable {
-            # Refer to the `system` parameter from
-            # the outer scope recursively
-            system = nixosSystem;
-            # To use Chrome, we need to allow the
-            # installation of non-free software.
-            config.allowUnfree = true;
-          };
-        };
         modules = [
-          nixos-wsl.nixosModules.default
+          inputs.nixos-wsl.nixosModules.default
           ./hosts/nixos/wsl
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = inputs // {
-              inherit username;
-              hostname = "nixos-wsl";
-              pkgs-unstable = import nixpkgs-unstable {
-                # Refer to the `system` parameter from
-                # the outer scope recursively
-                system = nixosSystem;
-                # To use Chrome, we need to allow the
-                # installation of non-free software.
-                config.allowUnfree = true;
-              };
-            };
-            home-manager.users.${username} = {
-              imports = [
-                ./home
-                ./home/nixos/wsl
-              ];
-            };
-          }
+        ];
+        homeImports = [
+          ./home
+          ./home/nixos/wsl
         ];
       };
 
       # Ubuntu WSL Configuration
-      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = inputs // {
-          inherit username;
-          hostname = "GHOST-MACHINE";
-          pkgs-unstable = import nixpkgs-unstable {
-            # Refer to the `system` parameter from
-            # the outer scope recursively
-            system = nixosSystem;
-            # To use Chrome, we need to allow the
-            # installation of non-free software.
-            config.allowUnfree = true;
-          };
-        };
+      homeConfigurations.${username} = mkHome {
+        hostname = "GHOST-MACHINE";
         modules = [
           ./home
           ./home/ubuntu
         ];
       };
 
-      # AND FINALLY, THE OG, NIXOS
-      nixosConfigurations."kirby" = nixpkgs.lib.nixosSystem {
+      # NixOS configuration with secure boot
+      nixosConfigurations."kirby" = mkSystem {
+        hostname = "kirby-machine";
         system = nixosSystem;
-        specialArgs = inputs // {
-          inherit username;
-          hostname = "kirby-machine";
-          inherit zen-browser;
-          pkgs-unstable = import nixpkgs-unstable {
-            system = nixosSystem;
-            config.allowUnfree = true;
-          };
-        };
         modules = [
           ./hosts/nixos/kirby
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "backup";
-            home-manager.extraSpecialArgs = inputs // {
-              inherit username;
-              hostname = "kirby-machine";
-              pkgs-unstable = import nixpkgs-unstable {
-                system = nixosSystem;
-                config.allowUnfree = true;
-              };
-            };
-            home-manager.users.${username} = {
-              imports = [
-                ./home
-                ./home/nixos/kirby
-              ];
-            };
-          }
-
-          # Secure-boot Confdig
-          lanzaboote.nixosModules.lanzaboote
-          (
-            { pkgs, lib, ... }:
-            {
-
-              environment.systemPackages = [
-                # For debugging and troubleshooting Secure Boot.
-                pkgs.sbctl
-              ];
-
-              # Lanzaboote currently replaces the systemd-boot module.
-              # This setting is usually set to true in configuration.nix
-              # generated at installation time. So we force it to false
-              # for now.
-              boot.loader.systemd-boot.enable = lib.mkForce false;
-
-              boot.lanzaboote = {
-                enable = true;
-                pkiBundle = "/var/lib/sbctl";
-              };
-            }
-          )
+          inputs.lanzaboote.nixosModules.lanzaboote
+          ./modules/nixos/secure-boot.nix
         ];
+        homeImports = [
+          ./home
+          ./home/nixos/kirby
+        ];
+        extraArgs = { inherit (inputs) zen-browser; };
       };
 
       formatter = {
-        ${darwinSystem} = nixpkgs.legacyPackages.${darwinSystem}.nixfmt;
-        ${nixosSystem} = nixpkgs.legacyPackages.${nixosSystem}.nixfmt;
+        ${darwinSystem} = nixpkgs.legacyPackages.${darwinSystem}.nixfmt-rfc-style;
+        ${nixosSystem} = nixpkgs.legacyPackages.${nixosSystem}.nixfmt-rfc-style;
       };
     };
 }

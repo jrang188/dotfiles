@@ -35,10 +35,6 @@
     nixfmt-tree
     pre-commit
 
-    # Mobile App Dev
-    flutter
-    cocoapods
-
     # DevOps
     tenv
     kubernetes-helm

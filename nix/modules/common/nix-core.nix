@@ -15,7 +15,6 @@
 
   nix.gc = {
     automatic = true;
-    dates = "daily";
     options = lib.mkDefault "--delete-older-than 7d";
   };
 

@@ -12,7 +12,7 @@
   };
 
   environment.systemPackages = with pkgs-unstable; [
-    (warbar.overrideAttrs (oldAttrs: {
+    (waybar.overrideAttrs (oldAttrs: {
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     }))
 

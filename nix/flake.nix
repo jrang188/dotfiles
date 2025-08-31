@@ -194,7 +194,6 @@
         modules = [
           ./hosts/nixos/kirby
           inputs.lanzaboote.nixosModules.lanzaboote
-          ./modules/nixos/secure-boot.nix
         ];
         homeImports = [
           ./home

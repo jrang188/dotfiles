@@ -1,9 +1,9 @@
 { pkgs, lib, ... }:
 
 {
-  environment.systemPackages = [
-    # For debugging and troubleshooting Secure Boot.
-    pkgs.sbctl
+  environment.systemPackages = with pkgs; [
+    sbctl
+    niv
   ];
 
   # Lanzaboote currently replaces the systemd-boot module.

@@ -16,7 +16,9 @@
     localsend
     obsidian
     notion-app-enhanced
-    discord
+    discord-ptb
     ticktick
+    webcord
+    vesktop
   ];
 }

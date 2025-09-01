@@ -12,15 +12,13 @@
   };
 
   environment.systemPackages = with pkgs-unstable; [
-
-    waybar
-    wofi # app launcher
+    hyprpanel # menu bar (too much hassle to rice waybar)
+    rofi-wayland # app launcher
     hyprshot # screenshot tool
-    swaynotificationcenter # notification daemon
     hyprlock # lock screen for hyprland
     hypridle # idle management daeomon
     hyprpaper # wallpaper utility
-    hyprpolkitagent # polkit agent
+    # hyprpolkitagent # polkit agent
     hyprpicker # color pickers
     hyprsunset # blue-light filter during sunset
 

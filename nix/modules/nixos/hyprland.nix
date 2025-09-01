@@ -12,18 +12,7 @@
   };
 
   environment.systemPackages = with pkgs-unstable; [
-    (waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-    }))
-
-    # Notification Daemons
-    mako
-    libnotify
-
-    # wallpaper
-    swww
-
-    # app launcher
-    rofi-wayland
+    waybar
+    wofi # app launcher
   ];
 }

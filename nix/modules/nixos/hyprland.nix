@@ -12,7 +12,20 @@
   };
 
   environment.systemPackages = with pkgs-unstable; [
+
     waybar
     wofi # app launcher
+    hyprshot # screenshot tool
+    swaynotificationcenter # notification daemon
+    hyprlock # lock screen for hyprland
+    hypridle # idle management daeomon
+    hyprpaper # wallpaper utility
+    hyprpolkitagent # polkit agent
+    hyprpicker # color pickers
+    hyprsunset # blue-light filter during sunset
+
+    # qt wayland library
+    qt5.qtwayland
+    qt6.qtwayland
   ];
 }

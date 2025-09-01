@@ -18,7 +18,7 @@
     hyprlock # lock screen for hyprland
     hypridle # idle management daeomon
     hyprpaper # wallpaper utility
-    # hyprpolkitagent # polkit agent
+    hyprpolkitagent # polkit agent
     hyprpicker # color pickers
     hyprsunset # blue-light filter during sunset
 

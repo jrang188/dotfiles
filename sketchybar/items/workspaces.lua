@@ -5,6 +5,10 @@ local app_icons = require("helpers.app_icons")
 local query_workspaces =
 "aerospace list-workspaces --all --format '%{workspace}%{monitor-appkit-nsscreen-screens-id}' --json"
 
+-- Alternative query using monitor names for more reliable mapping
+local query_workspaces_with_names =
+"aerospace list-workspaces --all --format '%{workspace}%{monitor-name}' --json"
+
 -- Add padding to the left
 local root = sbar.add("item", "root", {
 	icon = {
@@ -82,7 +86,7 @@ local function updateWindow(workspace_index, args)
 	sbar.animate("tanh", 10, function()
 		for i, visible_workspace in ipairs(visible_workspaces) do
 			if no_app and workspace_index == visible_workspace["workspace"] then
-				local monitor_id = visible_workspace["monitor-appkit-nsscreen-screens-id"]
+				local monitor_id = math.floor(visible_workspace["monitor-appkit-nsscreen-screens-id"])
 				icon_line = " —"
 				workspaces[workspace_index]:set({
 					icon = { drawing = true },
@@ -146,19 +150,67 @@ local function updateWindows()
 	end)
 end
 
+-- Monitor name to ID mapping for more reliable display assignment
+local function getMonitorIdFromName(monitor_name)
+	-- Common monitor name patterns and their expected IDs
+	local monitor_mapping = {
+		["Built-in Retina Display"] = 1,
+		["Built-in Liquid Retina XDR Display"] = 1,
+		["Built-in Liquid Retina Display"] = 1,
+		-- Add more patterns as needed for your specific monitors
+	}
+
+	-- Try exact match first
+	if monitor_mapping[monitor_name] then
+		return monitor_mapping[monitor_name]
+	end
+
+	-- Try partial matches for external monitors
+	if string.find(monitor_name, "Built%-in") then
+		return 1
+	elseif string.find(monitor_name, "LG") or string.find(monitor_name, "Dell") or string.find(monitor_name, "Samsung") then
+		-- External monitors typically get IDs 2, 3, etc.
+		return 2 -- Default to 2 for external monitors
+	end
+
+	-- Fallback to 1 if we can't determine
+	return 1
+end
+
 local function updateWorkspaceMonitor()
 	local workspace_monitor = {}
-	sbar.exec(query_workspaces, function(workspaces_and_monitors)
-		for _, entry in ipairs(workspaces_and_monitors) do
-			local space_index = entry.workspace
-			local monitor_id = math.floor(entry["monitor-appkit-nsscreen-screens-id"])
-			workspace_monitor[space_index] = monitor_id
+
+	-- First, get monitor names and IDs for mapping
+	sbar.exec("aerospace list-monitors --json", function(monitors)
+		local monitor_name_to_id = {}
+		for _, monitor in ipairs(monitors) do
+			monitor_name_to_id[monitor["monitor-name"]] = monitor["monitor-id"]
+			print("Monitor: " .. monitor["monitor-name"] .. " -> ID: " .. monitor["monitor-id"])
 		end
-		for workspace_index, _ in pairs(workspaces) do
-			workspaces[workspace_index]:set({
-				display = workspace_monitor[workspace_index],
-			})
-		end
+
+		-- Then get workspace assignments
+		sbar.exec(query_workspaces_with_names, function(workspaces_and_monitors)
+			print("=== Workspace Monitor Assignments ===")
+			for _, entry in ipairs(workspaces_and_monitors) do
+				local space_index = entry.workspace
+				local monitor_name = entry["monitor-name"]
+				local monitor_id = monitor_name_to_id[monitor_name] or getMonitorIdFromName(monitor_name)
+				workspace_monitor[space_index] = monitor_id
+				print("Workspace " .. space_index .. " -> Monitor '" .. monitor_name .. "' (ID: " .. monitor_id .. ")")
+			end
+
+			for workspace_index, _ in pairs(workspaces) do
+				local target_monitor = workspace_monitor[workspace_index]
+				if target_monitor then
+					workspaces[workspace_index]:set({
+						display = target_monitor,
+					})
+					print("Setting workspace " .. workspace_index .. " to display " .. target_monitor)
+				else
+					print("Warning: No monitor found for workspace " .. workspace_index)
+				end
+			end
+		end)
 	end)
 end
 
@@ -238,7 +290,6 @@ sbar.exec(query_workspaces, function(workspaces_and_monitors)
 			background = { border_width = 2 },
 		})
 	end)
-	
-	sbar.exec("sketchybar --reorder apple " .. ws_order .. " front_app")
 
+	sbar.exec("sketchybar --reorder apple " .. ws_order .. " front_app")
 end)

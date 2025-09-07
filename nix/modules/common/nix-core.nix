@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   ...
 }:
 {
@@ -26,14 +25,9 @@
     ];
   };
 
-  nix.optimise.automatic = true;
   nixpkgs.config = {
     allowUnfree = true;
     allowBroken = true;
-  };
-  nix.gc = {
-    automatic = true;
-    options = lib.mkDefault "--delete-older-than 7d";
   };
 
   fonts.packages = with pkgs; [

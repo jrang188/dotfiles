@@ -125,6 +125,7 @@
             inherit extraArgs;
           };
           modules = modules ++ [
+            { nix.enable = false; }
             inputs.mac-app-util.darwinModules.default
             inputs.home-manager.darwinModules.home-manager
             (mkHomeManagerConfig {

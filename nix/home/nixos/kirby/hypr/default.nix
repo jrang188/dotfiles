@@ -9,10 +9,7 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    package = null;
-    portalPackage = null;
     xwayland.enable = true;
-
     settings = {
 
       # Set programs that you use

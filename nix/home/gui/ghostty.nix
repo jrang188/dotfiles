@@ -2,7 +2,7 @@
 {
   programs.ghostty = {
     enable = true;
-    package = pkgs-unstable.ghostty;
+    package = pkgs-unstable.ghostty-bin;
     settings = {
       font-family = "JetBrainsMono Nerd Font Mono";
       theme = "tokyonight";

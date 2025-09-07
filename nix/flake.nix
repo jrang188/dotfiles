@@ -47,6 +47,7 @@
         import nixpkgs-unstable {
           inherit system;
           config.allowUnfree = true;
+          config.allowBroken = true;
         };
 
       # Helper function to create specialArgs

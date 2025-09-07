@@ -12,4 +12,9 @@
       Minute = 0;
     };
   };
+
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowBroken = true;
+  };
 }

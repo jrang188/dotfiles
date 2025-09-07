@@ -6,11 +6,10 @@
   ];
 
   nix.optimise = {
-    automatic = true;
     interval = {
-      Weekday = "1";
-      Hour = "2";
-      Minute = "0";
+      Weekday = 1;
+      Hour = 2;
+      Minute = 0;
     };
   };
 }

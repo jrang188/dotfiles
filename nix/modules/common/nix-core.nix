@@ -10,7 +10,6 @@
       "flakes"
     ];
 
-    auto-optimise-store = true; # May make rebuilds longer but less size
     substituters = [
       "https://cache.nixos.org/"
       "https://nix-community.cachix.org/"
@@ -27,8 +26,9 @@
     ];
   };
 
+  nix.optimise.automatic = true;
   nixpkgs.config.allowUnfree = true;
-
+  nixpkgs.config.allowBroken = true;
   nix.gc = {
     automatic = true;
     options = lib.mkDefault "--delete-older-than 7d";

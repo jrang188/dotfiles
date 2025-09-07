@@ -7,6 +7,7 @@
     ./nix-gc.nix
     ./hyprland.nix
   ];
-  nix.optimise.automatic = true;
+
+  nix.settings.auto-optimise-store = true; # May make rebuilds longer but less size
   users.defaultUserShell = pkgs-unstable.zsh;
 }

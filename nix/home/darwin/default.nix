@@ -12,6 +12,8 @@
     cocoapods
   ];
 
+  programs.ghostty.package = pkgs-unstable.ghostty-bin;
+
   programs.zsh.oh-my-zsh.plugins = [
     "macos"
   ];

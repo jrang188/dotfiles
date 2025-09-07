@@ -20,4 +20,6 @@
     webcord
     vesktop
   ];
+
+  programs.ghostty.package = pkgs-unstable.ghostty;
 }

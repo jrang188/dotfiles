@@ -2,8 +2,8 @@
   description = "My Nix System Configurations";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/release-25.05";
-    nixpkgs-unstable.url = "nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     darwin = {
       url = "github:LnL7/nix-darwin/nix-darwin-25.05";
@@ -125,7 +125,7 @@
             inherit extraArgs;
           };
           modules = modules ++ [
-            { nix.enable = false; }
+            { nix.enable = false; } # We want to use determinate nix
             inputs.mac-app-util.darwinModules.default
             inputs.home-manager.darwinModules.home-manager
             (mkHomeManagerConfig {

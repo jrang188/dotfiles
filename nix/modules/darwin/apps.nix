@@ -31,7 +31,6 @@
       "raycast"
       "scroll-reverser"
       "warp"
-      "ghostty"
       "aerospace"
       "karabiner-elements"
       "sf-symbols" # font for sketchybar

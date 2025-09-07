@@ -1,5 +1,8 @@
 { pkgs-unstable, ... }:
 {
+  imports = [
+    ../gui/ghostty.nix
+  ];
   home.packages = with pkgs-unstable; [
     switchaudio-osx
     nowplaying-cli

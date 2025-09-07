@@ -7,6 +7,6 @@
     ./nix-gc.nix
     ./hyprland.nix
   ];
-
+  nix.optimise.automatic = true;
   users.defaultUserShell = pkgs-unstable.zsh;
 }

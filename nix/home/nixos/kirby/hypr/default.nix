@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs-unstable, ... }:
 {
   imports = [
     ./hypridle.nix
@@ -207,6 +207,18 @@
 
     };
   };
+
+  home.packages = with pkgs-unstable; [
+    hyprshot # screenshot tool
+    hyprpolkitagent # polkit agent
+    hyprpicker # color picker
+    hyprpanel # menu bar (too much hassle to rice waybar)
+    rofi-wayland # temporary since i want to try walker
+
+    # qt wayland library
+    qt5.qtwayland
+    qt6.qtwayland
+  ];
 
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 }

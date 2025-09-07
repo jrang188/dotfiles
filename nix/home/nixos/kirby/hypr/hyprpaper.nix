@@ -1,6 +1,6 @@
 { pkgs-unstable, ... }:
 {
-  programs.hyprpaper = {
+  services.hyprpaper = {
     enable = true;
     package = pkgs-unstable.hyprpaper;
     settings = {

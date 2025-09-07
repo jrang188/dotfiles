@@ -1,6 +1,6 @@
 { pkgs-unstable, ... }:
 {
-  programs.hyprsunset = {
+  services.hyprsunset = {
     enable = true;
     package = pkgs-unstable.hyprsunset;
     transitions = {

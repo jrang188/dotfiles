@@ -1,6 +1,11 @@
 { ... }:
 {
-  imports = [ ];
+  imports = [
+    ./hypridle.nix
+    ./hyprlock.nix
+    ./hyprpaper.nix
+    ./hyprsunset.nix
+  ];
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -20,9 +25,6 @@
       # Autostart
       "exec-once" = [
         "hyprpanel"
-        "hypridle"
-        "hyprpaper"
-        "hyprsunset"
         "systemctl --user start hyprpolkitagent"
         "1password --silent" # 1password in the background
       ];

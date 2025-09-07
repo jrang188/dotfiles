@@ -26,7 +26,7 @@
         "1password --silent" # 1password in the background
       ];
 
-      "settings" = [
+      "monitors" = [
         ",preferred,auto,auto"
         "dp-2,2560x1440@144.01hz,auto,auto"
 

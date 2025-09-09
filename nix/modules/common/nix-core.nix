@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }:
 {
@@ -54,6 +55,4 @@
   # this is required if you want to use darwin's default shell - zsh
   programs.zsh.enable = true;
 
-  # Auto upgrade nix package and the daemon service.
-  nix.package = pkgs.nix;
 }

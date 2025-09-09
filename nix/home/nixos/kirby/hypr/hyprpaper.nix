@@ -4,8 +4,8 @@
     enable = true;
     package = pkgs-unstable.hyprpaper;
     settings = {
-      preload = "../../../../wallpapers/spiderverse.jpg";
-      wallpaper = ", ../../../../wallpapers/spiderverse.jpg";
+      preload = "~/dotfiles/wallpapers/spiderverse.jpg";
+      wallpaper = ", ~/dotfiles/wallpapers/spiderverse.jpg";
     };
   };
 }

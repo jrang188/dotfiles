@@ -214,7 +214,7 @@
     hyprpolkitagent # polkit agent
     hyprpicker # color picker
     hyprpanel # menu bar (too much hassle to rice waybar)
-    rofi-wayland # temporary since i want to try walker
+    rofi # temporary since i want to try walker
 
     # qt wayland library
     qt5.qtwayland

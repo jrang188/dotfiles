@@ -2,8 +2,9 @@
   description = "My Nix System Configurations";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/*";
+    nixpkgs-unstable.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     darwin = {
       url = "github:LnL7/nix-darwin/nix-darwin-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -96,6 +97,7 @@
           inherit system;
           specialArgs = mkSpecialArgs { inherit hostname system extraArgs; };
           modules = modules ++ [
+            inputs.determinate.nixosModules.default
             inputs.home-manager.nixosModules.home-manager
             (mkHomeManagerConfig {
               inherit

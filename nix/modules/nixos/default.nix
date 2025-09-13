@@ -13,7 +13,6 @@
   ];
 
   # Auto upgrade nix package and the daemon service.
-  nix.package = pkgs.lixPackageSets.stable.lix;
   nix.optimise.automatic = true;
   nix.settings.auto-optimise-store = true; # May make rebuilds longer but less size
   nix.gc = {
@@ -21,5 +20,6 @@
     options = lib.mkDefault "--delete-older-than 7d";
     dates = "Daily";
   };
+  nix.settings.eval-cores = 0;
   users.defaultUserShell = pkgs-unstable.zsh;
 }

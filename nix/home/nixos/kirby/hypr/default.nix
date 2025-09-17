@@ -206,7 +206,7 @@
       ];
     };
 
-    plugins = [ pkgs-unstable.hyprlandPlugins.hy3 ];
+    # plugins = [ pkgs-unstable.hyprlandPlugins.hy3 ];
   };
 
   home.packages = with pkgs-unstable; [

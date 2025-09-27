@@ -20,9 +20,8 @@
     defaults = {
       # menuExtraClock.Show24Hour = true; # show 24 hour clock
       dock = {
-        autohide = true;
-        autohide-delay = 0.0;
-        tilesize = 48;
+        autohide = false;
+        tilesize = 30;
         persistent-apps = [
           "System/Applications/Launchpad.app"
           "/Applications/Zen Browser.app"

@@ -4,7 +4,7 @@
     enable = true;
     settings = {
       font-family = "JetBrainsMono Nerd Font Mono";
-      theme = "tokyonight";
+      theme = "TokyoNight";
       background-opacity = 0.88;
       background-blur = true;
     };

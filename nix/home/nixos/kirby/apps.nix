@@ -7,7 +7,7 @@
     jetbrains.idea-community-bin
     httpie
     warp-terminal
-
+    microsoft-edge
     xournalpp # PDF Editor
     spotify
     zoom-us

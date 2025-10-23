@@ -31,7 +31,7 @@
     gnumake
     golangci-lint
     spring-boot-cli
-    claude-code
+    # claude-code
     nixfmt-tree
     pre-commit
 

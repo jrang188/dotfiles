@@ -23,7 +23,7 @@
         autohide = false;
         tilesize = 24;
         persistent-apps = [
-          "System/Applications/Launchpad.app"
+          "System/Applications/Apps.app"
           "/Applications/Zen Browser.app"
           "${pkgs-unstable.ghostty-bin}/Applications/Ghostty.app"
           "/Applications/Warp.app"

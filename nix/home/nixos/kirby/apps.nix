@@ -17,7 +17,7 @@
     notion-app-enhanced
     discord-ptb
     ticktick
-    webcord
+    # webcord # electron-36.9.5 EOL error
     vesktop
   ];
 

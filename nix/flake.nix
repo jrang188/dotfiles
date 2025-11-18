@@ -10,9 +10,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+
+    # TODO: Uncomment this and remove the inputs below when mac-app-util is fixed
+    # mac-app-util = {
+    #   url = "github:hraban/mac-app-util";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     mac-app-util = {
       url = "github:hraban/mac-app-util";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.cl-nix-lite.url = "github:r4v3n6101/cl-nix-lite/url-fix";
     };
 
     nixos-wsl = {

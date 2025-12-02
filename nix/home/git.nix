@@ -3,14 +3,15 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
-    userName = "Justin Ang";
-    userEmail = "justinang177@gmail.com";
-    ignores = [ ".DS_Store" ];
-
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Justin Ang";
+        email = "justinang177@gmail.com";
+      };
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
       pull.ff = "only";
     };
+    ignores = [ ".DS_Store" ];
   };
 }

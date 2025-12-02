@@ -28,7 +28,7 @@
   };
 
   programs.git = {
-    extraConfig = {
+    settings = {
       core.sshCommand = "ssh.exe";
     };
   };

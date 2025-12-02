@@ -1,9 +1,9 @@
-{ pkgs-unstable, ... }:
+{ pkgs, ... }:
 {
   imports = [
     ../gui/ghostty.nix
   ];
-  home.packages = with pkgs-unstable; [
+  home.packages = with pkgs; [
     switchaudio-osx
     nowplaying-cli
 
@@ -12,7 +12,7 @@
     cocoapods
   ];
 
-  programs.ghostty.package = pkgs-unstable.ghostty-bin;
+  programs.ghostty.package = pkgs.ghostty-bin;
 
   programs.zsh.oh-my-zsh.plugins = [
     "macos"

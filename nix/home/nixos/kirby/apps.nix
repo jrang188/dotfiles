@@ -1,6 +1,6 @@
-{ pkgs-unstable, ... }:
+{ pkgs, ... }:
 {
-  home.packages = with pkgs-unstable; [
+  home.packages = with pkgs; [
     code-cursor
     vscode
     kitty
@@ -21,5 +21,5 @@
     vesktop
   ];
 
-  programs.ghostty.package = pkgs-unstable.ghostty;
+  programs.ghostty.package = pkgs.ghostty;
 }

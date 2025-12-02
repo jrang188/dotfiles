@@ -1,9 +1,9 @@
-{ pkgs-unstable, ... }:
+{ pkgs, ... }:
 {
   programs.hyprland = {
     enable = true;
-    package = pkgs-unstable.hyprland;
+    package = pkgs.hyprland;
     xwayland.enable = true;
-    portalPackage = pkgs-unstable.xdg-desktop-portal-hyprland;
+    portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
 }

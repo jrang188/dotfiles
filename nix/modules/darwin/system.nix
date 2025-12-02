@@ -1,4 +1,4 @@
-{ pkgs-unstable, ... }:
+{ pkgs, ... }:
 ###################################################################################
 #
 #  macOS's System configuration
@@ -25,7 +25,7 @@
         persistent-apps = [
           "System/Applications/Apps.app"
           "/Applications/Zen Browser.app"
-          "${pkgs-unstable.ghostty-bin}/Applications/Ghostty.app"
+          "${pkgs.ghostty-bin}/Applications/Ghostty.app"
           "/Applications/Warp.app"
           "/Applications/Cursor.app"
           "/Applications/Obsidian.app"
@@ -44,5 +44,5 @@
   # Add ability to used TouchID for sudo authentication
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  fonts.packages = with pkgs-unstable; [ sketchybar-app-font ];
+  fonts.packages = with pkgs; [ sketchybar-app-font ];
 }

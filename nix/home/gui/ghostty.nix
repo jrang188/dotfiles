@@ -1,4 +1,4 @@
-{ pkgs-unstable, ... }:
+{ ... }:
 {
   programs.ghostty = {
     enable = true;

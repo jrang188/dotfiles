@@ -1,4 +1,4 @@
-{ zen-browser, pkgs-unstable, ... }:
+{ zen-browser, ... }:
 {
   imports = [
     zen-browser.homeModules.beta
@@ -25,9 +25,9 @@
       };
     };
     # nativeMessagingHosts = [
-    #   pkgs-unstable.firefoxpwa
-    #   pkgs-unstable._1password-gui
-    #   pkgs-unstable._1password
+    #   pkgs.firefoxpwa
+    #   pkgs._1password-gui
+    #   pkgs._1password
     # ];
   };
 }

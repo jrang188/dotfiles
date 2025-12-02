@@ -1,11 +1,11 @@
-{ pkgs-unstable, ... }:
+{ pkgs, ... }:
 {
   ## MUST SET ZSH AS DEFAULT SHELL
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     autocd = true;
-    package = pkgs-unstable.zsh;
+    package = pkgs.zsh;
 
     oh-my-zsh = {
       enable = true;

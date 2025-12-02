@@ -1,6 +1,6 @@
-{ pkgs-unstable, pkgs, ... }:
+{ pkgs, ... }:
 {
-  home.packages = with pkgs-unstable; [
+  home.packages = with pkgs; [
     nil
     nixfmt-rfc-style
     jq

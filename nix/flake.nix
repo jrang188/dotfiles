@@ -2,11 +2,14 @@
   description = "My Nix System Configurations";
 
   inputs = {
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/*";
-    nixpkgs-unstable.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
+    # Main nixpkgs pinned to unstable
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # Stable references for each system type
+    nixpkgs-stable-nixos.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-darwin-25.11";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     darwin = {
-      url = "https://flakehub.com/f/nix-darwin/nix-darwin/0.2511.*";
+      url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -26,14 +29,14 @@
     };
 
     home-manager = {
-      url = "https://flakehub.com/f/nix-community/home-manager/0.2511.*";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     lanzaboote = {
-      url = "https://flakehub.com/f/nix-community/lanzaboote/0.4.3";
+      url = "github:nix-community/lanzaboote/v0.4.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -46,14 +49,16 @@
       darwinSystem = "aarch64-darwin";
       nixosSystem = "x86_64-linux";
 
-      # Helper function to create unstable packages
-      mkUnstablePkgs =
-        { system, nixpkgs-unstable }:
-        import nixpkgs-unstable {
-          inherit system;
-          config.allowUnfree = true;
-          config.allowBroken = true;
-        };
+      # Helper function to get the correct stable nixpkgs input based on system
+      getStableNixpkgs =
+        system:
+        if system == darwinSystem then
+          inputs.nixpkgs-stable-darwin
+        else
+          inputs.nixpkgs-stable-nixos; # default to nixos stable
+
+      # Helper function to get stable packages (system-specific)
+      mkStablePkgs = { system }: (getStableNixpkgs system).legacyPackages.${system};
 
       # Helper function to create specialArgs
       mkSpecialArgs =
@@ -65,10 +70,8 @@
         inputs
         // {
           inherit username hostname;
-          pkgs-unstable = mkUnstablePkgs {
-            inherit system;
-            inherit (inputs) nixpkgs-unstable;
-          };
+          pkgs = inputs.nixpkgs.legacyPackages.${system};
+          pkgs-stable = mkStablePkgs { inherit system; };
         }
         // extraArgs;
 

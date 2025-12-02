@@ -2,7 +2,6 @@
   username,
   hostname,
   pkgs,
-  pkgs-unstable,
   ...
 }:
 {
@@ -32,7 +31,7 @@
   users.defaultUserShell = pkgs.zsh;
 
   # WSL Utilities (e.g. allows opening web urls)
-  environment.systemPackages = with pkgs-unstable; [
+  environment.systemPackages = with pkgs; [
     wslu
     socat
   ];

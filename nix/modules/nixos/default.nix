@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgs-unstable,
   lib,
   ...
 }:
@@ -21,5 +20,5 @@
     dates = "Daily";
   };
   nix.settings.eval-cores = 0;
-  users.defaultUserShell = pkgs-unstable.zsh;
+  users.defaultUserShell = pkgs.zsh;
 }

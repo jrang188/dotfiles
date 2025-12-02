@@ -1,5 +1,5 @@
 {
-  pkgs-unstable,
+  pkgs,
   ...
 }:
 {
@@ -206,10 +206,10 @@
       ];
     };
 
-    # plugins = [ pkgs-unstable.hyprlandPlugins.hy3 ];
+    # plugins = [ pkgs.hyprlandPlugins.hy3 ];
   };
 
-  home.packages = with pkgs-unstable; [
+  home.packages = with pkgs; [
     hyprshot # screenshot tool
     hyprpolkitagent # polkit agent
     hyprpicker # color picker

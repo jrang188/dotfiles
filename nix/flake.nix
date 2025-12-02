@@ -6,7 +6,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     # Stable references for each system type
     nixpkgs-stable-nixos.url = "github:NixOS/nixpkgs/nixos-25.11";
-    nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-darwin-25.11";
+    nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     darwin = {
       url = "github:LnL7/nix-darwin";
@@ -70,7 +70,6 @@
         inputs
         // {
           inherit username hostname;
-          pkgs = inputs.nixpkgs.legacyPackages.${system};
           pkgs-stable = mkStablePkgs { inherit system; };
         }
         // extraArgs;

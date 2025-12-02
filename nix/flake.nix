@@ -6,10 +6,9 @@
     nixpkgs-unstable.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     darwin = {
-      url = "github:LnL7/nix-darwin/nix-darwin-25.05";
+      url = "https://flakehub.com/f/nix-darwin/nix-darwin/0.2511.*";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
 
     # TODO: Uncomment this and remove the inputs below when mac-app-util is fixed
     # mac-app-util = {
@@ -27,14 +26,14 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "https://flakehub.com/f/nix-community/home-manager/0.2511.*";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
+      url = "https://flakehub.com/f/nix-community/lanzaboote/0.4.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

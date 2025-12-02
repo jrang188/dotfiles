@@ -52,10 +52,7 @@
       # Helper function to get the correct stable nixpkgs input based on system
       getStableNixpkgs =
         system:
-        if system == darwinSystem then
-          inputs.nixpkgs-stable-darwin
-        else
-          inputs.nixpkgs-stable-nixos; # default to nixos stable
+        if system == darwinSystem then inputs.nixpkgs-stable-darwin else inputs.nixpkgs-stable-nixos; # default to nixos stable
 
       # Helper function to get stable packages (system-specific)
       mkStablePkgs = { system }: (getStableNixpkgs system).legacyPackages.${system};

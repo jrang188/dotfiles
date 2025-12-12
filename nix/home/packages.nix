@@ -48,5 +48,6 @@
     lazydocker
     podman
     podman-compose
+    docker
   ];
 }

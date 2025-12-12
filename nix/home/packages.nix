@@ -12,6 +12,7 @@
     cmatrix
     stow
     bat
+    openssl
 
     # Programming Languages
     fnm

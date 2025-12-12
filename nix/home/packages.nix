@@ -46,5 +46,7 @@
     oci-cli
     pulumi-bin
     lazydocker
+    podman
+    podman-compose
   ];
 }

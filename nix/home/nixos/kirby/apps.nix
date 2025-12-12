@@ -19,6 +19,7 @@
     ticktick
     # webcord # electron-36.9.5 EOL error
     vesktop
+    podman-desktop
   ];
 
   programs.ghostty.package = pkgs.ghostty;

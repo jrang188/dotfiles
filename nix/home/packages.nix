@@ -21,7 +21,7 @@
     go
     bun
     rustup
-    temurin-bin
+    temurin-bin # defaults to jdk21 for now
     gradle
     maven
 

@@ -35,7 +35,6 @@
     claude-code
     nixfmt-tree
     pre-commit
-    devenv
 
     # DevOps
     tenv

@@ -13,6 +13,7 @@
     stow
     bat
     openssl
+    direnv
 
     # Programming Languages
     fnm
@@ -35,6 +36,7 @@
     claude-code
     nixfmt-tree
     pre-commit
+    statix
 
     # DevOps
     tenv

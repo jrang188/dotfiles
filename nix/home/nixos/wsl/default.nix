@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   programs.zsh = {
     # Use .exe if using WSL
@@ -32,7 +32,8 @@
       core.sshCommand = "ssh.exe";
     };
   };
-  imports = [
-    ../clang.nix
+
+  home.packages = with pkgs; [
+    gcc # nixos-wsl buggy
   ];
 }

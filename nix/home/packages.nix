@@ -37,6 +37,7 @@
     nixfmt-tree
     pre-commit
     statix
+    devenv
 
     # DevOps
     tenv

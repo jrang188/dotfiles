@@ -9,6 +9,7 @@
     ./nix-ld.nix
     ./1password.nix
     ./hyprland.nix
+    ./podman.nix
   ];
 
   # Auto upgrade nix package and the daemon service.

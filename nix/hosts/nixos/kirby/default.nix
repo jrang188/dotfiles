@@ -31,6 +31,7 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "podman"
     ];
     isNormalUser = true;
   };

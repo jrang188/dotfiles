@@ -49,9 +49,6 @@
     google-cloud-sdk
     oci-cli
     pulumi-bin
-    lazydocker
-    podman
-    podman-compose
-    docker
+    podman-tui
   ];
 }

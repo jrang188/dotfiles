@@ -34,6 +34,6 @@
   };
 
   home.packages = with pkgs; [
-    gcc # nixos-wsl buggy
+    clang
   ];
 }

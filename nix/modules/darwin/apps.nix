@@ -15,6 +15,7 @@ _: {
       "nikitabobko/tap"
       "FelixKratz/formulae"
       "homebrew/services"
+      "grishka/grishka"
     ];
 
     # `brew install`
@@ -23,10 +24,6 @@ _: {
       "borders"
       "lua"
       "kafka"
-      {
-        name = "grishka/grishka/neardrop";
-        args = [ "no-quarantine" ];
-      }
     ];
 
     # `brew install --cask`
@@ -41,6 +38,7 @@ _: {
       "font-sf-pro"
       "orbstack"
       "localsend"
+      "neardrop"
     ];
   };
 }

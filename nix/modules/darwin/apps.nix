@@ -15,7 +15,6 @@ _: {
       "nikitabobko/tap"
       "FelixKratz/formulae"
       "homebrew/services"
-      "grishka/grishka"
     ];
 
     # `brew install`
@@ -38,7 +37,7 @@ _: {
       "font-sf-pro"
       "orbstack"
       "localsend"
-      "neardrop"
+      "grishka/grishka/neardrop"
     ];
   };
 }

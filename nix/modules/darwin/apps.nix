@@ -36,6 +36,7 @@ _: {
       "font-sf-mono"
       "font-sf-pro"
       "orbstack"
+      "localsend"
     ];
   };
 }

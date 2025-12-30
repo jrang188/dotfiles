@@ -10,6 +10,7 @@
     ./1password.nix
     ./hyprland.nix
     ./podman.nix
+    ./localsend.nix
   ];
   nix = {
 

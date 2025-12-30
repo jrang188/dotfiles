@@ -4,7 +4,6 @@
     code-cursor
     vscode
     kitty
-    jetbrains.idea-community-bin
     httpie
     warp-terminal
     microsoft-edge
@@ -12,7 +11,6 @@
     spotify
     zoom-us
     libreoffice
-    localsend
     obsidian
     notion-app-enhanced
     discord-ptb

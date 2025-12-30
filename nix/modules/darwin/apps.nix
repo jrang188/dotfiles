@@ -23,6 +23,10 @@ _: {
       "borders"
       "lua"
       "kafka"
+      {
+        name = "grishka/grishka/neardrop";
+        args = [ "no-quarantine" ];
+      }
     ];
 
     # `brew install --cask`

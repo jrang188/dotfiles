@@ -80,11 +80,13 @@
           extraArgs ? { },
         }:
         {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = mkSpecialArgs { inherit hostname system extraArgs; };
-          home-manager.users.${username} = {
-            imports = homeImports;
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            extraSpecialArgs = mkSpecialArgs { inherit hostname system extraArgs; };
+            users.${username} = {
+              imports = homeImports;
+            };
           };
         };
 

@@ -23,7 +23,7 @@ ubuntu:
 	home-manager switch --flake .#sirwayne
 
 clean:
-	nh clean
+	nh clean all
 	# nix-collect-garbage -d
 
 update:

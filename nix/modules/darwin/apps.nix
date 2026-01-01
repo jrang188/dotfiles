@@ -15,6 +15,7 @@ _: {
       "nikitabobko/tap"
       "FelixKratz/formulae"
       "homebrew/services"
+      "grishka/grishka"
     ];
 
     # `brew install`

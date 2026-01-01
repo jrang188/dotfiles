@@ -13,7 +13,7 @@
     libreoffice
     obsidian
     notion-app-enhanced
-    discord-ptb
+    discord
     ticktick
     # webcord # electron-36.9.5 EOL error
     vesktop

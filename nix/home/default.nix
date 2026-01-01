@@ -34,4 +34,10 @@ in
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # Experiment NH
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+  };
 }

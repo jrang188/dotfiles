@@ -18,6 +18,7 @@
     # webcord # electron-36.9.5 EOL error
     vesktop
     podman-desktop
+    prismLauncher
   ];
 
   programs.ghostty.package = pkgs.ghostty;

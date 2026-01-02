@@ -24,6 +24,7 @@ _: {
       "borders"
       "lua"
       "kafka"
+      "mole"
     ];
 
     # `brew install --cask`

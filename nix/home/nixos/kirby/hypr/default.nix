@@ -201,8 +201,8 @@
 
       # Window Rules
       "windowrule" = [
-        "suppressevent maximize, class:.*" # Prevent apps from auto-maximizing
-        "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0" # Fix XWayland focus issues
+        # "suppressevent maximize, class:.*" # Prevent apps from auto-maximizing
+        # "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0" # Fix XWayland focus issues
       ];
     };
 

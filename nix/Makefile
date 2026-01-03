@@ -11,20 +11,19 @@ default:
 	@echo "  make update  - Update flake inputs"
 
 darwin:
-	nh darwin switch . -H Sterling-MBP
+	nh darwin switch --ask . -H Sterling-MBP
 
 wsl:
-	nh os switch . -H wsl
+	nh os switch --ask . -H wsl
 
 nixos:
-	nh os switch . -H kirby
+	nh os switch --ask . -H kirby
 
 ubuntu:
 	home-manager switch --flake .#sirwayne
 
 clean:
 	nh clean all
-	# nix-collect-garbage -d
 
 update:
 	nix flake update

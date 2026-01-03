@@ -41,7 +41,7 @@ in
     clean = {
       enable = true;
       dates = "weekly";
-      extraArgs = "--keep-since 4d --keep 3";
+      extraArgs = "--keep-since 4d --keep 3 --optimise";
     };
   };
 }

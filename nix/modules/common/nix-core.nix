@@ -13,19 +13,14 @@
     substituters = [
       "https://cache.nixos.org/"
       "https://install.determinate.systems" # keep Determinate’s
-      "https://nix-community.cachix.org/"
-      "https://cachix.cachix.org"
-      "https://hyprland.cachix.org"
-      "https://ghostty.cachix.org"
     ];
 
-    trusted-substituters = [
-      "https://cache.nixos.org/"
-      "https://install.determinate.systems" # keep Determinate’s
+    extra-substituters = [
       "https://nix-community.cachix.org/"
       "https://cachix.cachix.org"
       "https://hyprland.cachix.org"
       "https://ghostty.cachix.org"
+      "https://devenv.cachix.org"
     ];
 
     trusted-public-keys = [
@@ -35,6 +30,7 @@
       "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       "ghostty.cachix.org-1:QB389yTa6gTyneehvqG58y0WnHjQOqgnA+wBnpWWxns="
+      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
     ];
   };
 

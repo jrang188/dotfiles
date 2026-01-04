@@ -1,30 +1,25 @@
-{ pkgs, pkgs-stable, ... }:
+{ pkgs, ... }:
 {
-  home.packages =
-    with pkgs;
-    [
-      code-cursor
-      vscode
-      kitty
-      httpie
-      warp-terminal
-      microsoft-edge
-      xournalpp # PDF Editor
-      spotify
-      zoom-us
-      libreoffice
-      obsidian
-      notion-app-enhanced
-      discord
-      ticktick
-      # webcord # electron-36.9.5 EOL error
-      # vesktop
-      podman-desktop
-      prismlauncher
-    ]
-    ++ [
-      pkgs-stable.vesktop
-    ];
+  home.packages = with pkgs; [
+    code-cursor
+    vscode
+    kitty
+    httpie
+    warp-terminal
+    microsoft-edge
+    xournalpp # PDF Editor
+    spotify
+    zoom-us
+    libreoffice
+    obsidian
+    notion-app-enhanced
+    discord
+    ticktick
+    # webcord # electron-36.9.5 EOL error
+    vesktop
+    podman-desktop
+    prismlauncher
+  ];
 
   programs.ghostty.package = pkgs.ghostty;
 }

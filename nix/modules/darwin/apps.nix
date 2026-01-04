@@ -16,6 +16,7 @@ _: {
       "FelixKratz/formulae"
       "homebrew/services"
       "grishka/grishka"
+      "imshuhao/kdeconnect"
     ];
 
     # `brew install`
@@ -40,6 +41,7 @@ _: {
       "orbstack"
       "localsend"
       "grishka/grishka/neardrop"
+      "kdeconnect"
     ];
   };
 }

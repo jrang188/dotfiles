@@ -3,13 +3,13 @@
 
   inputs = {
     # Main nixpkgs pinned to unstable
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     # Stable references for each system type
-    nixpkgs-stable-nixos.url = "https://flakehub.com/f/NixOS/nixpkgs/*";
-    nixpkgs-stable-darwin.url = "https://flakehub.com/f/NixOS/nixpkgs/*";
+    nixpkgs-stable-nixos.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     darwin = {
-      url = "https://flakehub.com/f/nix-darwin/nix-darwin/0.1";
+      url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -29,14 +29,14 @@
     };
 
     home-manager = {
-      url = "https://flakehub.com/f/nix-community/home-manager/0.1";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     lanzaboote = {
-      url = "https://flakehub.com/f/nix-community/lanzaboote/1.0.0";
+      url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

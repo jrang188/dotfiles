@@ -4,8 +4,12 @@
     enable = true;
     package = pkgs.hyprpaper;
     settings = {
-      preload = "~/dotfiles/wallpapers/spiderverse.jpg";
-      wallpaper = ", ~/dotfiles/wallpapers/spiderverse.jpg";
+      wallpaper = [
+        {
+          "monitor" = "DP-2";
+          "path" = "~/dotfiles/wallpapers/spiderverse.jpg";
+        }
+      ];
     };
   };
 }

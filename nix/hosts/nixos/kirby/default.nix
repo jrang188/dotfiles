@@ -5,6 +5,7 @@
 {
   username,
   hostname,
+  pkgs,
   ...
 }:
 
@@ -56,7 +57,12 @@
   };
 
   # Enable networking
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+    plugins = with pkgs; [
+      networkmanager-openvpn # openvpn manager
+    ];
+  };
 
   # Set your time zone.
   time.timeZone = "America/Vancouver";
@@ -75,8 +81,14 @@
     # services.xserver.desktopManager.gnome.enable = true;
 
     # Enable the KDE Plastma Desktop Environment.
-    displayManager.sddm.enable = true;
     desktopManager.plasma6.enable = true;
+
+    # Enable the COSMIC login manager
+    displayManager.cosmic-greeter.enable = true;
+
+    # Enable the COSMIC desktop environment
+    desktopManager.cosmic.enable = true;
+    system76-scheduler.enable = true;
 
     # Configure keymap in X11
     xserver.xkb = {
@@ -122,8 +134,10 @@
     };
   };
 
-  programs.kdeconnect.enable = true;
-  programs.firefox.enable = true;
+  programs = {
+    kdeconnect.enable = true;
+    firefox.enable = true;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

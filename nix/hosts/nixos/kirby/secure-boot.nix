@@ -3,7 +3,6 @@
 {
   environment.systemPackages = with pkgs; [
     sbctl
-    niv
   ];
 
   # Lanzaboote currently replaces the systemd-boot module.
@@ -15,5 +14,7 @@
   boot.lanzaboote = {
     enable = true;
     pkiBundle = "/var/lib/sbctl";
+    autoGenerateKeys.enable = true;
+    autoEnrollKeys.enable = true;
   };
 }

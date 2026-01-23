@@ -213,13 +213,18 @@
     hyprshot # screenshot tool
     hyprpolkitagent # polkit agent
     hyprpicker # color picker
-    hyprpanel # menu bar (too much hassle to rice waybar)
     rofi # temporary since i want to try walker
 
     # qt wayland library
     qt5.qtwayland
     qt6.qtwayland
   ];
+
+  # ashell (replacing hyprpanel)
+  programs.ashell = {
+    enable = true;
+    systemd.enable = true;
+  };
 
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 }

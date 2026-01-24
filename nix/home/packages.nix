@@ -1,56 +1,68 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    nil
-    nixfmt
-    nixfmt-tree
-    jq
-    fzf
-    fd
-    ripgrep
-    lazygit
-    tree
-    cmatrix
-    stow
-    bat
-    openssl
-    direnv
+    # ============================================
+    # Nix & Editor Tools
+    # ============================================
+    nil              # Nix language server
+    nixfmt           # Nix formatter
+    nixfmt-tree      # Nix formatter (tree-sitter based)
+    statix           # Nix linter
 
-    # Programming Languages
-    fnm
-    uv
-    python3
-    go
-    bun
-    rustup
-    temurin-bin # defaults to jdk21 for now
-    gradle
-    maven
+    # ============================================
+    # General Utilities
+    # ============================================
+    jq               # JSON processor
+    fzf              # Fuzzy finder
+    fd               # Fast find alternative
+    ripgrep          # Fast grep alternative
+    bat              # Cat with syntax highlighting
+    tree             # Directory tree viewer
+    cmatrix          # Matrix-style terminal animation
+    stow             # Symlink manager
+    openssl          # SSL/TLS toolkit
+    direnv           # Environment variable manager
+    lazygit          # Git TUI
 
-    # Dev Tools
-    gh
-    stripe-cli
-    _1password-cli
-    gnumake
-    golangci-lint
-    spring-boot-cli
-    claude-code
-    nixfmt-tree
-    pre-commit
-    statix
-    devenv
-    codecrafters-cli
+    # ============================================
+    # Programming Languages & Runtimes
+    # ============================================
+    fnm              # Fast Node.js version manager
+    uv               # Fast Python package installer
+    python3          # Python interpreter
+    go               # Go programming language
+    bun              # Fast JavaScript runtime
+    rustup           # Rust toolchain installer
+    temurin-bin      # OpenJDK (defaults to JDK 21)
+    gradle           # Java build tool
+    maven            # Java build tool
 
-    # DevOps
-    tenv
-    kubernetes-helm
-    kubectl
-    kubectx
-    k9s
-    awscli2
-    google-cloud-sdk
-    oci-cli
-    pulumi-bin
-    podman-tui
+    # ============================================
+    # Development Tools
+    # ============================================
+    gh               # GitHub CLI
+    stripe-cli       # Stripe CLI
+    _1password-cli   # 1Password CLI
+    gnumake          # Build automation tool
+    golangci-lint    # Go linter
+    spring-boot-cli  # Spring Boot CLI
+    claude-code      # Claude AI coding assistant
+    pre-commit       # Git hooks framework
+    devenv           # Development environment manager
+    codecrafters-cli # Codecrafters CLI
+
+    # ============================================
+    # DevOps & Cloud Tools
+    # ============================================
+    tenv              # Terraform version manager
+    kubernetes-helm   # Kubernetes package manager
+    kubectl           # Kubernetes CLI
+    kubectx           # Kubernetes context switcher
+    k9s               # Kubernetes TUI
+    awscli2           # AWS CLI
+    google-cloud-sdk  # Google Cloud SDK
+    oci-cli           # Oracle Cloud Infrastructure CLI
+    pulumi-bin        # Infrastructure as code tool
+    podman-tui        # Podman TUI
   ];
 }

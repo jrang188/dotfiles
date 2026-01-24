@@ -1,8 +1,15 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    wl-clipboard # Implements wl-copy and wl-paste
-    chntpw
-    clang # macos have clang installed by default
+    # ============================================
+    # Wayland & System Tools
+    # ============================================
+    wl-clipboard     # Wayland clipboard utilities (wl-copy, wl-paste)
+
+    # ============================================
+    # System Utilities
+    # ============================================
+    chntpw           # Windows registry editor
+    clang            # C/C++ compiler (macOS has clang by default, but needed on NixOS)
   ];
 }

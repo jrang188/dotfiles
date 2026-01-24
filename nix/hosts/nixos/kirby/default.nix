@@ -45,7 +45,7 @@
   nix.settings.trusted-users = [ username ];
 
   # Auto system update (using flake)
-  # Weekly updates are more reasonable than daily
+  # Twice weekly updates (Monday and Thursday)
   system.autoUpgrade = {
     enable = true;
     flake = "/home/${username}/dotfiles/nix#kirby";
@@ -55,7 +55,7 @@
       "--update-input"
       "nixpkgs-darwin"
     ];
-    dates = "weekly"; # Runs every Monday at 04:00
+    dates = "Mon,Thu 04:00"; # Runs every Monday and Thursday at 04:00
     allowReboot = false;
   };
 

@@ -162,6 +162,41 @@ Regular maintenance tasks:
 4. Check for security updates
 5. Review and organize new packages by category
 
+## 🔍 Code Quality
+
+### Pre-commit Hooks
+
+This repository uses [pre-commit](https://pre-commit.com/) to ensure code quality:
+
+```bash
+# Install pre-commit hooks (run once)
+pre-commit install
+
+# Run hooks manually on all files
+pre-commit run --all-files
+
+# Run hooks on staged files only (automatic on commit)
+pre-commit run
+```
+
+The pre-commit hooks will:
+- **Format** Nix files with `nixfmt-tree`
+- **Lint** Nix files with `statix`
+- Check for trailing whitespace and fix end of files
+- Validate YAML and JSON files
+
+### Manual Formatting
+
+You can also format files manually:
+
+```bash
+# Format all Nix files
+nix fmt
+
+# Or format specific files
+nixfmt-tree path/to/file.nix
+```
+
 ## 📁 Package Organization
 
 Packages are organized by category for easy maintenance:

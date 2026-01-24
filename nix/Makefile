@@ -1,5 +1,5 @@
 # Careful about copy/pasting, Makefiles want tabs!
-.PHONY: default darwin nixos ubuntu clean update
+.PHONY: default darwin nixos ubuntu clean update lint format fmt
 
 default:
 	@echo "Please specify a target:"
@@ -9,6 +9,9 @@ default:
 	@echo "  make ubuntu  - Rebuild Ubuntu Home Manager configuration"
 	@echo "  make clean   - Collect garbage"
 	@echo "  make update  - Update flake inputs"
+	@echo "  make lint    - Lint Nix files with statix"
+	@echo "  make format  - Format Nix files with nixfmt-tree"
+	@echo "  make fmt     - Alias for format"
 
 darwin:
 	nh darwin switch --ask . -H Sterling-MBP
@@ -27,3 +30,11 @@ clean:
 
 update:
 	nix flake update
+
+lint:
+	statix check .
+
+format:
+	nix fmt
+
+fmt: format

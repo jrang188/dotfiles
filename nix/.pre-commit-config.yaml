@@ -1,0 +1,50 @@
+# Pre-commit hooks for Nix configuration
+# 
+# Installation:
+#   pre-commit install
+#
+# Run manually:
+#   pre-commit run --all-files
+#
+# Note: Requires nixfmt-tree and statix to be in your PATH
+# These are available via home.packages in this config
+
+repos:
+  # Nix formatting with nixfmt-tree (uses system-installed tool)
+  - repo: local
+    hooks:
+      - id: nixfmt-tree
+        name: Format Nix files with nixfmt-tree
+        entry: nixfmt-tree
+        language: system
+        types: [nix]
+        require_serial: false
+        pass_filenames: true
+
+  # Nix linting with statix (uses system-installed tool)
+  - repo: local
+    hooks:
+      - id: statix-check
+        name: Lint Nix files with statix
+        entry: statix check
+        language: system
+        types: [nix]
+        pass_filenames: true
+        args: ["--"]
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+        types: [nix]
+      - id: end-of-file-fixer
+        name: Fix end of files
+        types: [nix]
+      - id: check-yaml
+        name: Check YAML files
+        exclude: ^(flake.lock|.*\.lock)$
+      - id: check-json
+        name: Check JSON files
+        exclude: ^(flake.lock|.*\.lock)$

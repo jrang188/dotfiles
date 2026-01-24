@@ -4,9 +4,9 @@
     ./apps.nix
     ./packages.nix
     ./zen-browser.nix
-    ./hypr
-    ./rofi
+    ./hyprland.nix
+    ./rofi.nix
     ../../gui
-    ./ashell
+    ./ashell.nix
   ];
 }

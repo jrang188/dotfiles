@@ -24,11 +24,11 @@
       sidebar-mode = false;
 
       # Display characters (Nerd Fonts)
-      display-drun = " ";
-      display-run = " ";
-      display-window = " ";
-      display-emoji = " ";
-      display-calc = " ";
+      display-drun = "  ";
+      display-run = "  ";
+      display-window = " ";
+      display-emoji = " ";
+      display-calc = " ";
 
       # Vim Keybindings
       kb-row-up = "Up,Control+k";

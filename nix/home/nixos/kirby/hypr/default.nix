@@ -202,7 +202,6 @@
     hyprshot # screenshot tool
     hyprpolkitagent # polkit agent
     hyprpicker # color picker
-    rofi
 
     # qt wayland library
     qt5.qtwayland

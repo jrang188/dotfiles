@@ -1,10 +1,20 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
+{
   programs.rofi = {
     enable = true;
     # Use the absolute Nix store path for the terminal
     terminal = "${lib.getExe pkgs.ghostty}";
-    modes = [ "drun" "window" "run" "emoji" "calc" ];
-    plugins = with pkgs; [ rofi-calc rofi-emoji ];
+    modes = [
+      "drun"
+      "window"
+      "run"
+      "emoji"
+      "calc"
+    ];
+    plugins = with pkgs; [
+      rofi-calc
+      rofi-emoji
+    ];
     extraConfig = {
       icon-theme = "Papirus-Dark";
       show-icons = true;

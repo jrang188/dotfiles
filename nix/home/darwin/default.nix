@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   imports = [ ../gui/ghostty.nix ];
   home.packages = with pkgs; [
     switchaudio-osx

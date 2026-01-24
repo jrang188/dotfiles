@@ -33,8 +33,7 @@
           "/Applications/Spotify.app"
           "/System/Applications/System Settings.app"
         ];
-        wvous-br-corner =
-          1; # Avoid triggering quick note when hovering at bottom right corner
+        wvous-br-corner = 1; # Avoid triggering quick note when hovering at bottom right corner
         show-recents = false;
       };
       NSGlobalDomain.KeyRepeat = 2;

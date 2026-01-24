@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   ## MUST SET ZSH AS DEFAULT SHELL
   programs.zsh = {
     enable = true;
@@ -8,8 +9,17 @@
 
     oh-my-zsh = {
       enable = true;
-      plugins =
-        [ "git" "fnm" "bun" "kubectl" "helm" "terraform" "aws" "uv" "direnv" ];
+      plugins = [
+        "git"
+        "fnm"
+        "bun"
+        "kubectl"
+        "helm"
+        "terraform"
+        "aws"
+        "uv"
+        "direnv"
+      ];
     };
 
     syntaxHighlighting.enable = true;

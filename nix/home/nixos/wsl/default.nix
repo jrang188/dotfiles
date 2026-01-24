@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   programs.zsh = {
     # Use .exe if using WSL
     shellAliases = {
@@ -26,7 +27,11 @@
     '';
   };
 
-  programs.git = { settings = { core.sshCommand = "ssh.exe"; }; };
+  programs.git = {
+    settings = {
+      core.sshCommand = "ssh.exe";
+    };
+  };
 
   home.packages = with pkgs; [ clang ];
 }

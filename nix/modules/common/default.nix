@@ -1,1 +1,7 @@
-{ ... }: { imports = [ ./apps.nix ./nix-core.nix ]; }
+{ ... }:
+{
+  imports = [
+    ./apps.nix
+    ./nix-core.nix
+  ];
+}

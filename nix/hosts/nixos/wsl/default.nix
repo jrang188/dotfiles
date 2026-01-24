@@ -1,4 +1,11 @@
-{ username, hostname, pkgs, lib, ... }: {
+{
+  username,
+  hostname,
+  pkgs,
+  lib,
+  ...
+}:
+{
   imports = [ ../../../modules/common ];
   #############################################################
   #
@@ -23,9 +30,16 @@
   users.defaultUserShell = pkgs.zsh;
 
   # WSL Utilities (e.g. allows opening web urls)
-  environment.systemPackages = with pkgs; [ wslu socat ];
+  environment.systemPackages = with pkgs; [
+    wslu
+    socat
+  ];
 
-  programs.nix-ld.libraries = with pkgs; [ stdenv.cc.cc zlib openssl ];
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    openssl
+  ];
 
   nix = {
     settings = {

@@ -1,5 +1,11 @@
-{ pkgs, ... }: {
-  imports = [ ./hypridle.nix ./hyprlock.nix ./hyprpaper.nix ./hyprsunset.nix ];
+{ pkgs, ... }:
+{
+  imports = [
+    ./hypridle.nix
+    ./hyprlock.nix
+    ./hyprpaper.nix
+    ./hyprsunset.nix
+  ];
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -84,7 +90,9 @@
         "pseudotile" = true;
         "preserve_split" = true;
       };
-      "master" = { "new_status" = "master"; };
+      "master" = {
+        "new_status" = "master";
+      };
       "misc" = {
         "force_default_wallpaper" = -1;
         "disable_hyprland_logo" = true;

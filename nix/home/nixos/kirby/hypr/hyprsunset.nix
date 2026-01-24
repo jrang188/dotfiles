@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   services.hyprsunset = {
     enable = true;
     package = pkgs.hyprsunset;

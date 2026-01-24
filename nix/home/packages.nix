@@ -39,6 +39,7 @@
     pre-commit
     statix
     devenv
+    codecrafters-cli
 
     # DevOps
     tenv

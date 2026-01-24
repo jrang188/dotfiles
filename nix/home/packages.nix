@@ -3,6 +3,7 @@
   home.packages = with pkgs; [
     nil
     nixfmt
+    nixfmt-tree
     jq
     fzf
     fd

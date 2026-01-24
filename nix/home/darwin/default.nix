@@ -5,12 +5,17 @@
   ];
   
   home.packages = with pkgs; [
-    switchaudio-osx
-    nowplaying-cli
+    # ============================================
+    # macOS Audio Tools
+    # ============================================
+    switchaudio-osx  # macOS audio switcher
+    nowplaying-cli   # Now playing CLI
 
-    # Mobile App Dev
-    flutter
-    cocoapods
+    # ============================================
+    # Mobile App Development
+    # ============================================
+    flutter          # Flutter SDK
+    cocoapods        # CocoaPods dependency manager
   ];
 
   # Override ghostty package for Darwin (use ghostty-bin)

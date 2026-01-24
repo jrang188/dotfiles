@@ -44,8 +44,20 @@
 
   nix.settings.trusted-users = [ username ];
 
-  # Auto system update
-  system.autoUpgrade.enable = true;
+  # Auto system update (using flake)
+  # Weekly updates are more reasonable than daily
+  system.autoUpgrade = {
+    enable = true;
+    flake = "/home/${username}/dotfiles/nix#kirby";
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "--update-input"
+      "nixpkgs-darwin"
+    ];
+    dates = "weekly"; # Runs every Monday at 04:00
+    allowReboot = false;
+  };
 
   # Set your time zone.
   time.timeZone = "America/Vancouver";

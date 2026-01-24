@@ -2,15 +2,17 @@
   description = "My Nix System Configurations";
 
   inputs = {
-    # Main nixpkgs pinned to unstable
+    # Main nixpkgs for NixOS (requires NixOS tests)
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # Darwin-specific nixpkgs (faster, no NixOS tests required)
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     # Stable references for each system type
     nixpkgs-stable-nixos.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     darwin = {
       url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
     # TODO: Uncomment this and remove the inputs below when mac-app-util is fixed
@@ -32,6 +34,11 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Home Manager for Darwin uses Darwin-specific nixpkgs
+    home-manager-darwin = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
@@ -42,7 +49,7 @@
   };
 
   outputs =
-    inputs@{ self, nixpkgs, ... }:
+    inputs@{ self, ... }:
     let
       # Common variables
       username = "sirwayne";
@@ -99,7 +106,7 @@
           homeImports,
           extraArgs ? { },
         }:
-        nixpkgs.lib.nixosSystem {
+        inputs.nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = mkSpecialArgs { inherit hostname system extraArgs; };
           modules = modules ++ [
@@ -134,7 +141,7 @@
           modules = modules ++ [
             { nix.enable = false; } # We want to use determinate nix
             inputs.mac-app-util.darwinModules.default
-            inputs.home-manager.darwinModules.home-manager
+            inputs.home-manager-darwin.darwinModules.home-manager
             (mkHomeManagerConfig {
               inherit hostname;
               system = darwinSystem;
@@ -212,8 +219,8 @@
       };
 
       formatter = {
-        ${darwinSystem} = nixpkgs.legacyPackages.${darwinSystem}.nixfmt-tree;
-        ${nixosSystem} = nixpkgs.legacyPackages.${nixosSystem}.nixfmt-tree;
+        ${darwinSystem} = inputs.nixpkgs-darwin.legacyPackages.${darwinSystem}.nixfmt-tree;
+        ${nixosSystem} = inputs.nixpkgs.legacyPackages.${nixosSystem}.nixfmt-tree;
       };
     };
 }

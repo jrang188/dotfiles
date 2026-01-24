@@ -3,7 +3,7 @@
     enable = true;
     # Use the absolute Nix store path for the terminal
     terminal = "${lib.getExe pkgs.ghostty}";
-    modes = [ "drun" "window" "run" "emoji" ];
+    modes = [ "drun" "window" "run" "emoji" "calc" ];
     plugins = with pkgs; [ rofi-calc rofi-emoji ];
     extraConfig = {
       icon-theme = "Papirus-Dark";
@@ -17,7 +17,8 @@
       display-drun = " ";
       display-run = " ";
       display-window = " ";
-      display-emoji = " ";
+      display-emoji = " ";
+      display-calc = " ";
 
       # Vim Keybindings
       kb-row-up = "Up,Control+k";

@@ -18,6 +18,7 @@
     vesktop
     podman-desktop
     prismlauncher
+    blueman
   ];
 
   programs.ghostty.package = pkgs.ghostty;

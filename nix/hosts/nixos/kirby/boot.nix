@@ -1,4 +1,4 @@
-{
+_: {
   # Bootloader configuration
   # Note: secure-boot.nix may override some of these settings
   boot.loader = {

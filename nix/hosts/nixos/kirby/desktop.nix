@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+_: {
   # Desktop environment and related services
   services = {
     # Enable the X11 windowing system.

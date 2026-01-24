@@ -223,46 +223,6 @@
   # Hyprland environment variables
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  # Hypridle - idle management daemon
-  services.hypridle = {
-    enable = true;
-    package = pkgs.hypridle;
-    settings = {
-      general = {
-        lock_cmd = "pidof hyprlock || hyprlock"; # avoid starting multiple hyprlock instances.
-        before_sleep_cmd = "loginctl lock-session"; # lock before suspend.
-        after_sleep_cmd = "hyprctl dispatch dpms on"; # to avoid having to press a key twice to turn on the display.
-      };
-
-      # turn off keyboard backlight, comment out this section if you dont have a keyboard backlight.
-      listener = [
-        {
-          timeout = 150; # 2.5min.
-          on-timeout = "brightnessctl -s set 10"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
-          on-resume = "brightnessctl -r"; # monitor backlight restore.
-        }
-        {
-          timeout = 150; # 2.5min.
-          on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0"; # turn off keyboard backlight.
-          on-resume = "brightnessctl -rd rgb:kbd_backlight"; # turn on keyboard backlight.
-        }
-        {
-          timeout = 300; # 5min
-          on-timeout = "loginctl lock-session"; # lock screen when timeout has passed
-        }
-        {
-          timeout = 330; # 5.5min
-          on-timeout = "hyprctl dispatch dpms off"; # screen off when timeout has passed
-          on-resume = "hyprctl dispatch dpms on && brightnessctl -r"; # screen on when activity is detected after timeout has fired.
-        }
-        {
-          timeout = 1800; # 30min
-          on-timeout = "systemctl suspend"; # suspend pc
-        }
-      ];
-    };
-  };
-
   # Hyprlock - screen locker
   programs.hyprlock = {
     enable = true;
@@ -270,7 +230,7 @@
     settings = {
       background = {
         monitor = "";
-        path = "/home/sirwayne/Pictures/wallpaper.jpg";
+        path = "~/dotfiles/wallpapers/spiderverse.jpg";
         color = "rgba(25, 20, 20, 1.0)";
         blur_passes = 2;
       };
@@ -319,38 +279,80 @@
     };
   };
 
-  # Hyprpaper - wallpaper daemon
-  services.hyprpaper = {
-    enable = true;
-    package = pkgs.hyprpaper;
-    settings = {
-      wallpaper = [
-        {
-          "monitor" = "DP-2";
-          "path" = "~/dotfiles/wallpapers/spiderverse.jpg";
-        }
-      ];
+  services = {
+    # Hypridle - idle management daemon
+    hypridle = {
+      enable = true;
+      package = pkgs.hypridle;
+      settings = {
+        general = {
+          lock_cmd = "pidof hyprlock || hyprlock"; # avoid starting multiple hyprlock instances.
+          before_sleep_cmd = "loginctl lock-session"; # lock before suspend.
+          after_sleep_cmd = "hyprctl dispatch dpms on"; # to avoid having to press a key twice to turn on the display.
+        };
+
+        # turn off keyboard backlight, comment out this section if you dont have a keyboard backlight.
+        listener = [
+          {
+            timeout = 150; # 2.5min.
+            on-timeout = "brightnessctl -s set 10"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
+            on-resume = "brightnessctl -r"; # monitor backlight restore.
+          }
+          {
+            timeout = 150; # 2.5min.
+            on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0"; # turn off keyboard backlight.
+            on-resume = "brightnessctl -rd rgb:kbd_backlight"; # turn on keyboard backlight.
+          }
+          {
+            timeout = 300; # 5min
+            on-timeout = "loginctl lock-session"; # lock screen when timeout has passed
+          }
+          {
+            timeout = 330; # 5.5min
+            on-timeout = "hyprctl dispatch dpms off"; # screen off when timeout has passed
+            on-resume = "hyprctl dispatch dpms on && brightnessctl -r"; # screen on when activity is detected after timeout has fired.
+          }
+          {
+            timeout = 1800; # 30min
+            on-timeout = "systemctl suspend"; # suspend pc
+          }
+        ];
+      };
     };
-  };
 
-  # Hyprsunset - blue light filter
-  services.hyprsunset = {
-    enable = true;
-    package = pkgs.hyprsunset;
-    settings = {
-      max-gamma = 150;
+    # Hyprpaper - wallpaper daemon
+    hyprpaper = {
+      enable = true;
+      package = pkgs.hyprpaper;
+      settings = {
+        wallpaper = [
+          {
+            "monitor" = "DP-2";
+            "path" = "~/dotfiles/wallpapers/spiderverse.jpg";
+          }
+        ];
+      };
+    };
 
-      profile = [
-        {
-          time = "7:00";
-          identity = true;
-        }
-        {
-          time = "18:00";
-          temperature = 4500;
-          gamma = 1.2;
-        }
-      ];
+    # Hyprsunset - blue light filter
+    hyprsunset = {
+      enable = true;
+      package = pkgs.hyprsunset;
+      settings = {
+        max-gamma = 150;
+
+        profile = [
+          {
+            time = "7:00";
+            identity = true;
+          }
+          {
+            time = "18:00";
+            temperature = 4500;
+            gamma = 1.2;
+          }
+        ];
+      };
     };
   };
 }

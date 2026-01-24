@@ -9,7 +9,7 @@
     ./rofi.nix
     ./ashell.nix
   ];
-  
+
   # Override ghostty package for NixOS (use regular ghostty)
   programs.ghostty.package = pkgs.ghostty;
 }

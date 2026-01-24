@@ -5,7 +5,6 @@
 {
   username,
   hostname,
-  pkgs,
   ...
 }:
 

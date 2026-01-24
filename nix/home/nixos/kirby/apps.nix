@@ -4,60 +4,60 @@
     # ============================================
     # Code Editors & IDEs
     # ============================================
-    code-cursor      # Cursor IDE
-    vscode           # Visual Studio Code
+    code-cursor # Cursor IDE
+    vscode # Visual Studio Code
 
     # ============================================
     # Terminals
     # ============================================
-    kitty            # Terminal emulator
-    warp-terminal    # Modern terminal
+    kitty # Terminal emulator
+    warp-terminal # Modern terminal
 
     # ============================================
     # Development & Productivity Tools
     # ============================================
-    httpie           # HTTP client
-    obsidian         # Note-taking app
+    httpie # HTTP client
+    obsidian # Note-taking app
     notion-app-enhanced # Notion client
-    ticktick         # Task management
+    ticktick # Task management
 
     # ============================================
     # Communication & Collaboration
     # ============================================
-    discord          # Discord client
-    webcord          # Discord web client
-    vesktop          # Discord client (Vesktop)
-    zoom-us          # Video conferencing
+    discord # Discord client
+    webcord # Discord web client
+    vesktop # Discord client (Vesktop)
+    zoom-us # Video conferencing
 
     # ============================================
     # Media & Entertainment
     # ============================================
-    spotify          # Music streaming
+    spotify # Music streaming
 
     # ============================================
     # Office & Productivity
     # ============================================
-    libreoffice      # Office suite
-    xournalpp        # PDF editor
+    libreoffice # Office suite
+    xournalpp # PDF editor
 
     # ============================================
     # Browsers
     # ============================================
-    microsoft-edge   # Microsoft Edge browser
+    microsoft-edge # Microsoft Edge browser
 
     # ============================================
     # Container & Virtualization
     # ============================================
-    podman-desktop   # Podman desktop client
+    podman-desktop # Podman desktop client
 
     # ============================================
     # Gaming & Entertainment
     # ============================================
-    prismlauncher    # Minecraft launcher
+    prismlauncher # Minecraft launcher
 
     # ============================================
     # System Tools
     # ============================================
-    blueman          # Bluetooth manager
+    blueman # Bluetooth manager
   ];
 }

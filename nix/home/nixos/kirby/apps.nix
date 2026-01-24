@@ -21,6 +21,4 @@
     prismlauncher
     blueman
   ];
-
-  programs.ghostty.package = pkgs.ghostty;
 }

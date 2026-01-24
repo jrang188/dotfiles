@@ -1,4 +1,8 @@
-_: {
+{ pkgs, ... }:
+{
+  # Reusable GUI configuration
+  # This provides a base ghostty configuration that can be overridden by host-specific configs
+  
   programs.ghostty = {
     enable = true;
     settings = {

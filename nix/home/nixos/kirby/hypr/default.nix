@@ -18,12 +18,17 @@
       "$menu" = "rofi -show drun -show-icons";
       "$browser" = "zen";
       "$1pass" = "1password";
+      "$discord" = "vesktop";
+      "$spotify" = "spotify";
+      "$ticktick" = "ticktick";
+      "$obsidian" = "obsidian";
 
       # Autostart
       "exec-once" = [
         "hyprpanel"
         "systemctl --user start hyprpolkitagent"
         "1password --silent" # 1password in the background
+        "kdeconnect-indicator" # KDE Connect indicator
       ];
 
       "monitor" = [
@@ -124,6 +129,10 @@
         "$mainMod, backslash, togglesplit" # Toggle split direction (dwindle layout)
         "$mainMod, B, exec, $browser" # Open browser
         "$superShift, 1, exec, $1pass" # Open 1Password
+        "$superShift, D, exec, $discord" # Open Discord
+        "$superShift, S, exec, $spotify" # Open Spotify
+        "$superShift, T, exec, $ticktick" # Open TickTick
+        "$superShift, O, exec, $obsidian" # Open Obsidian
 
         # Screenshot shortcuts
         "$superShift, w, exec, hyprshot -m window" # Screenshot window

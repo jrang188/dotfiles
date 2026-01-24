@@ -1,10 +1,4 @@
-{ ... }:
-{
-  imports = [
-    ./apps.nix
-    ./packages.nix
-    ./zen-browser.nix
-    ./hypr
-    ../../gui
-  ];
+{ ... }: {
+  imports =
+    [ ./apps.nix ./packages.nix ./zen-browser.nix ./hypr ./rofi ../../gui ];
 }

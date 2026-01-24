@@ -1,9 +1,5 @@
-{ username, hostname, ... }:
-{
-  imports = [
-    ../../../modules/common
-    ../../../modules/darwin
-  ];
+{ username, hostname, ... }: {
+  imports = [ ../../../modules/common ../../../modules/darwin ];
   #############################################################
   #
   #  Host & Users configuration

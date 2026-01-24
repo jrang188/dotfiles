@@ -5,16 +5,10 @@ let
       "/Users/${username}"
     else
       "/home/${username}";
-in
-{
+in {
   # import sub modules
-  imports = [
-    ./zsh.nix
-    ./neovim.nix
-    ./git.nix
-    ./oh-my-posh.nix
-    ./packages.nix
-  ];
+  imports =
+    [ ./zsh.nix ./neovim.nix ./git.nix ./oh-my-posh.nix ./packages.nix ];
 
   # Home Manager needs a bit of information about you and the
   # paths it should manage.

@@ -202,7 +202,7 @@
     hyprshot # screenshot tool
     hyprpolkitagent # polkit agent
     hyprpicker # color picker
-    rofi # temporary since i want to try walker
+    rofi
 
     # qt wayland library
     qt5.qtwayland

@@ -1,9 +1,5 @@
-{ pkgs, ... }:
-{
-  imports = [
-    ./apps.nix
-    ./system.nix
-  ];
+{ pkgs, ... }: {
+  imports = [ ./apps.nix ./system.nix ];
 
   nix.optimise = {
     interval = {

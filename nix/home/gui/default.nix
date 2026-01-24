@@ -1,5 +1,1 @@
-_: {
-  imports = [
-    ./ghostty.nix
-  ];
-}
+_: { imports = [ ./ghostty.nix ]; }

@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   programs.hyprlock = {
     enable = true;
     package = pkgs.hyprlock;
@@ -14,7 +13,7 @@
       label = [
         {
           monitor = "";
-          text = "cmd[update:1000] echo \"<b>$(date +'%H:%M:%S')</b>\"";
+          text = ''cmd[update:1000] echo "<b>$(date +'%H:%M:%S')</b>"'';
           color = "rgb(143, 143, 143)";
           font_size = 64;
           font_family = "JetBrains Mono Nerd Font";
@@ -24,7 +23,7 @@
         }
         {
           monitor = "";
-          text = "cmd[update:1000] echo \"$(date +'%A, %B %d, %Y')\"";
+          text = ''cmd[update:1000] echo "$(date +'%A, %B %d, %Y')"'';
           color = "rgb(143, 143, 143)";
           font_size = 24;
           font_family = "JetBrains Mono Nerd Font";

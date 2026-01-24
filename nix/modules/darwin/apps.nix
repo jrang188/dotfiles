@@ -20,13 +20,7 @@ _: {
     ];
 
     # `brew install`
-    brews = [
-      "sketchybar"
-      "borders"
-      "lua"
-      "kafka"
-      "mole"
-    ];
+    brews = [ "sketchybar" "borders" "lua" "kafka" "mole" ];
 
     # `brew install --cask`
     casks = [

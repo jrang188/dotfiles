@@ -2,12 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{
-  username,
-  hostname,
-  pkgs,
-  ...
-}:
+{ username, hostname, pkgs, ... }:
 
 {
   imports = [
@@ -29,11 +24,7 @@
   users.users.${username} = {
     home = "/home/${username}";
     description = username;
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "podman"
-    ];
+    extraGroups = [ "networkmanager" "wheel" "podman" ];
     isNormalUser = true;
   };
 
@@ -59,9 +50,10 @@
   # Enable networking
   networking.networkmanager = {
     enable = true;
-    plugins = with pkgs; [
-      networkmanager-openvpn # openvpn manager
-    ];
+    plugins = with pkgs;
+      [
+        networkmanager-openvpn # openvpn manager
+      ];
   };
 
   # Set your time zone.

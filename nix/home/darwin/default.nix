@@ -1,8 +1,5 @@
-{ pkgs, ... }:
-{
-  imports = [
-    ../gui/ghostty.nix
-  ];
+{ pkgs, ... }: {
+  imports = [ ../gui/ghostty.nix ];
   home.packages = with pkgs; [
     switchaudio-osx
     nowplaying-cli
@@ -14,7 +11,5 @@
 
   programs.ghostty.package = pkgs.ghostty-bin;
 
-  programs.zsh.oh-my-zsh.plugins = [
-    "macos"
-  ];
+  programs.zsh.oh-my-zsh.plugins = [ "macos" ];
 }

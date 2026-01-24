@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   programs.zsh = {
     oh-my-zsh.plugins = [ "ubuntu" ];
     # Use .exe if using WSL
@@ -36,9 +35,5 @@
     clang
   ];
 
-  programs.git = {
-    extraConfig = {
-      core.sshCommand = "ssh.exe";
-    };
-  };
+  programs.git = { extraConfig = { core.sshCommand = "ssh.exe"; }; };
 }

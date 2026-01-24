@@ -1,8 +1,5 @@
-{ zen-browser, ... }:
-{
-  imports = [
-    zen-browser.homeModules.beta
-  ];
+{ zen-browser, ... }: {
+  imports = [ zen-browser.homeModules.beta ];
 
   programs.zen-browser = {
     enable = true;

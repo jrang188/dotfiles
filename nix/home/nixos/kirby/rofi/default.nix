@@ -3,7 +3,7 @@
     enable = true;
     # Use the absolute Nix store path for the terminal
     terminal = "${lib.getExe pkgs.ghostty}";
-    mode = [ "drun" "window" "run" "emoji" ];
+    modes = [ "drun" "window" "run" "emoji" ];
     plugins = with pkgs; [ rofi-calc rofi-emoji ];
     extraConfig = {
       icon-theme = "Papirus-Dark";

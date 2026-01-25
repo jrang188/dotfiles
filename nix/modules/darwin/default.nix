@@ -22,7 +22,7 @@
   # See: https://github.com/NixOS/nixpkgs/issues/450554
   nixpkgs.overlays = [
     (final: prev: {
-      pre-commit = pkgs-stable.pre-commit;
+      inherit (pkgs-stable) pre-commit;
     })
   ];
 

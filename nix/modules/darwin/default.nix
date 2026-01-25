@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-stable, ... }:
 {
   imports = [
     ./apps.nix
@@ -17,6 +17,14 @@
     allowUnfree = true;
     allowBroken = true;
   };
+
+  # Overlay to use stable pre-commit on Darwin to avoid dotnet dependency
+  # See: https://github.com/NixOS/nixpkgs/issues/450554
+  nixpkgs.overlays = [
+    (final: prev: {
+      pre-commit = pkgs-stable.pre-commit;
+    })
+  ];
 
   # Auto upgrade nix package and the daemon service.
   nix.package = pkgs.nix;

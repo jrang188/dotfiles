@@ -8,6 +8,7 @@
     ./hyprland.nix
     ./rofi.nix
     ./ashell.nix
+    ./kde.nix
   ];
 
   # Override ghostty package for NixOS (use regular ghostty)

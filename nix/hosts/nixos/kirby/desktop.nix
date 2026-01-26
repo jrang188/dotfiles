@@ -5,19 +5,11 @@ _: {
     # You can disable this if you're only using the Wayland session.
     xserver.enable = true;
 
-    # Enable the GNOME Desktop Environment.
-    # services.xserver.displayManager.gdm.enable = true;
-    # services.xserver.desktopManager.gnome.enable = true;
-
     # Enable the KDE Plasma Desktop Environment.
     desktopManager.plasma6.enable = true;
 
-    # Enable the COSMIC login manager
-    displayManager.cosmic-greeter.enable = true;
-
-    # Enable the COSMIC desktop environment
-    desktopManager.cosmic.enable = true;
-    system76-scheduler.enable = true;
+    # Enable the SDDM display manager
+    displayManager.sddm.enable = true;
 
     # Configure keymap in X11
     xserver.xkb = {

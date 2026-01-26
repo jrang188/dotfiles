@@ -1,10 +1,12 @@
-{ config, ... }:
-{
+_: {
   # ashell (replacing hyprpanel)
   # Only enable ashell when Hyprland is enabled
   programs.ashell = {
-    enable = config.wayland.windowManager.hyprland.enable or false;
-    systemd.enable = true;
+    enable = true;
+    systemd = {
+      enable = true;
+      target = "hyprland-session.target";
+    };
     settings = {
       # Modules
       modules = {

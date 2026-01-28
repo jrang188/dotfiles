@@ -8,6 +8,7 @@
     ./hyprland.nix
     ./rofi.nix
     ./ashell.nix
+    ./swaync.nix
     ./kde.nix
   ];
 

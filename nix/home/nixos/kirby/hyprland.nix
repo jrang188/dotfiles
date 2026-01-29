@@ -19,7 +19,7 @@
 
       # Autostart
       "exec-once" = [
-        "hyprpanel"
+        "swaync"
         "systemctl --user start hyprpolkitagent"
         "1password --silent" # 1password in the background
         "kdeconnect-indicator" # KDE Connect indicator

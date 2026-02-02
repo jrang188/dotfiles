@@ -6,7 +6,7 @@ return {
         settings = {
           ["nil"] = {
             formatting = {
-              command = { "nixfmt" },
+              command = { "treefmt" },
             },
             nix = {
               flake = {

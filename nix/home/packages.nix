@@ -33,7 +33,8 @@
     go # Go programming language
     bun # Fast JavaScript runtime
     rustup # Rust toolchain installer
-    temurin-bin # OpenJDK (defaults to JDK 21)
+    # temurin-bin # OpenJDK (defaults to JDK 21)
+    javaPackages.compiler.temurin-bin.jdk-25 # jdk-25
     gradle # Java build tool
     maven # Java build tool
 

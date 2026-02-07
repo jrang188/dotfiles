@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     # ============================================
     # Code Editors & IDEs
@@ -7,7 +6,7 @@
     code-cursor # Cursor IDE
     vscode # Visual Studio Code
     zed-editor # Zed Editor
-    jetbrains.idea # Intellij IDEA
+    jetbrains.idea-oss # Intellij IDEA
 
     # ============================================
     # Terminals

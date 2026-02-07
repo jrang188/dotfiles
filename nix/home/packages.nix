@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     # ============================================
     # Nix & Editor Tools
@@ -23,6 +22,7 @@
     openssl # SSL/TLS toolkit
     direnv # Environment variable manager
     lazygit # Git TUI
+    xxd
 
     # ============================================
     # Programming Languages & Runtimes
@@ -33,8 +33,7 @@
     go # Go programming language
     bun # Fast JavaScript runtime
     rustup # Rust toolchain installer
-    # temurin-bin # OpenJDK (defaults to JDK 21)
-    javaPackages.compiler.temurin-bin.jdk-25 # jdk-25
+    javaPackages.compiler.temurin-bin.jdk-25 # Temurin 25
     gradle # Java build tool
     maven # Java build tool
 

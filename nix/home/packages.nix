@@ -5,6 +5,7 @@
     # Nix & Editor Tools
     # ============================================
     nil # Nix language server
+    nixd # Another Nix language server
     nixfmt # Nix formatter
     nixfmt-tree # Nix formatter (tree-sitter based)
     statix # Nix linter
@@ -48,6 +49,7 @@
     golangci-lint # Go linter
     spring-boot-cli # Spring Boot CLI
     claude-code # Claude AI coding assistant
+    opencode # OpenCode CLI
     pre-commit # Git hooks framework
     devenv # Development environment manager
     codecrafters-cli # Codecrafters CLI

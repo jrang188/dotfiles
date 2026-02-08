@@ -2,7 +2,11 @@ _: {
   services = {
     howdy = {
       enable = true;
-      settings = { video = { dark_threshold = 85; }; };
+      settings = {
+        video = {
+          dark_threshold = 85;
+        };
+      };
       control = "sufficient";
     };
     linux-enable-ir-emitter.enable = true;

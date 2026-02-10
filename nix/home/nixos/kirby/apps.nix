@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     # ============================================
     # Code Editors & IDEs
@@ -23,6 +22,7 @@
     notion-app-enhanced # Notion client
     ticktick # Task management
     ollama # Ollama AI coding assistant
+    todoist-electron # Todoist Client
 
     # ============================================
     # Communication & Collaboration

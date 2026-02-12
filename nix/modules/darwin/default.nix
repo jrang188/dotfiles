@@ -1,17 +1,9 @@
 { pkgs, pkgs-stable, ... }:
 {
   imports = [
-    ./apps.nix
     ./system.nix
+    ./security.nix
   ];
-
-  nix.optimise = {
-    interval = {
-      Weekday = 1;
-      Hour = 2;
-      Minute = 0;
-    };
-  };
 
   nixpkgs.config = {
     allowUnfree = true;
@@ -26,6 +18,14 @@
     })
   ];
 
-  # Auto upgrade nix package and the daemon service.
-  nix.package = pkgs.nix;
+  nix = {
+    package = pkgs.nix;
+    optimise = {
+      interval = {
+        Weekday = 1;
+        Hour = 2;
+        Minute = 0;
+      };
+    };
+  };
 }

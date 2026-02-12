@@ -3,7 +3,7 @@ local settings = require("settings")
 local app_icons = require("helpers.app_icons")
 
 local query_workspaces =
-"aerospace list-workspaces --all --format '%{workspace}%{monitor-appkit-nsscreen-screens-id}' --json"
+"aerospace list-workspaces --all --format '%{workspace}%{monitor}' --json"
 
 -- Add padding to the left
 local root = sbar.add("item", "root", {
@@ -36,7 +36,7 @@ local function withWindows(f)
 	local open_windows = {}
 	local get_windows = "aerospace list-windows --monitor all --format '%{workspace}%{app-name}' --json"
 	local query_visible_workspaces =
-	"aerospace list-workspaces --visible --monitor all --format '%{workspace}%{monitor-appkit-nsscreen-screens-id}' --json"
+	"aerospace list-workspaces --visible --monitor all --format '%{workspace}%{monitor}' --json"
 	local get_focus_workspaces = "aerospace list-workspaces --focused"
 	sbar.exec(get_windows, function(workspace_and_windows)
 		for _, entry in ipairs(workspace_and_windows) do
@@ -82,7 +82,7 @@ local function updateWindow(workspace_index, args)
 	sbar.animate("tanh", 10, function()
 		for i, visible_workspace in ipairs(visible_workspaces) do
 			if no_app and workspace_index == visible_workspace["workspace"] then
-				local monitor_id = visible_workspace["monitor-appkit-nsscreen-screens-id"]
+				local monitor_id = visible_workspace["monitor"]
 				icon_line = " —"
 				workspaces[workspace_index]:set({
 					icon = { drawing = true },
@@ -151,7 +151,7 @@ local function updateWorkspaceMonitor()
 	sbar.exec(query_workspaces, function(workspaces_and_monitors)
 		for _, entry in ipairs(workspaces_and_monitors) do
 			local space_index = entry.workspace
-			local monitor_id = math.floor(entry["monitor-appkit-nsscreen-screens-id"])
+			local monitor_id = math.floor(entry["monitor"])
 			workspace_monitor[space_index] = monitor_id
 		end
 		for workspace_index, _ in pairs(workspaces) do

@@ -25,6 +25,7 @@
     direnv # Environment variable manager
     lazygit # Git TUI
     xxd
+    cachix
 
     # ============================================
     # Programming Languages & Runtimes

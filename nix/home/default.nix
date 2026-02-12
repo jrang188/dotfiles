@@ -1,7 +1,10 @@
 { username, pkgs, ... }:
 let
   homeDirectory =
-    if pkgs.system == "aarch64-darwin" || pkgs.system == "x86_64-darwin" then
+    if
+      pkgs.stdenv.hostPlatform.system == "aarch64-darwin"
+      || pkgs.stdenv.hostPlatform.system == "x86_64-darwin"
+    then
       "/Users/${username}"
     else
       "/home/${username}";

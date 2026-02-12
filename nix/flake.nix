@@ -219,8 +219,8 @@
       };
 
       formatter = {
-        ${darwinSystem} = inputs.nixpkgs-darwin.legacyPackages.${darwinSystem}.nixfmt-tree;
-        ${nixosSystem} = inputs.nixpkgs.legacyPackages.${nixosSystem}.nixfmt-tree;
+        ${darwinSystem} = inputs.nixpkgs-darwin.legacyPackages.${darwinSystem}.nixfmt;
+        ${nixosSystem} = inputs.nixpkgs.legacyPackages.${nixosSystem}.nixfmt;
       };
     };
 }

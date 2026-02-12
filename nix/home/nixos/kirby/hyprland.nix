@@ -38,11 +38,11 @@
         "gaps_in" = 4;
         "gaps_out" = 9;
         "border_size" = 2;
-        "col.active_border" = "rgba(ca9ee6ff) rgba(f2d5cfff) 45deg";
-        "col.inactive_border" = "rgba(b4befecc) rgba(6c7086cc) 45deg";
+        "col.active_border" = "rgba(7aa2f7ff) rgba(bb9af7ff) 45deg";
+        "col.inactive_border" = "rgba(565f89cc) rgba(414868cc) 45deg";
         "resize_on_border" = true;
         "allow_tearing" = false;
-        "layout" = "dwindle";
+        "layout" = "hy3";
       };
       "decoration" = {
         "rounding" = 10;
@@ -138,9 +138,26 @@
 
         # Window focus (vim-like navigation)
         "$mainMod, h, movefocus, l" # Focus left
-        "$mainMod, j, movefocus, r" # Focus right
+        "$mainMod, j, movefocus, d" # Focus down
         "$mainMod, k, movefocus, u" # Focus up
-        "$mainMod, l, movefocus, d" # Focus down
+        "$mainMod, l, movefocus, r" # Focus right
+
+        # Window movement (hy3 - Alt+Shift+vim keys)
+        "$mainMod SHIFT, h, hy3:movewindow, l" # Move window left
+        "$mainMod SHIFT, j, hy3:movewindow, d" # Move window down
+        "$mainMod SHIFT, k, hy3:movewindow, u" # Move window up
+        "$mainMod SHIFT, l, hy3:movewindow, r" # Move window right
+
+        # Layout toggles (like aerospace)
+        "$mainMod, slash, hy3:changegroup, toggletab" # Toggle tabbed/stacked layout
+        "$mainMod, comma, hy3:makegroup, opposite" # Create opposite split
+
+        # Resize (like aerospace - smart resize)
+        "$mainMod, minus, resizeactive, -50 -50" # Shrink window
+        "$mainMod, equal, resizeactive, 50 50" # Grow window
+
+        # Workspace back-and-forth (like aerospace alt-tab)
+        "$mainMod, TAB, workspace, previous" # Switch to previous workspace
 
         # Workspace switching (1-10)
         "$mainMod, 1, workspace, 1"
@@ -206,7 +223,24 @@
       ];
     };
 
-    # plugins = [ pkgs.hyprlandPlugins.hy3 ];
+    plugins = with pkgs.hyprlandPlugins; [
+      hy3
+    ];
+
+    extraConfig = ''
+      # hy3 configuration
+      plugin {
+        hy3 {
+          # Use hy3 layout instead of dwindle
+          # Set layout to hy3 in general section below
+        }
+      }
+
+      # Enable hy3 layout
+      general {
+        layout = hy3
+      }
+    '';
   };
 
   # Hyprland-related packages
@@ -239,7 +273,7 @@
         {
           monitor = "";
           text = ''cmd[update:1000] echo "<b>$(date +'%H:%M:%S')</b>"'';
-          color = "rgb(143, 143, 143)";
+          color = "rgb(c0caf5)";
           font_size = 64;
           font_family = "JetBrains Mono Nerd Font";
           position = "0, -200";
@@ -249,7 +283,7 @@
         {
           monitor = "";
           text = ''cmd[update:1000] echo "$(date +'%A, %B %d, %Y')"'';
-          color = "rgb(143, 143, 143)";
+          color = "rgb(a9b1d6)";
           font_size = 24;
           font_family = "JetBrains Mono Nerd Font";
           position = "0, -120";
@@ -264,11 +298,11 @@
         outline_thickness = 3;
         inner_color = "rgba(0, 0, 0, 0.0)"; # no fill
 
-        outer_color = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        check_color = "rgba(00ff99ee) rgba(ff6633ee) 120deg";
-        fail_color = "rgba(ff6633ee) rgba(ff0066ee) 40deg";
+        outer_color = "rgba(7aa2f7ee) rgba(bb9af7ee) 45deg";
+        check_color = "rgba(9ece6aee) rgba(e0af68ee) 120deg";
+        fail_color = "rgba(f7768eee) rgba(ff9e64ee) 40deg";
 
-        font_color = "rgb(143, 143, 143)";
+        font_color = "rgb(c0caf5)";
         fade_on_empty = false;
         rounding = 15;
 

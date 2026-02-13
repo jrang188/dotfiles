@@ -32,7 +32,11 @@
   users.users.${username} = {
     home = "/home/${username}";
     description = username;
-    extraGroups = [ "networkmanager" "wheel" "podman" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "podman"
+    ];
     isNormalUser = true;
   };
 
@@ -43,7 +47,12 @@
   system.autoUpgrade = {
     enable = true;
     flake = "/home/${username}/dotfiles/nix#kirby";
-    flags = [ "--update-input" "nixpkgs" "--update-input" "nixpkgs-darwin" ];
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "--update-input"
+      "nixpkgs-darwin"
+    ];
     dates = "Mon,Thu 04:00"; # Runs every Monday and Thursday at 04:00
     allowReboot = false;
   };

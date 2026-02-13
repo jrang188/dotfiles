@@ -34,15 +34,17 @@ _: {
           "Memory"
         ];
       };
-      lock_cmd = "hyprlock &";
-      remove_airplane_btn = true;
-      vpn_more_cmd = "nm-connection-editor";
-      indicators = [
-        "Audio"
-        "Bluetooth"
-        "Network"
-        "Vpn"
-      ];
+      settings = {
+        lock_cmd = "hyprlock &";
+        remove_airplane_btn = true;
+        vpn_more_cmd = "nm-connection-editor";
+        indicators = [
+          "Audio"
+          "Bluetooth"
+          "Network"
+          "Vpn"
+        ];
+      };
 
       # Appearances
       appearance = {

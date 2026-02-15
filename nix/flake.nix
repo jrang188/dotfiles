@@ -15,16 +15,6 @@
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
-    # TODO: Uncomment this and remove the inputs below when mac-app-util is fixed
-    # mac-app-util = {
-    #   url = "github:hraban/mac-app-util";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    mac-app-util = {
-      url = "github:hraban/mac-app-util";
-      inputs.cl-nix-lite.url = "github:r4v3n6101/cl-nix-lite/url-fix";
-    };
-
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -140,7 +130,6 @@
           };
           modules = modules ++ [
             { nix.enable = false; } # We want to use determinate nix
-            inputs.mac-app-util.darwinModules.default
             inputs.home-manager-darwin.darwinModules.home-manager
             (mkHomeManagerConfig {
               inherit hostname;
@@ -176,7 +165,6 @@
         homeImports = [
           ./home
           ./home/darwin
-          inputs.mac-app-util.homeManagerModules.default
         ];
       };
 

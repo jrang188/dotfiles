@@ -2,6 +2,7 @@
 {
   imports = [
     ../../../modules/home/gui.nix
+    ./theme.nix
     ./apps.nix
     ./packages.nix
     ./zen-browser.nix

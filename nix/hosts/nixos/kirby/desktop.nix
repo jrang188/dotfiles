@@ -44,4 +44,6 @@ _: {
     openssh.enable = true;
   };
   security.rtkit.enable = true;
+
+  programs.coolercontrol.enable = true;
 }

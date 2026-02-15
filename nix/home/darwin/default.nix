@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
+    ../../modules/home/gui.nix
     ./packages.nix
     ./gui.nix
   ];

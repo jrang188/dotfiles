@@ -15,14 +15,10 @@
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
-    # TODO: Uncomment this and remove the inputs below when mac-app-util is fixed
-    # mac-app-util = {
-    #   url = "github:hraban/mac-app-util";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    # Don't follow nixpkgs to avoid SBCL 2.6.0 build failure
+    # See: https://github.com/hraban/mac-app-util/issues/42
     mac-app-util = {
       url = "github:hraban/mac-app-util";
-      inputs.cl-nix-lite.url = "github:r4v3n6101/cl-nix-lite/url-fix";
     };
 
     nixos-wsl = {

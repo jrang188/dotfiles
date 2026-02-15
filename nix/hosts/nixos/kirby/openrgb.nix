@@ -16,15 +16,19 @@
           channels = [
             {
               mode = "PWM";
+              speed = 50;
             }
             {
               mode = "PWM";
+              speed = 50;
             }
             {
               mode = "PWM";
+              speed = 50;
             }
             {
               mode = "PWM";
+              speed = 50;
             }
           ];
         }

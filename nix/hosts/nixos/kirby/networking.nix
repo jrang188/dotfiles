@@ -16,7 +16,7 @@
   ];
 
   # Encrypted DNS using dnscrypt-proxy2 with AdGuard DNS
-  services.dnscrypt-proxy2 = {
+  services.dnscrypt-proxy = {
     enable = true;
     settings = {
       ipv6_servers = true;

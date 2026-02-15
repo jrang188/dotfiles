@@ -14,7 +14,7 @@
       "$1pass" = "1password";
       "$discord" = "vesktop";
       "$spotify" = "spotify";
-      "$ticktick" = "ticktick";
+      "$todoist" = "todoist-electron";
       "$obsidian" = "obsidian";
 
       # Autostart
@@ -125,7 +125,7 @@
         "$superShift, 1, exec, $1pass" # Open 1Password
         "$superShift, D, exec, $discord" # Open Discord
         "$superShift, S, exec, $spotify" # Open Spotify
-        "$superShift, T, exec, $ticktick" # Open TickTick
+        "$superShift, T, exec, $todoist" # Open Todoist
         "$superShift, O, exec, $obsidian" # Open Obsidian
 
         # Screenshot shortcuts

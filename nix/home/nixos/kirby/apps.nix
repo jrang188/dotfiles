@@ -21,7 +21,6 @@
     httpie # HTTP client
     obsidian # Note-taking app
     notion-app-enhanced # Notion client
-    ticktick # Task management
     ollama # Ollama AI coding assistant
     todoist-electron # Todoist Client
 

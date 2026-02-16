@@ -8,6 +8,8 @@
     vimdiffAlias = true;
     extraPackages = with pkgs; [
       gcc
+      luarocks
+      tree-sitter
 
       # LSPs
       astro-language-server

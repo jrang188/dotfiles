@@ -22,7 +22,6 @@
     cmatrix # Matrix-style terminal animation
     stow # Symlink manager
     openssl # SSL/TLS toolkit
-    direnv # Environment variable manager
     lazygit # Git TUI
     xxd
     cachix
@@ -54,6 +53,7 @@
     pre-commit # Git hooks framework
     devenv # Development environment manager
     codecrafters-cli # Codecrafters CLI
+    devbox
 
     # ============================================
     # DevOps & Cloud Tools
@@ -69,4 +69,11 @@
     pulumi-bin # Infrastructure as code tool
     podman-tui # Podman TUI
   ];
+
+  # Enable Nix-Direnv
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
 }

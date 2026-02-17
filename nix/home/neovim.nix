@@ -1,4 +1,7 @@
 { pkgs, ... }:
+let
+  unocss-language-server = pkgs.callPackage ../pkgs/unocss-language-server.nix { };
+in
 {
   programs.neovim = {
     enable = true;
@@ -30,6 +33,7 @@
       sqls
       tailwindcss-language-server
       taplo
+      unocss-language-server
       terraform-ls
       typescript-language-server
       vue-language-server

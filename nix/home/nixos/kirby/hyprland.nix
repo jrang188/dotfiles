@@ -10,7 +10,7 @@
       "$terminal" = "ghostty";
       "$fileManager" = "dolphin";
       "$menu" = "rofi -show drun -show-icons";
-      "$browser" = "zen";
+      "$browser" = "zen-beta";
       "$1pass" = "1password";
       "$discord" = "vesktop";
       "$spotify" = "spotify";

@@ -36,6 +36,7 @@ in
       unocss-language-server
       terraform-ls
       typescript-language-server
+      vtsls # Correct typescript language server
       vue-language-server
       yaml-language-server
 

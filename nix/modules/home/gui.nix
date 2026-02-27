@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+_: {
   # Reusable GUI configuration
   # This provides a base ghostty configuration that can be overridden by host-specific configs
 
@@ -13,8 +12,4 @@
     };
     enableZshIntegration = true;
   };
-
-  home.packages = with pkgs; [
-    anytype # Trying out anytype
-  ];
 }

@@ -29,7 +29,7 @@
     # ============================================
     # Programming Languages & Runtimes
     # ============================================
-    fnm # Fast Node.js version manager
+    nodejs
     uv # Fast Python package installer
     python3 # Python interpreter
     go # Go programming language

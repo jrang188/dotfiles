@@ -18,15 +18,20 @@ _: {
         ];
       };
       github = {
-        command = [
-          "op"
+        command = "op";
+        args = [
           "run"
-          "--env-file=$HOME/.config/.env"
+          "--"
+          "docker"
+          "run"
+          "-i"
+          "--rm"
+          "-e"
+          "GITHUB_PERSONAL_ACCESS_TOKEN"
+          "ghcr.io/github/github-mcp-server"
         ];
-        type = "http";
-        url = "https://api.githubcopilot.com/mcp";
-        headers = {
-          Authorization = "Bearer {env:GITHUB_PAT}";
+        env = {
+          GITHUB_PERSONAL_ACCESS_TOKEN = "op://Development/Github MCP PAT/token";
         };
       };
     };

@@ -2,6 +2,8 @@ _: {
   programs.opencode = {
     enable = true;
     enableMcpIntegration = true;
-    themes = "catppuccin-macchiato";
+    settings = {
+      theme = "catppuccin-macchiato";
+    };
   };
 }

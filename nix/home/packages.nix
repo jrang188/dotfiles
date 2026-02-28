@@ -35,7 +35,7 @@
     go # Go programming language
     bun # Fast JavaScript runtime
     rustup # Rust toolchain installer
-    javaPackages.compiler.temurin-bin.jdk-25 # Temurin 25
+    javaPackages.compiler.temurin-bin.jdk-21 # Temurin 21
     gradle # Java build tool
     maven # Java build tool
 
@@ -49,7 +49,6 @@
     golangci-lint # Go linter
     spring-boot-cli # Spring Boot CLI
     claude-code # Claude AI coding assistant
-    opencode # OpenCode CLI
     pre-commit # Git hooks framework
     devenv # Development environment manager
     codecrafters-cli # Codecrafters CLI

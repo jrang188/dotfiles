@@ -17,6 +17,8 @@ in
     ./git.nix
     ./oh-my-posh.nix
     ./packages.nix
+    ./opencode.nix
+    ./mcp.nix
   ];
 
   # Home Manager needs a bit of information about you and the

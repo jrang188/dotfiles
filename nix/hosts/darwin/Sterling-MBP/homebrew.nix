@@ -43,6 +43,7 @@ _: {
       "kdeconnect"
       "intellij-idea"
       "zed"
+      "google-drive"
     ];
   };
 }

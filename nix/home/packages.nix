@@ -48,7 +48,6 @@
     gnumake # Build automation tool
     golangci-lint # Go linter
     spring-boot-cli # Spring Boot CLI
-    claude-code # Claude AI coding assistant
     pre-commit # Git hooks framework
     devenv # Development environment manager
     codecrafters-cli # Codecrafters CLI

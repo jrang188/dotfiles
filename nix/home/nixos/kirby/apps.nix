@@ -40,7 +40,7 @@
     # ============================================
     # Office & Productivity
     # ============================================
-    libreoffice # Office suite
+    # libreoffice # Office suite - temporarily disabled due to nixpkgs bug #495219
     xournalpp # PDF editor
 
     # ============================================

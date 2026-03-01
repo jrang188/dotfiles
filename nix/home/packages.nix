@@ -67,6 +67,9 @@
     oci-cli # Oracle Cloud Infrastructure CLI
     pulumi-bin # Infrastructure as code tool
     podman-tui # Podman TUI
+    lazydocker
+    kind
+    minikube
   ];
 
   # Enable Nix-Direnv

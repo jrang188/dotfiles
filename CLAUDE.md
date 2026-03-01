@@ -1,4 +1,3 @@
-
 # CLAUDE.md - Agent Guidelines for This Repository
 
 This repository contains Nix-based system configurations for macOS (Darwin), NixOS, and Ubuntu (WSL). It uses Nix flakes with Home Manager for declarative, reproducible system configuration.

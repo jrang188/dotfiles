@@ -227,11 +227,6 @@ Note = 'secondary'
 Utility = 'secondary'
 Media = 'secondary'
 
-# Current Ghostty Workaround on open;fing new tabs
-[[on-window-detected]]
-if.app-id = "com.mitchellh.ghostty"
-run = ["layout floating"]
-
 # Utility
 [[on-window-detected]]
 if.app-id = 'com.nordvpn.NordVPN'

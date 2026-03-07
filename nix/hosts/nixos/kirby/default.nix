@@ -2,9 +2,26 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
-{ username, hostname, ... }:
+{
+  username,
+  hostname,
+  nixpkgsHyprland,
+  ...
+}:
 
 {
+  # Pin hyprland to 0.53.3 via overlay to keep hy3 working.
+  # hy3 0.53.0.1 is incompatible with hyprland 0.54.x (API breakage).
+  # Remove this overlay once hy3 supports hyprland 0.54.x and nixpkgs catches up.
+  nixpkgs.overlays = [
+    (final: prev: {
+      inherit (nixpkgsHyprland.legacyPackages.${prev.stdenv.hostPlatform.system})
+        hyprland
+        hyprlandPlugins
+        ;
+    })
+  ];
+
   imports = [
     ../../../modules/common
     ../../../modules/nixos

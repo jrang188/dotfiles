@@ -8,6 +8,9 @@
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     # Stable references for each system type
     nixpkgs-stable-nixos.url = "github:NixOS/nixpkgs/nixos-25.11";
+    # Pinned to the last nixos-unstable commit with hyprland 0.53.3, before the 0.54.x
+    # update that broke hy3 compatibility. Remove once hy3 supports hyprland 0.54.x.
+    nixpkgsHyprland.url = "github:NixOS/nixpkgs/dd9b079222d43e1943b6ebd802f04fd959dc8e61";
     nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     darwin = {

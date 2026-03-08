@@ -44,6 +44,7 @@ _: {
       "intellij-idea"
       "zed"
       "google-drive"
+      "adobe-acrobat-reader"
     ];
   };
 }

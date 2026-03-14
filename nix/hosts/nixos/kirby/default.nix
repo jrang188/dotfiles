@@ -59,18 +59,15 @@
 
   nix.settings.trusted-users = [ username ];
 
-  # Auto system update (using flake)
-  # Twice weekly updates (Monday and Thursday)
+  # Auto system update at 4pm every Monday and Thursday
   system.autoUpgrade = {
     enable = true;
-    flake = "/home/${username}/dotfiles/nix#kirby";
+    flake = "github:jrang188/dotfiles?dir=nix#kirby";
+    dates = "Mon,Thu 16:00";
     flags = [
-      "--update-input"
-      "nixpkgs"
-      "--update-input"
-      "nixpkgs-darwin"
+      "--upgrade"
+      "-L"
     ];
-    dates = "Mon,Thu 04:00"; # Runs every Monday and Thursday at 04:00
     allowReboot = false;
   };
 

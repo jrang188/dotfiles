@@ -7,7 +7,7 @@ _: {
         args = [ "mcp-nixos" ];
       };
       astro = {
-        type = "http";
+        type = "remote";
         url = "https://mcp.docs.astro.build/mcp";
       };
       kubernetes = {
@@ -33,6 +33,10 @@ _: {
         env = {
           GITHUB_PERSONAL_ACCESS_TOKEN = "op://Development/Github MCP PAT/token";
         };
+      };
+      pulumi = {
+        "type" = "remote";
+        "url" = "https://mcp.ai.pulumi.com/mcp";
       };
     };
   };

@@ -52,6 +52,8 @@
     devenv # Development environment manager
     codecrafters-cli # Codecrafters CLI
     devbox
+    pnpm
+    yarn-berry
 
     # ============================================
     # DevOps & Cloud Tools

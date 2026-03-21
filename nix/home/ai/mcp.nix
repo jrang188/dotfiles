@@ -17,23 +17,6 @@ _: {
           "kubernetes-mcp-server@latest"
         ];
       };
-      github = {
-        command = "op";
-        args = [
-          "run"
-          "--"
-          "docker"
-          "run"
-          "-i"
-          "--rm"
-          "-e"
-          "GITHUB_PERSONAL_ACCESS_TOKEN"
-          "ghcr.io/github/github-mcp-server"
-        ];
-        env = {
-          GITHUB_PERSONAL_ACCESS_TOKEN = "op://Development/Github MCP PAT/token";
-        };
-      };
       pulumi = {
         "type" = "remote";
         "url" = "https://mcp.ai.pulumi.com/mcp";

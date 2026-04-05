@@ -26,7 +26,7 @@ in
       marksman
       nixd
       nixfmt
-      nodePackages.vscode-langservers-extracted # jsonls, cssls, html, eslint
+      vscode-langservers-extracted # jsonls, cssls, html, eslint
       pyright
       ruff
       rust-analyzer

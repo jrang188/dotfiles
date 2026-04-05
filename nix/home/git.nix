@@ -12,5 +12,6 @@ _: {
       pull.ff = "only";
     };
     ignores = [ ".DS_Store" ];
+    signing.format = null;
   };
 }

@@ -2,7 +2,7 @@ _: {
   programs.opencode = {
     enable = true;
     enableMcpIntegration = true;
-    settings = {
+    tui = {
       theme = "tokyonight";
     };
   };

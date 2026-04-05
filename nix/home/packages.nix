@@ -67,6 +67,7 @@
     google-cloud-sdk # Google Cloud SDK
     oci-cli # Oracle Cloud Infrastructure CLI
     pulumi-bin # Infrastructure as code tool
+    pulumi-esc # Pulumi's version of HCP Vault
     podman-tui # Podman TUI
     lazydocker
     kind

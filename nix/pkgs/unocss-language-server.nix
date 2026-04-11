@@ -23,9 +23,11 @@ stdenv.mkDerivation (finalAttrs: {
     inherit (finalAttrs) pname version src;
     pnpm = pnpm_9;
     fetcherVersion = 1;
-    hash = if stdenv.hostPlatform.isLinux
-      then "sha256-7sLUxKgQOZyx01hVDTrSHiqCDcW1Vi+tVlLAP5fcQaA="
-      else "sha256-E/mxy6XMTdFKVUBJApf74/L7ld/U3SUZhdYuhUaHTlo=";
+    hash =
+      if stdenv.hostPlatform.isLinux then
+        "sha256-7sLUxKgQOZyx01hVDTrSHiqCDcW1Vi+tVlLAP5fcQaA="
+      else
+        "sha256-E/mxy6XMTdFKVUBJApf74/L7ld/U3SUZhdYuhUaHTlo=";
   };
 
   nativeBuildInputs = [

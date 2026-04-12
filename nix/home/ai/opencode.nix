@@ -1,7 +1,7 @@
 { inputs, pkgs, ... }:
 
 let
-  system = pkgs.stdenv.hostPlatform.system;
+  inherit (pkgs.stdenv.hostPlatform) system;
 in
 {
   programs.opencode = {
@@ -9,6 +9,7 @@ in
     package = inputs.llm-agents.packages.${system}.opencode;
     enableMcpIntegration = true;
     settings = {
+      model = "opencode-go/mimo-v2-pro";
       plugin = [ "superpowers@git+https://github.com/obra/superpowers.git" ];
     };
     tui = {

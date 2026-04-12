@@ -18,4 +18,7 @@
     flutter # Flutter SDK
     cocoapods # CocoaPods dependency manager
   ];
+
+  programs.neovim.extraPackages = with pkgs; [ pngpaste ];
+
 }

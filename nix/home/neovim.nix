@@ -48,6 +48,8 @@ in
       # Linters
       shellcheck
       python314Packages.flake8
+      markdownlint-cli2
+      markdown-toc
 
       # DAP (debugging)
       delve # Go debugger

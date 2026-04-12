@@ -42,10 +42,12 @@
     # Pinned to the last nixos-unstable commit with hyprland 0.53.3, before the 0.54.x
     # update that broke hy3 compatibility. Remove once hy3 supports hyprland 0.54.x.
     nixpkgsHyprland.url = "github:NixOS/nixpkgs/dd9b079222d43e1943b6ebd802f04fd959dc8e61";
+
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs =
-    inputs@{ ... }:
+    inputs:
     let
       # Common variables
       username = "sirwayne";

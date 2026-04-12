@@ -71,7 +71,7 @@
         }:
         inputs
         // {
-          inherit username hostname;
+          inherit username hostname inputs;
           pkgs-stable = mkStablePkgs { inherit system; };
         }
         // extraArgs;
@@ -172,7 +172,7 @@
           ./home
           ./home/nixos/kirby
         ];
-        extraArgs = { inherit (inputs) zen-browser; };
+        extraArgs = { inherit (inputs) zen-browser llm-agents; };
       };
 
       formatter = {

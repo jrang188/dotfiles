@@ -8,10 +8,8 @@
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     # Stable references for each system type
     nixpkgs-stable-nixos.url = "github:NixOS/nixpkgs/nixos-25.11";
-    # Pinned to the last nixos-unstable commit with hyprland 0.53.3, before the 0.54.x
-    # update that broke hy3 compatibility. Remove once hy3 supports hyprland 0.54.x.
-    nixpkgsHyprland.url = "github:NixOS/nixpkgs/dd9b079222d43e1943b6ebd802f04fd959dc8e61";
     nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
+
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     darwin = {
       url = "github:LnL7/nix-darwin";
@@ -22,11 +20,6 @@
     # See: https://github.com/hraban/mac-app-util/issues/42
     mac-app-util = {
       url = "github:hraban/mac-app-util";
-    };
-
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL/main";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
@@ -45,10 +38,14 @@
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Pinned to the last nixos-unstable commit with hyprland 0.53.3, before the 0.54.x
+    # update that broke hy3 compatibility. Remove once hy3 supports hyprland 0.54.x.
+    nixpkgsHyprland.url = "github:NixOS/nixpkgs/dd9b079222d43e1943b6ebd802f04fd959dc8e61";
   };
 
   outputs =
-    inputs@{ self, ... }:
+    inputs@{ ... }:
     let
       # Common variables
       username = "sirwayne";
@@ -148,24 +145,6 @@
             })
           ];
         };
-
-      # Helper function to create Home Manager configurations
-      mkHome =
-        {
-          hostname,
-          modules,
-          extraArgs ? { },
-        }:
-        inputs.home-manager.lib.homeManagerConfiguration {
-          pkgs = inputs.nixpkgs.legacyPackages.${nixosSystem};
-          extraSpecialArgs = mkSpecialArgs {
-            inherit hostname;
-            system = nixosSystem;
-            inherit extraArgs;
-          };
-          inherit modules;
-        };
-
     in
     {
       # Darwin configuration
@@ -176,29 +155,6 @@
           ./home
           ./home/darwin
           inputs.mac-app-util.homeManagerModules.default
-        ];
-      };
-
-      # WSL NixOS configuration
-      nixosConfigurations."wsl" = mkSystem {
-        hostname = "nixos-wsl";
-        system = nixosSystem;
-        modules = [
-          inputs.nixos-wsl.nixosModules.default
-          ./hosts/nixos/wsl
-        ];
-        homeImports = [
-          ./home
-          ./home/nixos/wsl
-        ];
-      };
-
-      # Ubuntu WSL Configuration
-      homeConfigurations.${username} = mkHome {
-        hostname = "GHOST-MACHINE";
-        modules = [
-          ./home
-          ./home/ubuntu
         ];
       };
 

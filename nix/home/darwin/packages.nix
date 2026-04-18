@@ -15,8 +15,14 @@
     # ============================================
     # Mobile App Development
     # ============================================
-    flutter # Flutter SDK
-    cocoapods # CocoaPods dependency manager
+    # flutter # Flutter SDK
+    # cocoapods # CocoaPods dependency manager
+    # android-tools
+
+    # ============================================
+    # AirSync Dependency
+    # ============================================
+    # scrcpy
   ];
 
   programs.neovim.extraPackages = with pkgs; [ pngpaste ];

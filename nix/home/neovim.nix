@@ -63,5 +63,6 @@ in
     withNodeJs = true;
     withPython3 = true;
     withRuby = true;
+    sideloadInitLua = true;
   };
 }

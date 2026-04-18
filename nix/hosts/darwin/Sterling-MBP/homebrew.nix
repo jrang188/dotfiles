@@ -25,6 +25,8 @@ _: {
       "lua"
       "kafka"
       "mole"
+      "media-control"
+      "scrcpy"
     ];
 
     # `brew install --cask`
@@ -39,12 +41,12 @@ _: {
       "font-sf-pro"
       "orbstack"
       "localsend"
-      "grishka/grishka/neardrop"
       "kdeconnect"
       "intellij-idea"
       "zed"
       "google-drive"
       "adobe-acrobat-reader"
+      "android-platform-tools"
     ];
   };
 }

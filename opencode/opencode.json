@@ -1,0 +1,44 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode-go/mimo-v2-pro",
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers.git",
+  ],
+  "mcp": {
+    "nixos": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "mcp-nixos"
+      ],
+      "enabled": true
+    },
+    "astro": {
+      "type": "remote",
+      "url": "https://mcp.docs.astro.build/mcp",
+      "enabled": true
+    },
+    "kubernetes": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "kubernetes-mcp-server@latest"
+      ],
+      "enabled": true
+    },
+    "pulumi": {
+      "type": "remote",
+      "url": "https://mcp.ai.pulumi.com/mcp",
+      "enabled": true
+    }
+  },
+  "agent": {
+    "explore": {
+      "disable": true
+    },
+    "general": {
+      "disable": true
+    }
+  }
+}

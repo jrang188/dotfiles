@@ -1,6 +1,6 @@
 # AGENTS.md - Agent Guidelines for This Repository
 
-This repository contains Nix-based system configurations for macOS (Darwin), NixOS, and Ubuntu (WSL). It uses Nix flakes with Home Manager for declarative, reproducible system configuration.
+Nix-based system configurations for macOS (Darwin) and NixOS. Uses Nix flakes with Home Manager for declarative, reproducible system configuration.
 
 ## Repository Structure
 
@@ -9,41 +9,43 @@ This repository contains Nix-based system configurations for macOS (Darwin), Nix
 ├── nix/                    # Main Nix configuration
 │   ├── flake.nix           # Flake entry point
 │   ├── Makefile            # Build commands
-│   ├── home/               # Home Manager configs (shared across all systems)
+│   ├── home/               # Home Manager configs (shared + host-specific)
 │   ├── hosts/              # Host-specific system configs
 │   ├── modules/            # Reusable Nix modules
-│   └── lib/                # Helper functions
+│   └── lib/                # Helper functions (currently empty)
 ├── nvim/                   # Neovim configuration (LazyVim-based)
 │   ├── lua/                # Lua plugins and config
 │   └── stylua.toml         # Lua formatter config
-└── sketchybar/             # macOS status bar config
+├── sketchybar/             # macOS status bar config (Lua-based)
+├── aerospace/              # macOS tiling window manager config
+└── opencode/               # OpenCode agent configuration
 ```
+
+## Active Hosts
+
+Only two hosts are wired in `flake.nix` outputs:
+
+- **`Sterling-MBP`** — macOS (Darwin), aarch64
+- **`kirby`** — NixOS, x86_64
+
+> **Note:** WSL (`hosts/nixos/wsl/`, `home/nixos/wsl/`, `home/ubuntu/`) and Ubuntu home configs exist in the tree but are **not currently exported** from `flake.nix`. They are orphaned configs left over from prior iterations.
 
 ## Build Commands
 
-### From nix/ directory:
+All `make` targets must be run from the `nix/` directory:
 
 ```bash
-# Build macOS configuration
-make darwin
+cd nix
 
-# Build NixOS kirby configuration
-make nixos
-
-# Build NixOS WSL configuration
-make wsl
-
-# Build Ubuntu WSL configuration
-make ubuntu
-
-# Update flake inputs
-make update
-
-# Clean old generations
-make clean
+make darwin   # Rebuild Sterling-MBP via `nh darwin switch`
+make nixos    # Rebuild kirby via `nh os switch`
+make update   # Update flake inputs (`nix flake update`)
+make clean    # Garbage collect (`nh clean all`)
+make lint     # Lint with statix
+make format   # Format with nixfmt (also: `make fmt`)
 ```
 
-### Manual rebuild commands:
+### Manual rebuilds (when `nh` is unavailable)
 
 ```bash
 # macOS
@@ -51,55 +53,46 @@ darwin-rebuild switch --flake .#Sterling-MBP
 
 # NixOS
 sudo nixos-rebuild switch --flake .#kirby
-
-# NixOS WSL
-sudo nixos-rebuild switch --flake .#wsl
-
-# Ubuntu WSL
-home-manager switch --flake .#sirwayne
 ```
 
-### Format and Lint Commands
+### Validation / dry-run
 
 ```bash
-# Format Nix files (nixfmt-tree)
-make format    # or: make fmt
+# macOS
+darwin-rebuild dry-run --flake .#Sterling-MBP
+
+# NixOS
+sudo nixos-rebuild dry-run --flake .#kirby
+```
+
+## Format and Lint
+
+```bash
+cd nix
+
+# Format all Nix files (uses flake formatter output)
 nix fmt
 
-# Lint Nix files (statix)
+# Lint (statix)
 make lint
 statix check .
 
-# Run pre-commit hooks
+# Pre-commit hooks (install once)
 pre-commit install
 pre-commit run --all-files
-
-# Run treefmt for formatting
-treefmt
 ```
 
-### Testing
+## Code Style
 
-No formal test framework exists. Validate changes by building:
+### Nix
 
-```bash
-# Dry-run to check for errors (NixOS)
-sudo nixos-rebuild dry-run --flake .#kirby
-
-# Dry-run for Darwin
-darwin-rebuild dry-run --flake .#Sterling-MBP
-```
-
-## Code Style Guidelines
-
-### Nix Files
-
-- **Indentation**: 2 spaces (enforced by `.editorconfig`)
-- **Formatting**: Use `nix fmt` or `treefmt` before committing
-- **Line width**: No strict limit, but keep lines reasonable
+- **Indentation**: 2 spaces (enforced by `nix/.editorconfig`)
+- **Formatter**: `nixfmt` via `nix fmt`
+- **Linter**: `statix`
+- **Line width**: No strict limit; keep reasonable
 - **Attribute ordering**: Group related attributes together
 
-### Nix Expression Style
+### Nix Expression Conventions
 
 ```nix
 # Prefer function shorthand for simple arguments
@@ -119,150 +112,139 @@ in
     inherit username;
     stateVersion = "24.11";
   };
-
-  programs = {
-    # Enable and configure together
-    git = {
-      enable = true;
-      userName = "Your Name";
-      userEmail = "email@example.com";
-    };
-  };
-
-  # Use enable = true pattern consistently
-  services.foo.enable = true;
 }
 ```
 
-### Naming Conventions
+### Package Lists
 
-- **Files**: `kebab-case.nix` (e.g., `neovim.nix`, `hyprland.nix`)
-- **Attributes**: `camelCase` or `kebab-case` consistently within a file
-- **Modules**: Descriptive names, singular form (e.g., `boot.nix`, not `boots.nix`)
-- **Hosts**: Hostnames (e.g., `kirby`, `Sterling-MBP`, `wsl`)
-
-### Import Organization
-
-Follow this import order in `default.nix` files:
-
-1. Import shared modules (top-level `./module.nix`)
-2. Import platform modules (`./darwin/`, `./nixos/`)
-3. Import host modules (`./nixos/kirby/`)
-
-Example from `home/default.nix`:
+Use category headers and `with pkgs;`:
 
 ```nix
-{
-  imports = [
-    # Shared (applied to all systems)
-    ./zsh.nix
-    ./neovim.nix
-    ./git.nix
-    # Platform-specific
-    ./darwin
-    ./nixos
-  ];
-}
-```
-
-### Attribute Sets
-
-Use trailing commas for better diffs:
-
-```nix
-{
-  option1 = true;
-  option2 = {
-    key = "value";
-  };
-}
-```
-
-### Package Definitions
-
-Group packages in `packages.nix` by category with headers:
-
-```nix
-# Nix & Editor Tools
-packages = with pkgs; [
-  # formatter
-  nixfmt-rfc-style
-  # linter
-  statix
-]
-
-# Development Tools
-++ with pkgs; [
-  git
-  gh
-]
-```
-
-### Error Handling
-
-- Use `lib.mkIf` for conditional options instead of `if then else`
-- Use `lib.mkMerge` for merging attribute sets
-- Use `lib.mkDefault` for sensible defaults
-
-```nix
-# Good: Conditional enable
-services.foo.enable = pkgs.stdenv.hostPlatform.isLinux;
-
-# Good: Merge configurations
-programs.zsh.initExtra = lib.mkMerge [
-  (lib.mkIf cfg.enablePlugin1 ''
-    # plugin1 config
-  '')
-  (lib.mkIf cfg.enablePlugin2 ''
-    # plugin2 config
-  '')
+home.packages = with pkgs; [
+  # ============================================
+  # Category Name
+  # ============================================
+  package1
+  package2
 ];
 ```
 
-### Neovim Configuration (nvim/)
+### Import Order
 
+In `default.nix` files, prefer this order:
+
+1. Shared modules (top-level `./module.nix`)
+2. Platform modules (`./darwin/`, `./nixos/`)
+3. Host modules (`./nixos/kirby/`)
+
+### Conditional Logic
+
+Use `lib.mkIf`, `lib.mkMerge`, and `lib.mkDefault` instead of `if then else`:
+
+```nix
+services.foo.enable = pkgs.stdenv.hostPlatform.isLinux;
+
+programs.zsh.initExtra = lib.mkMerge [
+  (lib.mkIf cfg.enablePlugin1 ''...'')
+  (lib.mkIf cfg.enablePlugin2 ''...'')
+];
+```
+
+## Neovim Configuration (`nvim/`)
+
+- **Framework**: LazyVim
 - **Language**: Lua
-- **Framework**: LazyVim (see `lazyvim.json`)
-- **Formatter**: stylua (configured in `stylua.toml`)
-  - 2-space indentation
-  - 120 column width
+- **Formatter**: stylua (`stylua.toml`: 2 spaces, 120 columns)
+- **Plugin specs**: `lua/plugins/*.lua`
+- **Config overrides**: `lua/config/*.lua`
+- **Extras**: See `lazyvim.json` for enabled language/formatting extras
 
-Run Lua formatter:
+Format Lua:
 ```bash
+cd nvim
 stylua lua/
 ```
 
-## General Principles
+## macOS Configs (sketchybar, aerospace)
 
-1. **Test before committing**: Always run `make lint` and `make format`
-2. **Modularize**: Create separate files for distinct concerns
-3. **Document host-specifics**: Add comments for non-obvious configurations
-4. **Use flakes**: All new configurations should use the flake-based setup
-5. **Follow the structure**: Place files in appropriate directories per the project structure
+- **`sketchybar/`**: Lua-based status bar. Entry point is `sketchybarrc`, which loads `helpers/` and `init.lua`.
+- **`aerospace/`**: Tiling window manager config in `aerospace.toml`. Starts `sketchybar` and `borders` on launch.
 
-## Pre-commit Setup
+## Flake Architecture Notes
 
-Install pre-commit hooks to automatically lint and format:
+### Multiple nixpkgs Inputs
 
+The flake uses **separate nixpkgs inputs** per platform to avoid Darwin paying the cost of NixOS tests:
+
+- `nixpkgs` → `nixos-unstable` (used by NixOS)
+- `nixpkgs-darwin` → `nixpkgs-unstable` (used by Darwin)
+- `nixpkgs-stable-nixos` / `nixpkgs-stable-darwin` → stable release branches
+
+`pkgs-stable` is injected into `specialArgs` / `extraSpecialArgs` for all hosts.
+
+### Known Pinning / Overrides
+
+- **`mac-app-util` does NOT follow nixpkgs** — pinned separately to avoid SBCL 2.6.0 build failure ([hraban/mac-app-util#42](https://github.com/hraban/mac-app-util/issues/42)).
+- **Hyprland pinned to 0.53.3** on `kirby` via `nixpkgsHyprland` overlay — required for `hy3` compatibility. Remove once `hy3` supports Hyprland 0.54.x.
+- **Darwin pre-commit from stable** — overlay pulls `pre-commit` from `pkgs-stable` to avoid a `dotnet` dependency issue ([NixOS/nixpkgs#450554](https://github.com/NixOS/nixpkgs/issues/450554)).
+- **Determinate Nix on Darwin** — `nix.enable = false` in Darwin modules because Determinate Nix manages the daemon.
+
+### Helper Functions in `flake.nix`
+
+- `mkSpecialArgs` — builds `specialArgs` with `username`, `hostname`, `inputs`, `pkgs-stable`
+- `mkHomeManagerConfig` — creates a Home Manager user config with `extraSpecialArgs`
+- `mkSystem` — creates a `nixosSystem`
+- `mkDarwin` — creates a `darwinSystem`
+
+### Auto-Upgrade
+
+`kirby` has `system.autoUpgrade` enabled. It updates `nixpkgs` and `nixpkgs-darwin` inputs every Monday and Thursday at 04:00, then rebuilds from `/home/sirwayne/dotfiles/nix#kirby`.
+
+## Pre-Commit Setup
+
+Pre-commit hooks are configured in `nix/.pre-commit-config.yaml`:
+
+- `treefmt` — formats Nix files
+- `statix check .` — lints Nix files
+- `trailing-whitespace`, `end-of-file-fixer` — general hygiene
+- `check-yaml`, `check-json` — syntax validation
+
+Install once:
 ```bash
 cd nix
 pre-commit install
 ```
 
-This runs `statix check`, `treefmt`, and file validation on commit.
+## Stow / Dotfiles Symlinking
+
+`.stowrc` targets `~/.config` and ignores `nix/`, `archive/`, and `.stowrc`. The `nvim/`, `sketchybar/`, and `aerospace/` directories are intended to be stowed into `~/.config`.
+
+## AI / MCP Configuration
+
+- `opencode/opencode.json` — OpenCode agent settings and MCP server registry (NixOS, Astro, Kubernetes, Pulumi).
+- `nix/home/ai/` — Home Manager modules for `claude-code` and `mcp` servers.
 
 ## Useful Nix Commands
 
 ```bash
-# Evaluate and show the resulting config
+# Evaluate config (NixOS)
 nix eval .#nixosConfigurations.kirby.config.system.build.toplevel
 
-# Show differences
+# Show differences between generations
 nix diff ./result /run/current-system
 
 # Search for packages
 nix search nixpkgs package-name
 
-# Clean up
+# Collect garbage
 nix-store --gc
 ```
+
+## General Principles
+
+1. **Test before committing**: Always run `make lint` and `make format` from `nix/`.
+2. **Modularize**: Create separate files for distinct concerns.
+3. **Document host-specifics**: Add comments for non-obvious configurations.
+4. **Use flakes**: All active configurations use the flake-based setup.
+5. **Follow the structure**: Place files in appropriate directories per the project structure.
+6. **Do not expand orphaned configs**: WSL/Ubuntu configs exist but are not wired up; do not add them back without confirming with the user.

@@ -61,18 +61,18 @@
 
   # Auto system update (using flake)
   # Twice weekly updates (Monday and Thursday)
-  system.autoUpgrade = {
-    enable = true;
-    flake = "/home/${username}/dotfiles/nix#kirby";
-    flags = [
-      "--update-input"
-      "nixpkgs"
-      "--update-input"
-      "nixpkgs-darwin"
-    ];
-    dates = "Mon,Thu 04:00"; # Runs every Monday and Thursday at 04:00
-    allowReboot = false;
-  };
+  # system.autoUpgrade = {
+  #   enable = true;
+  #   flake = "/home/${username}/dotfiles/nix#kirby";
+  #   flags = [
+  #     "--update-input"
+  #     "nixpkgs"
+  #     "--update-input"
+  #     "nixpkgs-darwin"
+  #   ];
+  #   dates = "Mon,Thu 04:00"; # Runs every Monday and Thursday at 04:00
+  #   allowReboot = false;
+  # };
 
   # Set your time zone.
   time.timeZone = "America/Vancouver";

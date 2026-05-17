@@ -30,7 +30,8 @@
       "model": "opencode-go/deepseek-v4-pro",
       "fallback_models": [
         "opencode-go/deepseek-v4-flash",
-        "opencode-go/kimi-k2.6"
+        "opencode-go/kimi-k2.6",
+        "opencode-go/mimo-v2-pro"
       ],
       "prompt_append": "Explore thoroughly, then implement. Prefer small, testable changes."
     },
@@ -38,7 +39,8 @@
       "model": "opencode-go/glm-5.1",
       "fallback_models": [
         "opencode-go/kimi-k2.6",
-        "opencode-go/deepseek-v4-pro"
+        "opencode-go/deepseek-v4-pro",
+        "opencode-go/mimo-v2-pro"
       ]
     },
     "librarian": {
@@ -53,28 +55,40 @@
       "fallback_models": "opencode-go/qwen3.6-plus"
     },
     "prometheus": {
-      "model": "opencode-go/glm-5.1",
+      "model": "opencode-go/deepseek-v4-pro",
       "fallback_models": [
-        "opencode-go/qwen3.6-plus",
-        "opencode-go/deepseek-v4-pro"
+        "opencode-go/glm-5.1",
+        "opencode-go/mimo-v2-pro"
       ],
       "prompt_append": "Always interview first. Validate scope before planning."
     },
     "metis": {
       "model": "opencode-go/qwen3.6-plus",
-      "fallback_models": "opencode-go/deepseek-v4-pro"
+      "fallback_models": [
+        "opencode-go/deepseek-v4-pro",
+        "opencode-go/mimo-v2-pro"
+      ]
     },
     "momus": {
       "model": "opencode-go/qwen3.6-plus",
-      "fallback_models": "opencode-go/kimi-k2.6"
+      "fallback_models": [
+        "opencode-go/kimi-k2.6",
+        "opencode-go/mimo-v2-pro"
+      ]
     },
     "atlas": {
       "model": "opencode-go/deepseek-v4-pro",
-      "fallback_models": "opencode-go/deepseek-v4-flash"
+      "fallback_models": [
+        "opencode-go/deepseek-v4-flash",
+        "opencode-go/mimo-v2-pro"
+      ]
     },
     "code-reviewer": {
-      "model": "opencode-go/kimi-k2.6",
-      "fallback_models": "opencode-go/deepseek-v4-pro"
+      "model": "opencode-go/deepseek-v4-pro",
+      "fallback_models": [
+        "opencode-go/kimi-k2.6",
+        "opencode-go/mimo-v2-pro"
+      ]
     },
     "sisyphus-junior": {
       "model": "opencode-go/deepseek-v4-flash"
@@ -86,16 +100,25 @@
       "fallback_models": "opencode-go/qwen3.6-plus"
     },
     "ultrabrain": {
-      "model": "opencode-go/glm-5.1",
-      "fallback_models": "opencode-go/kimi-k2.6"
+      "model": "opencode-go/deepseek-v4-pro",
+      "fallback_models": [
+        "opencode-go/glm-5.1",
+        "opencode-go/mimo-v2-pro"
+      ]
     },
     "deep": {
       "model": "opencode-go/kimi-k2.6",
-      "fallback_models": "opencode-go/deepseek-v4-pro"
+      "fallback_models": [
+        "opencode-go/deepseek-v4-pro",
+        "opencode-go/mimo-v2-pro"
+      ]
     },
     "artistry": {
-      "model": "opencode-go/glm-5.1",
-      "fallback_models": "opencode-go/qwen3.6-plus"
+      "model": "opencode-go/qwen3.6-plus",
+      "fallback_models": [
+        "opencode-go/glm-5.1",
+        "opencode-go/mimo-v2-pro"
+      ]
     },
     "quick": {
       "model": "opencode-go/deepseek-v4-flash"
@@ -105,7 +128,10 @@
     },
     "unspecified-high": {
       "model": "opencode-go/deepseek-v4-pro",
-      "fallback_models": "opencode-go/kimi-k2.6"
+      "fallback_models": [
+        "opencode-go/kimi-k2.6",
+        "opencode-go/mimo-v2-pro"
+      ]
     },
     "writing": {
       "model": "opencode-go/qwen3.6-plus"
@@ -122,7 +148,8 @@
       "opencode-go/deepseek-v4-pro": 3,
       "opencode-go/deepseek-v4-flash": 20,
       "opencode-go/glm-5.1": 1,
-      "opencode-go/qwen3.6-plus": 5
+      "opencode-go/qwen3.6-plus": 5,
+      "opencode-go/mimo-v2-pro": 2
     }
   },
   "git_master": {

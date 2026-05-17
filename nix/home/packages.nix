@@ -78,6 +78,7 @@ in
       lazydocker
       kind
       minikube
+      talosctl
     ]
     ++ [
       inputs.llm-agents.packages.${system}.opencode

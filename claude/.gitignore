@@ -1,0 +1,26 @@
+# Installed by tools — not config
+agents/
+get-shit-done/
+hooks/
+skills/
+plugins/
+gsd-file-manifest.json
+gsd-install-state.json
+gsd-migration-journal/
+package.json
+
+# Runtime state
+backups/
+cache/
+debug/
+history.jsonl
+ide/
+mcp-needs-auth-cache.json
+memory/
+projects/
+session-env/
+sessions/
+shell-snapshots/
+tasks/
+transcripts/
+.last-cleanup

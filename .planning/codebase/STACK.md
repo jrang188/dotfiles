@@ -1,153 +1,146 @@
+---
+title: Technology Stack
+last_mapped: 2026-05-26
+---
+
 # Technology Stack
 
-**Analysis Date:** 2026-05-26
+## Primary Language
 
-## Languages
+**Nix** — all system, home-manager, and package configuration is written in Nix expressions (`.nix` files). No other language is used for system configuration.
 
-**Primary:**
-- **Nix** - System configuration language used throughout `nix/` for flakes, Home Manager modules, NixOS modules, Darwin modules, and package derivations
-- **Lua** - Neovim configuration (`nvim/lua/`), Sketchybar configuration (`sketchybar/`)
-- **TOML** - macOS tiling window manager config (`aerospace/aerospace.toml`)
-
-**Secondary:**
-- **Shell (Bash/Zsh)** - Helper scripts, `sketchybar/sketchybarrc`, opencode hooks (`opencode/hooks/*.sh`)
-- **JavaScript (CommonJS)** - opencode hooks (`opencode/hooks/*.js`), runs under Node.js (`opencode/package.json`)
-- **YAML** - `nix/.pre-commit-config.yaml`
-- **JSON** - `opencode/*.json`, `nvim/lazyvim.json`, `nvim/lazy-lock.json`
-
-## Runtime
-
-**Environment:**
-- **Nix** with flakes (managed by Determinate Nix on Darwin per `nix/modules/darwin/default.nix` and `nix/flake.nix` line 13)
-- **Darwin (macOS)** - aarch64 (`Sterling-MBP` host)
-- **NixOS** - x86_64 (`kirby` host)
-- Orphaned/inactive: WSL (`nix/hosts/nixos/wsl/`), Ubuntu Home Manager (`nix/home/ubuntu/`)
-
-**Nix Channels:**
-- `nixpkgs` → `github:NixOS/nixpkgs/nixos-unstable` (NixOS)
-- `nixpkgs-darwin` → `github:NixOS/nixpkgs/nixpkgs-unstable` (Darwin)
-- `nixpkgs-stable-nixos` → `github:NixOS/nixpkgs/nixos-25.11`
-- `nixpkgs-stable-darwin` → `github:NixOS/nixpkgs/nixpkgs-25.11-darwin`
-- `nixpkgsHyprland` → pinned commit `dd9b079222d43e1943b6ebd802f04fd959dc8e61` (for hy3 compatibility)
-
-**Package Manager:**
-- **Nix** (primary, via flakes)
-- **Homebrew** on Darwin (`nix/hosts/darwin/Sterling-MBP/homebrew.nix`) — manages GUI apps not available in nixpkgs
-- **Flatpak** on NixOS (`nix/modules/nixos/flatpak.nix`)
-- **`nh`** (Nix Helper) — primary rebuild command in `nix/Makefile`
-- **`bun`** — opencode plugin lockfile (`opencode/bun.lock`)
-- **`pnpm`/`yarn`/`npm`** — available via `nix/home/packages.nix` for JavaScript work
-
-**Lockfiles:**
-- `nix/flake.lock` — pinned flake inputs
-- `nvim/lazy-lock.json` — Neovim plugins
-- `opencode/bun.lock`, `opencode/package-lock.json` — opencode dependencies
-
-## Frameworks
-
-**Core:**
-- **Nix Flakes** — entry point `nix/flake.nix`, declarative system composition
-- **Home Manager** [`github:nix-community/home-manager`] — declarative user environment, applied via Darwin/NixOS modules
-- **nix-darwin** [`github:LnL7/nix-darwin`] — macOS system management
-- **Determinate Nix** [`https://flakehub.com/f/DeterminateSystems/determinate/*`] — Nix daemon replacement
-
-**Neovim Framework:**
-- **LazyVim** — declared in `nvim/lua/config/lazy.lua` and configured via `nvim/lazyvim.json` extras
-- **lazy.nvim** — plugin manager, bootstrapped from `https://github.com/folke/lazy.nvim.git`
-
-**Testing:**
-- No formal test framework. Validation by `darwin-rebuild dry-run --flake .#Sterling-MBP` and `sudo nixos-rebuild dry-run --flake .#kirby` (documented in `CLAUDE.md`).
-
-**Build/Dev:**
-- **`make`** (`nix/Makefile`) — wraps `nh darwin switch`, `nh os switch`, `nix flake update`, `statix check`, `nix fmt`
-- **`nh`** — Nix Helper for rebuilds and garbage collection
-- **`pre-commit`** (`nix/.pre-commit-config.yaml`) — runs `treefmt`, `statix check`, whitespace/EOF/YAML/JSON hooks
-- **`treefmt`** / **`nixfmt-tree`** — formatting
-- **`statix`** — Nix linter
-
-## Key Dependencies
-
-**Flake Inputs (`nix/flake.nix`):**
-- `nixpkgs`, `nixpkgs-darwin`, `nixpkgs-stable-nixos`, `nixpkgs-stable-darwin` — package sets
-- `determinate` — Determinate Systems Nix
-- `darwin` [LnL7/nix-darwin] — Darwin system module
-- `mac-app-util` [hraban/mac-app-util] — macOS .app trampolining (NOT following nixpkgs to avoid SBCL 2.6.0 build failure, see `nix/flake.nix` lines 19-23)
-- `home-manager`, `home-manager-darwin` — split inputs per platform
-- `zen-browser` [`github:0xc000022070/zen-browser-flake`] — Zen browser (kirby)
-- `lanzaboote` [`github:nix-community/lanzaboote/v1.0.0`] — Secure Boot for kirby
-- `nixpkgsHyprland` — pinned nixpkgs commit for Hyprland 0.53.3 (hy3 plugin compatibility)
-- `llm-agents` [`github:numtide/llm-agents.nix`] — provides `opencode` and `claude-code` packages
-
-**Critical Programming Toolchains (`nix/home/packages.nix`):**
-- `nodejs`, `bun`, `pnpm`, `yarn-berry` — JavaScript ecosystem
-- `python3`, `uv` — Python
-- `go` — Go
-- `rustup` — Rust toolchain installer
-- `temurin-bin.jdk-21`, `gradle`, `maven`, `spring-boot-cli` — Java
-- `nil`, `nixd`, `nixfmt`, `nixfmt-tree`, `statix` — Nix tooling
-
-**LSPs/Formatters/DAP (`nix/home/neovim.nix`):**
-- LSPs: `astro-language-server`, `basedpyright`, `docker-compose-language-service`, `dockerfile-language-server`, `gopls`, `helm-ls`, `jdt-language-server`, `kotlin-language-server`, `marksman`, `nixd`, `pyright`, `ruff`, `rust-analyzer`, `sqls`, `tailwindcss-language-server`, `taplo`, `unocss-language-server` (custom pkg `nix/pkgs/unocss-language-server.nix`), `terraform-ls`, `typescript-language-server`, `vtsls`, `vue-language-server`, `yaml-language-server`, `vscode-langservers-extracted`
-- Formatters: `prettierd`, `stylua`, `shfmt`
-- Linters: `shellcheck`, `python314Packages.flake8`, `markdownlint-cli2`, `markdown-toc`
-- DAP: `delve`, `python314Packages.debugpy`
-
-**DevOps/Cloud (`nix/home/packages.nix`):**
-- `tenv` (Terraform), `kubernetes-helm`, `kubectl`, `kubectx`, `k9s`, `kind`, `minikube`, `talosctl`
-- `awscli2`, `google-cloud-sdk`, `oci-cli`
-- `pulumi-bin`, `pulumi-esc`
-- `podman-tui`, `lazydocker`
-- `act` (local GitHub Actions runner)
-
-**CLI Utilities:**
-- `gh` (GitHub CLI), `stripe-cli`, `_1password-cli`, `codecrafters-cli`, `devenv`, `devbox`, `pre-commit`
-- `jq`, `fzf`, `fd`, `ripgrep`, `bat`, `tree`, `lazygit`, `stow`, `tmux`, `cachix`
-
-## Configuration
-
-**Environment:**
-- Username and hostname injected via `specialArgs` and `extraSpecialArgs` from `nix/flake.nix` helper `mkSpecialArgs` (lines 66-77)
-- Time zone: `America/Vancouver` (`nix/hosts/nixos/kirby/default.nix`)
-- Locale: `en_CA.UTF-8` (kirby)
-- Home Manager `stateVersion = "24.11"` (`nix/home/default.nix`)
-- NixOS `stateVersion = "25.05"` (kirby), `"24.05"` (orphaned WSL host)
-- Darwin `system.stateVersion = 5` (`nix/modules/darwin/system.nix`)
-
-**Build:**
-- `nix/flake.nix` — entry point, defines `darwinConfigurations."Sterling-MBP"` and `nixosConfigurations."kirby"`
-- `nix/Makefile` — build wrappers (`make darwin`, `make nixos`, `make update`, `make clean`, `make lint`, `make format`)
-- `nix/.editorconfig` — 2-space indent for Nix files
-- `nix/.pre-commit-config.yaml` — pre-commit hooks
-- `nvim/stylua.toml` — Lua formatter (2 spaces, 120 columns)
-- `.stowrc` — GNU Stow config targeting `~/.config`, ignoring `nix/`, `archive/`, `.stowrc`
-
-**Nix Substituters (`nix/modules/common/nix-core.nix`):**
-- `https://nix-community.cachix.org/`
-- `https://cachix.cachix.org`
-- `https://hyprland.cachix.org`
-- `https://ghostty.cachix.org`
-- `https://devenv.cachix.org`
-- `https://cache.numtide.com`
-
-**Allowed unfree/broken:** `nixpkgs.config.allowUnfree = true; allowBroken = true;` in `nix/modules/common/nix-core.nix` and `nix/modules/darwin/default.nix`.
-
-**Fonts (`nix/modules/common/nix-core.nix`, `nix/modules/darwin/system.nix`):**
-- `nerd-fonts.fira-code`, `nerd-fonts.jetbrains-mono`, `font-awesome`, `sketchybar-app-font`
-
-## Platform Requirements
-
-**Development:**
-- macOS aarch64 (Apple Silicon) for `Sterling-MBP`
-- x86_64 Linux for `kirby`
-- Determinate Nix installed (Darwin)
-- For first-time setup: `nh`, `darwin-rebuild`, or `nixos-rebuild` available
-
-**Production / Deployed System:**
-- macOS Darwin (`Sterling-MBP`): aarch64-darwin
-- NixOS (`kirby`): x86_64-linux with Secure Boot via `lanzaboote`, KDE Plasma 6 + SDDM (`nix/hosts/nixos/kirby/desktop.nix`), Hyprland + hy3 plugin (`nix/home/nixos/kirby/hyprland.nix`)
-- Audio: PipeWire (kirby)
-- Container runtime: Podman with Docker compatibility shim (`nix/modules/nixos/podman.nix`)
+**Secondary languages (tooling / auxiliary config):**
+- **Lua** — Neovim plugin configuration (`nvim/lua/`)
+- **Bash / Zsh** — hook scripts, Makefile targets, zsh init content
+- **JavaScript (CJS)** — GSD runtime hooks in `opencode/hooks/` and `claude/` (Node.js, CommonJS)
 
 ---
 
-*Stack analysis: 2026-05-26*
+## Core Framework
+
+| Layer | Tool | Version / Channel |
+|---|---|---|
+| Package manager | Nix (Determinate Systems) | Flakes-enabled |
+| NixOS modules | nixpkgs | `nixos-unstable` |
+| macOS modules | nixpkgs-darwin | `nixpkgs-unstable` |
+| Stable fallback (NixOS) | nixpkgs-stable-nixos | `nixos-25.11` |
+| Stable fallback (Darwin) | nixpkgs-stable-darwin | `nixpkgs-25.11-darwin` |
+| macOS system config | nix-darwin | `github:LnL7/nix-darwin` |
+| User environment | Home Manager | follows nixpkgs / nixpkgs-darwin |
+| Secure boot | lanzaboote | `v1.0.0` |
+| Rebuild helper | nh | via nixpkgs |
+
+---
+
+## Flake Inputs
+
+All inputs are in `nix/flake.nix`:
+
+| Input | Source | Notes |
+|---|---|---|
+| `nixpkgs` | `github:NixOS/nixpkgs/nixos-unstable` | NixOS primary |
+| `nixpkgs-darwin` | `github:NixOS/nixpkgs/nixpkgs-unstable` | macOS primary |
+| `nixpkgs-stable-nixos` | `github:NixOS/nixpkgs/nixos-25.11` | Stable reference |
+| `nixpkgs-stable-darwin` | `github:NixOS/nixpkgs/nixpkgs-25.11-darwin` | Stable reference |
+| `determinate` | `flakehub.com/f/DeterminateSystems/determinate/*` | Determinate Nix |
+| `darwin` | `github:LnL7/nix-darwin` | follows nixpkgs-darwin |
+| `home-manager` | `github:nix-community/home-manager` | follows nixpkgs |
+| `home-manager-darwin` | `github:nix-community/home-manager` | follows nixpkgs-darwin |
+| `mac-app-util` | `github:hraban/mac-app-util` | **does NOT follow nixpkgs** (SBCL 2.6.0 workaround) |
+| `zen-browser` | `github:0xc000022070/zen-browser-flake` | NixOS only |
+| `lanzaboote` | `github:nix-community/lanzaboote/v1.0.0` | follows nixpkgs |
+| `nixpkgsHyprland` | `github:NixOS/nixpkgs/dd9b079...` | **Pinned commit** — hyprland 0.53.3 for hy3 compat |
+| `llm-agents` | `github:numtide/llm-agents.nix` | opencode + claude-code packages |
+
+---
+
+## Shell Environment
+
+- **Shell:** Zsh (managed by Home Manager `programs.zsh`)
+- **Framework:** oh-my-zsh with plugins: `git`, `fnm`, `bun`, `kubectl`, `helm`, `terraform`, `aws`, `uv`, `direnv`, `macos` (Darwin only)
+- **Enhancements:** syntax highlighting, autosuggestion
+- **PATH additions:** `$HOME/.local/bin`, `$GOPATH/bin`, `/usr/local/go/bin`
+
+---
+
+## Installed Packages (shared across all hosts)
+
+Defined in `nix/home/packages.nix`:
+
+### Nix & Editor Tools
+- `nil`, `nixd` — dual Nix LSPs
+- `nixfmt`, `nixfmt-tree`, `statix` — formatting and linting
+
+### General Utilities
+`jq`, `fzf`, `fd`, `ripgrep`, `bat`, `tree`, `stow`, `openssl`, `lazygit`, `tmux`, `cachix`, `xxd`
+
+### Programming Languages & Runtimes
+`nodejs`, `uv`, `python3`, `go`, `bun`, `rustup`, `temurin-bin.jdk-21`, `gradle`, `maven`
+
+### Development Tools
+`gh`, `stripe-cli`, `_1password-cli`, `gnumake`, `golangci-lint`, `spring-boot-cli`, `pre-commit`, `devenv`, `devbox`, `pnpm`, `yarn-berry`, `codecrafters-cli`
+
+### DevOps & Cloud
+`tenv` (Terraform), `kubernetes-helm`, `kubectl`, `kubectx`, `k9s`, `awscli2`, `google-cloud-sdk`, `oci-cli`, `pulumi-bin`, `pulumi-esc`, `podman-tui`, `lazydocker`, `kind`, `minikube`, `talosctl`
+
+### AI Tools (via llm-agents.nix)
+`opencode`, `claude-code`
+
+---
+
+## macOS-Specific (Homebrew, via nix-darwin)
+
+Defined in `nix/hosts/darwin/Sterling-MBP/homebrew.nix`. Managed declaratively with `cleanup = "zap"` on activation.
+
+**Brews:** `sketchybar`, `borders`, `lua`, `kafka`, `mole`, `media-control`, `scrcpy`
+
+**Casks:** `raycast`, `scroll-reverser`, `warp`, `aerospace`, `karabiner-elements`, `sf-symbols`, `font-sf-mono`, `font-sf-pro`, `orbstack`, `localsend`, `kdeconnect`, `intellij-idea`, `zed`, `google-drive`, `adobe-acrobat-reader`, `android-platform-tools`
+
+---
+
+## Fonts
+
+| Font | Source |
+|---|---|
+| Fira Code Nerd Font | nixpkgs `nerd-fonts.fira-code` |
+| JetBrains Mono Nerd Font | nixpkgs `nerd-fonts.jetbrains-mono` |
+| Font Awesome | nixpkgs `font-awesome` |
+| Sketchybar App Font | nixpkgs `sketchybar-app-font` (Darwin) |
+| SF Symbols, SF Mono, SF Pro | Homebrew casks (Darwin) |
+
+---
+
+## Neovim
+
+- **Base:** LazyVim (see `nvim/lazyvim.json`)
+- **Config language:** Lua
+- **Formatter:** stylua (`nvim/stylua.toml`) — 2-space indent, 120 col width
+- **Nix integration:** `programs.neovim` via Home Manager (`nix/home/neovim.nix`)
+
+---
+
+## NixOS Desktop (kirby)
+
+- **Window manager:** Hyprland (pinned 0.53.3) + hy3 tiling plugin
+- **Session manager:** KDE Plasma (also installed — dual desktop)
+- **Notification daemon:** swaync
+- **App launcher:** Rofi
+- **Screen lock:** hyprlock / hypridle
+- **Wallpaper daemon:** hyprpaper
+- **Blue light filter:** hyprsunset
+- **Status bar:** ashell
+
+---
+
+## Binary Caches
+
+Configured in `nix/modules/common/nix-core.nix`:
+
+| Cache | URL |
+|---|---|
+| nix-community | `https://nix-community.cachix.org/` |
+| cachix | `https://cachix.cachix.org` |
+| hyprland | `https://hyprland.cachix.org` |
+| ghostty | `https://ghostty.cachix.org` |
+| devenv | `https://devenv.cachix.org` |
+| numtide | `https://cache.numtide.com` |

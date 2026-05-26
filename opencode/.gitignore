@@ -1,0 +1,15 @@
+# Installed by tools — not config
+agents/
+command/
+get-shit-done/
+hooks/
+plugins/
+gsd-file-manifest.json
+gsd-install-state.json
+.gsd-profile
+
+# Runtime/deps
+node_modules/
+package.json
+package-lock.json
+bun.lock

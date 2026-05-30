@@ -15,7 +15,6 @@ _: {
       "FelixKratz/formulae"
       "homebrew/services"
       "grishka/grishka"
-      "imshuhao/kdeconnect"
     ];
 
     # `brew install`
@@ -41,7 +40,6 @@ _: {
       "font-sf-pro"
       "orbstack"
       "localsend"
-      "kdeconnect"
       "intellij-idea"
       "zed"
       "google-drive"

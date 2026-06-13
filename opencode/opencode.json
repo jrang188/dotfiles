@@ -4,7 +4,6 @@
   "plugin": [
     "superpowers@git+https://github.com/obra/superpowers.git",
     "oh-my-opencode-slim",
-    "oh-my-openagent@latest"
   ],
   "mcp": {
     "nixos": {

@@ -22,6 +22,8 @@
       url = "github:hraban/mac-app-util";
     };
 
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -145,6 +147,22 @@
               system = darwinSystem;
               inherit homeImports extraArgs;
             })
+            inputs.nix-homebrew.darwinModules.nix-homebrew
+            {
+              nix-homebrew = {
+                # Install Homebrew under the default prefix
+                enable = true;
+
+                # Apple Silicon Only: Also install Homebrew under the default Intel prefix for Rosetta 2
+                enableRosetta = true;
+
+                # User owning the Homebrew prefix
+                user = username;
+
+                # Automatically migrate existing Homebrew installations
+                autoMigrate = true;
+              };
+            }
           ];
         };
     in

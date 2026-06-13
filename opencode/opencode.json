@@ -1,7 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "opencode-go/mimo-v2-pro",
-  "plugin": [],
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers.git",
+    "oh-my-opencode-slim",
+    "oh-my-openagent@latest"
+  ],
   "mcp": {
     "nixos": {
       "type": "local",
@@ -41,10 +45,11 @@
   },
   "permission": {
     "read": {
-      "~/.config/opencode/get-shit-done/*": "allow"
+      "~/.config/opencode/gsd-core/*": "allow"
     },
     "external_directory": {
-      "~/.config/opencode/get-shit-done/*": "allow"
+      "~/.config/opencode/gsd-core/*": "allow"
     }
-  }
+  },
+  "lsp": true
 }

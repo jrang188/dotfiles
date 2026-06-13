@@ -14,6 +14,7 @@ in
   imports = [
     ./zsh.nix
     ./neovim.nix
+    ./yazi.nix
     ./git.nix
     ./oh-my-posh.nix
     ./packages.nix

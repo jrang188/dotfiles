@@ -34,7 +34,7 @@ in
   # Qt dark theme - use gtk2 platform theme to match Tokyo Night GTK theme
   qt = lib.mkIf cfg.enable {
     enable = true;
-    platformTheme.name = "gtk";
+    platformTheme.name = "gtk2";
     style = {
       name = "gtk2";
       package = pkgs.qt6Packages.qt6gtk2;
@@ -54,7 +54,7 @@ in
     # GTK dark theme - Tokyo Night
     GTK_THEME = "Tokyonight-Dark";
     # Qt dark theme - use gtk2 to match GTK theme
-    QT_QPA_PLATFORMTHEME = "gtk2";
+    # QT_QPA_PLATFORMTHEME is managed by the qt module via platformTheme.name
     QT_STYLE_OVERRIDE = "gtk2";
     # Electron apps dark mode
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";

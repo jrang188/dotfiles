@@ -4,6 +4,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
+    configType = "hyprlang";
     settings = {
 
       # Set programs that you use

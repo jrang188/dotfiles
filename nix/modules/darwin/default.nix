@@ -8,6 +8,13 @@
   nixpkgs.config = {
     allowUnfree = true;
     allowBroken = true;
+    # Several packages depend on pinned pnpm versions that are currently marked
+    # insecure (e.g. unocss-language-server). Permit them until upstream
+    # nixpkgs updates the dependent packages.
+    permittedInsecurePackages = [
+      "pnpm-9.15.9"
+      "pnpm-10.34.0"
+    ];
   };
 
   # Overlay to use stable pre-commit on Darwin to avoid dotnet dependency

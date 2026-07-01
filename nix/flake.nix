@@ -7,8 +7,8 @@
     # Darwin-specific nixpkgs (faster, no NixOS tests required)
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     # Stable references for each system type
-    nixpkgs-stable-nixos.url = "github:NixOS/nixpkgs/nixos-25.11";
-    nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
+    nixpkgs-stable-nixos.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
 
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     darwin = {
@@ -37,7 +37,7 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v1.0.0";
+      url = "github:nix-community/lanzaboote/v1.1.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -194,8 +194,8 @@
       };
 
       formatter = {
-        ${darwinSystem} = inputs.nixpkgs-darwin.legacyPackages.${darwinSystem}.nixfmt;
-        ${nixosSystem} = inputs.nixpkgs.legacyPackages.${nixosSystem}.nixfmt;
+        ${darwinSystem} = inputs.nixpkgs-darwin.legacyPackages.${darwinSystem}.nixfmt-tree;
+        ${nixosSystem} = inputs.nixpkgs.legacyPackages.${nixosSystem}.nixfmt-tree;
       };
     };
 }

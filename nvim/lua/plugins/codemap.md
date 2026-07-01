@@ -39,6 +39,7 @@ Houses all custom plugin specifications and LazyVim plugin overrides. Every `.lu
 | `nixd.lua` | `neovim/nvim-lspconfig` | Configures nixd LSP with flake-based system and home-manager options evaluation using `builtins.getFlake` |
 | `opencode.lua` | `nickjvandyke/opencode.nvim` | OpenCode AI provider integration, snacks.nvim dependency for input/picker/terminal, keymaps for ask/select/toggle/operator, scroll fix for native `<C-a>`/`<C-x>` |
 | `unocss.lua` | `neovim/nvim-lspconfig` | Registers `unocss` LSP server |
+| `vim-tmux-navigator.lua` | `christoomey/vim-tmux-navigator` | Seamless Neovim<->tmux pane navigation via Ctrl-h/j/k/l, lazy-loaded on commands and keys |
 
 ### Detailed per-file documentation
 
@@ -94,6 +95,12 @@ Houses all custom plugin specifications and LazyVim plugin overrides. Every `.lu
   - `+` / `-` → remaps native `<C-a>`/`<C-x>` increment/decrement (normal, avoids conflict)
 
 **`unocss.lua`** — Targets `neovim/nvim-lspconfig` with `opts.servers.unocss = {}`. Registers the UnoCSS LSP server for Tailwind-like utility class support.
+
+**`vim-tmux-navigator.lua`** — Configures `christoomey/vim-tmux-navigator` for seamless navigation between Neovim splits and tmux panes. Lazy-loaded via:
+- `cmd`: `TmuxNavigateLeft`, `TmuxNavigateDown`, `TmuxNavigateUp`, `TmuxNavigateRight`, `TmuxNavigatePrevious`, `TmuxNavigatorProcessList`.
+- `keys`: `<C-h>` (left), `<C-j>` (down), `<C-k>` (up), `<C-l>` (right), `<C-\>` (previous pane).
+- Keymaps use `"<cmd><C-U>TmuxNavigate*<cr>"` pattern allowing count-prefixed navigation from visual mode.
+- Pairs with the tmux-side `vim-tmux-navigator` tmux plugin configured in `nix/home/tmux.nix`.
 
 ## Flow
 

@@ -19,6 +19,7 @@
         "aws"
         "uv"
         "direnv"
+        "tmux"
       ];
     };
 

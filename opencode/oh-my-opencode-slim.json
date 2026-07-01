@@ -54,7 +54,7 @@
     },
     "opencode-go": {
       "orchestrator": {
-        "model": "opencode-go/glm-5.1",
+        "model": "opencode-go/glm-5.2",
         "skills": [
           "*"
         ],
@@ -78,7 +78,7 @@
         "mcps": []
       },
       "librarian": {
-        "model": "opencode-go/minimax-m2.7",
+        "model": "opencode-go/minimax-m3",
         "skills": [],
         "mcps": [
           "websearch",
@@ -87,7 +87,7 @@
         ]
       },
       "explorer": {
-        "model": "opencode-go/minimax-m2.7",
+        "model": "opencode-go/minimax-m3",
         "skills": [],
         "mcps": []
       },

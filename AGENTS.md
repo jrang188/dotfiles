@@ -16,14 +16,13 @@ For deep work on a specific folder, also read that folder's `codemap.md`.
 ## Repository Structure
 
 ```
-.
 ├── nix/                    # Main Nix configuration
-│   ├── flake.nix           # Flake entry point
+│   ├── flake.nix           # Flake entry point (helper fns: mkSpecialArgs, mkStablePkgs, mkHomeManagerConfig, mkSystem, mkDarwin)
 │   ├── Makefile            # Build commands
 │   ├── home/               # Home Manager configs (shared + host-specific)
 │   ├── hosts/              # Host-specific system configs
-│   ├── modules/            # Reusable Nix modules
-│   └── lib/                # Helper functions (currently empty)
+│   ├── modules/            # Reusable Nix modules (common/, darwin/, home/, nixos/)
+│   └── pkgs/               # Custom package derivations (callPackage)
 ├── nvim/                   # Neovim configuration (LazyVim-based)
 │   ├── lua/                # Lua plugins and config
 │   └── stylua.toml         # Lua formatter config
@@ -39,6 +38,8 @@ Only two hosts are wired in `flake.nix` outputs:
 - **`Sterling-MBP`** — macOS (Darwin), aarch64
 - **`kirby`** — NixOS, x86_64
 
+> **Hostname gotcha:** the `kirby` flake output passes `hostname = "kirby-machine"` to `mkSystem` (not `"kirby"`). The `hostname` specialArg seen inside NixOS modules is `"kirby-machine"`; the flake attribute is `"kirby"`.
+
 > **Note:** WSL (`hosts/nixos/wsl/`, `home/nixos/wsl/`, `home/ubuntu/`) and Ubuntu home configs exist in the tree but are **not currently exported** from `flake.nix`. They are orphaned configs left over from prior iterations.
 
 ## Build Commands
@@ -53,7 +54,7 @@ make nixos    # Rebuild kirby via `nh os switch`
 make update   # Update flake inputs (`nix flake update`)
 make clean    # Garbage collect (`nh clean all`)
 make lint     # Lint with statix
-make format   # Format with nixfmt (also: `make fmt`)
+make format   # Format with nixfmt-tree (`nix fmt`)
 ```
 
 ### Manual rebuilds (when `nh` is unavailable)
@@ -189,27 +190,29 @@ The flake uses **separate nixpkgs inputs** per platform to avoid Darwin paying t
 
 - `nixpkgs` → `nixos-unstable` (used by NixOS)
 - `nixpkgs-darwin` → `nixpkgs-unstable` (used by Darwin)
-- `nixpkgs-stable-nixos` / `nixpkgs-stable-darwin` → stable release branches
+- `nixpkgs-stable-nixos` → `nixos-26.05`
+- `nixpkgs-stable-darwin` → `nixpkgs-26.05-darwin`
 
-`pkgs-stable` is injected into `specialArgs` / `extraSpecialArgs` for all hosts.
+`pkgs-stable` is injected into `specialArgs` / `extraSpecialArgs` for all hosts via `mkStablePkgs` (dispatches to the correct stable channel by `system`).
 
 ### Known Pinning / Overrides
 
 - **`mac-app-util` does NOT follow nixpkgs** — pinned separately to avoid SBCL 2.6.0 build failure ([hraban/mac-app-util#42](https://github.com/hraban/mac-app-util/issues/42)).
-- **Hyprland pinned to 0.53.3** on `kirby` via `nixpkgsHyprland` overlay — required for `hy3` compatibility. Remove once `hy3` supports Hyprland 0.54.x.
+- **Hyprland pinned to v0.54.3** on `kirby` via direct flake input `inputs.hyprland` (not an overlay), with `hy3` at `hl0.54.2.1` ABI-locked via `follows`. Bump both together. Do not upgrade to 0.55+ until `hy3` supports it (hy3#320, #321).
 - **Darwin pre-commit from stable** — overlay pulls `pre-commit` from `pkgs-stable` to avoid a `dotnet` dependency issue ([NixOS/nixpkgs#450554](https://github.com/NixOS/nixpkgs/issues/450554)).
 - **Determinate Nix on Darwin** — `nix.enable = false` in Darwin modules because Determinate Nix manages the daemon.
 
 ### Helper Functions in `flake.nix`
 
 - `mkSpecialArgs` — builds `specialArgs` with `username`, `hostname`, `inputs`, `pkgs-stable`
+- `mkStablePkgs` — resolves the correct stable nixpkgs legacyPackages by `system` (via `getStableNixpkgs`)
 - `mkHomeManagerConfig` — creates a Home Manager user config with `extraSpecialArgs`
 - `mkSystem` — creates a `nixosSystem`
 - `mkDarwin` — creates a `darwinSystem`
 
 ### Auto-Upgrade
 
-`kirby` has `system.autoUpgrade` enabled. It updates `nixpkgs` and `nixpkgs-darwin` inputs every Monday and Thursday at 04:00, then rebuilds from `/home/sirwayne/dotfiles/nix#kirby`.
+`system.autoUpgrade` is currently **commented out** in `hosts/nixos/kirby/default.nix`. The commented block (if re-enabled) updates `nixpkgs` and `nixpkgs-darwin` every Monday and Thursday at 04:00, then rebuilds from `/home/sirwayne/dotfiles/nix#kirby`.
 
 ## Pre-Commit Setup
 

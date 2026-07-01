@@ -19,6 +19,7 @@ in
     ./oh-my-posh.nix
     ./packages.nix
     ./ai
+    ./tmux.nix
   ];
 
   # Home Manager needs a bit of information about you and the

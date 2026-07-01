@@ -41,9 +41,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Pinned to the last nixos-unstable commit with hyprland 0.53.3, before the 0.54.x
-    # update that broke hy3 compatibility. Remove once hy3 supports hyprland 0.54.x.
-    nixpkgsHyprland.url = "github:NixOS/nixpkgs/dd9b079222d43e1943b6ebd802f04fd959dc8e61";
+    # Upstream Hyprland 0.54.3 + matching hy3. Use direct flakes (not nixpkgs) so
+    # the hy3 build is ABI-locked to this exact Hyprland via `follows`. Bump both
+    # together when ready. (0.55+ has known hy3 ABI churn — see hy3#320, #321.)
+    hyprland = {
+      url = "github:hyprwm/Hyprland?submodules=1&ref=v0.54.3";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hy3 = {
+      url = "github:outfoxxed/hy3?ref=hl0.54.2.1";
+      inputs.hyprland.follows = "hyprland";
+    };
 
     llm-agents.url = "github:numtide/llm-agents.nix";
   };
@@ -190,7 +198,14 @@
           ./home
           ./home/nixos/kirby
         ];
-        extraArgs = { inherit (inputs) zen-browser llm-agents; };
+        extraArgs = {
+          inherit (inputs)
+            zen-browser
+            llm-agents
+            hyprland
+            hy3
+            ;
+        };
       };
 
       formatter = {

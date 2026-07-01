@@ -11,7 +11,7 @@ _: {
       # Modules
       modules = {
         left = [
-          [ "Workspaces" ]
+          "Workspaces"
           "Tray"
         ];
         center = [ "WindowTitle" ];

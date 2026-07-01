@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   # Hyprland window manager configuration
   wayland.windowManager.hyprland = {
@@ -121,7 +121,7 @@
         "$mainMod, V, togglefloating" # Toggle floating mode
         "$mainMod, space, exec, $menu" # Open application menu
         "$mainMod, P, pseudo" # Toggle pseudotiling (dwindle layout)
-        "$mainMod, backslash, togglesplit" # Toggle split direction (dwindle layout)
+        "$mainMod, backslash, layoutmsg, togglesplit" # Toggle split direction (hy3 layout, togglesplit was removed in Hyprland 0.54)
         "$mainMod, B, exec, $browser" # Open browser
         "$superShift, 1, exec, $1pass" # Open 1Password
         "$superShift, D, exec, $discord" # Open Discord
@@ -224,8 +224,8 @@
       ];
     };
 
-    plugins = with pkgs.hyprlandPlugins; [
-      hy3
+    plugins = [
+      inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
     ];
 
     extraConfig = ''

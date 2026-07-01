@@ -5,24 +5,11 @@
 {
   username,
   hostname,
-  nixpkgsHyprland,
   ...
 }:
 
 {
   nixpkgs = {
-    # Pin hyprland to 0.53.3 via overlay to keep hy3 working.
-    # hy3 0.53.0.1 is incompatible with hyprland 0.54.x (API breakage).
-    # Remove this overlay once hy3 supports hyprland 0.54.x and nixpkgs catches up.
-    overlays = [
-      (final: prev: {
-        inherit (nixpkgsHyprland.legacyPackages.${prev.stdenv.hostPlatform.system})
-          hyprland
-          hyprlandPlugins
-          ;
-      })
-    ];
-
     # Several packages depend on pinned pnpm versions that are currently marked
     # insecure (e.g. vesktop, podman-desktop, unocss-language-server). Permit
     # them until upstream nixpkgs updates the dependent packages.

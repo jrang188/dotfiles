@@ -45,7 +45,7 @@
     # the hy3 build is ABI-locked to this exact Hyprland via `follows`. Bump both
     # together when ready. (0.55+ has known hy3 ABI churn — see hy3#320, #321.)
     hyprland = {
-      url = "github:hyprwm/Hyprland?submodules=1&ref=v0.54.3";
+      url = "git+https://github.com/hyprwm/Hyprland?submodules=1&ref=v0.54.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hy3 = {

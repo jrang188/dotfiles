@@ -26,7 +26,7 @@
   ];
 
   nix = {
-    package = pkgs.nix;
+    package = pkgs.lixPackageSets.stable.lix;
     optimise = {
       interval = {
         Weekday = 1;

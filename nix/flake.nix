@@ -147,7 +147,6 @@
             inherit extraArgs;
           };
           modules = modules ++ [
-            { nix.enable = false; } # We want to use determinate nix
             inputs.mac-app-util.darwinModules.default
             inputs.home-manager-darwin.darwinModules.home-manager
             (mkHomeManagerConfig {

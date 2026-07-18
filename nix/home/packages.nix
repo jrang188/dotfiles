@@ -77,8 +77,9 @@ in
       podman-tui # Podman TUI
       lazydocker
       kind
-      minikube
       talosctl
+      packer
+      hcloud
     ]
     ++ [
       inputs.llm-agents.packages.${system}.opencode

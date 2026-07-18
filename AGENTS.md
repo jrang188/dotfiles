@@ -200,6 +200,7 @@ The flake uses **separate nixpkgs inputs** per platform to avoid Darwin paying t
 - **`mac-app-util` does NOT follow nixpkgs** — pinned separately to avoid SBCL 2.6.0 build failure ([hraban/mac-app-util#42](https://github.com/hraban/mac-app-util/issues/42)).
 - **Hyprland pinned to v0.54.3** on `kirby` via direct flake input `inputs.hyprland` (not an overlay), with `hy3` at `hl0.54.2.1` ABI-locked via `follows`. Bump both together. Do not upgrade to 0.55+ until `hy3` supports it (hy3#320, #321).
 - **Darwin pre-commit from stable** — overlay pulls `pre-commit` from `pkgs-stable` to avoid a `dotnet` dependency issue ([NixOS/nixpkgs#450554](https://github.com/NixOS/nixpkgs/issues/450554)).
+- **Darwin nodejs_24 stdenv pin** — overlay rebuilds `nodejs-slim_24` (the underlying derivation; `nodejs_24` is a symlinkJoin wrapper around it) against `llvmPackages_20.libcxxStdenv` to dodge a V8 `std::hash<int>` ODR violation with libc++ 21 that spams "File descriptor … unmanaged mode" warnings from pnpm 11's worker pool. Cosmetic. Safe to drop once nixpkgs ships a V8 with upstream commit [v8/v8@65ce14d8](https://github.com/v8/v8/commit/65ce14d8). ([NixOS/nixpkgs#536039](https://github.com/NixOS/nixpkgs/issues/536039))
 - **Determinate Nix on Darwin** — `nix.enable = false` in Darwin modules because Determinate Nix manages the daemon.
 
 ### Helper Functions in `flake.nix`

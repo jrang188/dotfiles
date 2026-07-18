@@ -13,13 +13,14 @@ Key architectural patterns:
 - **Binding modes**: A two-mode state machine (`main` and `service`). The `main` mode handles normal tiling operations (focus, move, resize, workspace switching). The `service` mode provides administrative commands (config reload, layout reset, floating toggle, close-all-but-current). Mode transitions are tracked via SketchyBar triggers (`aerospace_enter_service_mode` / `aerospace_leave_service_mode`).
 - **Startup lifecycle**: `start-at-login = true` triggers the `after-startup-command` sequence, which launches `borders` (JankyBorders with TokyoNight colors) and `sketchybar` (status bar). These are `exec-and-forget` — AeroSpace does not track their lifetimes.
 - **Workspace-to-monitor assignment**: Named workspaces (Dev, Web, Shell, Comms, Note, Utility, Media) are pinned to `primary` or `secondary` monitors via `workspace-to-monitor-force-assignment`. Numeric workspaces (1-9) are unconstrained.
-- **Window detection rules**: `[[on-window-detected]]` blocks match `app-id` and auto-move windows to named workspaces (e.g., Slack → Comms, Spotify → Media, Obsidian → Note). No floating / sizing rules — only workspace assignment.
+- **Persistent workspaces**: `config-version = 2` requires explicit declaration of `persistent-workspaces` (v1 inferred this from keyboard bindings). The config lists all 16 referenced workspaces (1-9 plus the 7 named) so they stay pinned to their assigned monitor when empty.
+- **Window detection rules**: `[[on-window-detected]]` blocks use the modern `if = 'test %{app-bundle-id} = …'` form (the older `if.app-id = '…'` dotted-key syntax is soft-deprecated) to match app bundle IDs and auto-move windows to named workspaces (e.g., Slack → Comms, Spotify → Media, Obsidian → Note). No floating / sizing rules — only workspace assignment.
 - **Gaps**: Inner gaps (10px) are uniform; outer gaps vary by monitor (built-in gets 10px bottom, 20px top; all others get 10px bottom, 50px top).
 
 ## Flow
 
 1. **Login → AeroSpace startup**: macOS launches AeroSpace (via `start-at-login`). AeroSpace runs `after-startup-command`: `exec-and-forget borders ...` then `exec-and-forget sketchybar`.
-2. **Window creation**: When a new window is detected, `[[on-window-detected]]` rules are evaluated in order. If `app-id` matches, the window is moved to the specified workspace via `move-node-to-workspace`.
+2. **Window creation**: When a new window is detected, `[[on-window-detected]]` rules are evaluated in order. Each rule runs an `if = 'test %{app-bundle-id} = …'` test; on match, the window is moved to the specified workspace via `move-node-to-workspace`.
 3. **User interaction**: Key bindings in `[mode.main.binding]` dispatch AeroSpace commands (focus, move, resize, workspace switch). `alt-shift-;` enters `service` mode; `esc` returns to `main` mode.
 4. **Focus/workspace change → SketchyBar**: Two event callbacks notify SketchyBar:
    - `exec-on-workspace-change` → `sketchybar --trigger aerospace_workspace_change` with `FOCUSED_WORKSPACE` and `FOCUSED_DISPLAY`.

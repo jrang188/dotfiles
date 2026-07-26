@@ -22,7 +22,7 @@ Shared Home Manager configuration root — the base user environment applied to 
 
 ## Integration
 
-- **Flake entry point**: `nix/flake.nix` lines 182–186 (Darwin) and 197–199 (NixOS) wire `./home` as the first element of `homeImports`.
+- **Flake entry point**: `nix/flake.nix` lines 181–185 (Darwin) and 196–199 (NixOS) wire `./home` as the first element of `homeImports`.
 - **Consumed by**: `nix/home/darwin/` (adds Darwin-specific overlays), `nix/home/nixos/kirby/` (adds NixOS- and host-specific overlays). Also consumed by oprhaned configs `nix/home/nixos/wsl/` and `nix/home/ubuntu/` (not wired into flake.nix).
 - **External dependency**: `inputs.llm-agents.packages.${system}.opencode` is injected into `home.packages` via `packages.nix`.
 - **Shared module dependency**: `nix/modules/home/gui.nix` provides a base `programs.ghostty` config that Darwin and NixOS hosts may import and override.

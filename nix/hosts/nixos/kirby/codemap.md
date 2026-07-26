@@ -17,7 +17,7 @@ Host-specific NixOS module for the **kirby** machine (x86_64-linux desktop). Def
 ## Files
 | File | Role |
 |------|------|
-| `default.nix` | Composition root. Sets `networking.hostName`, user `sirwayne` (groups: networkmanager, wheel, podman), `nix.settings.trusted-users`, timezone, locale, `programs.kdeconnect`, `programs.firefox`, `system.stateVersion = "25.05"`. Permits insecure pnpm versions. |
+| `default.nix` | Composition root. Sets `networking.hostName`, user `sirwayne` (groups: networkmanager, wheel, podman), `nix.settings.trusted-users`, timezone, locale, `programs.kdeconnect`, `programs.firefox`, `system.stateVersion = "25.05"`. Permits insecure pnpm versions and electron-40.10.5. |
 | `boot.nix` | systemd-boot loader: `consoleMode = "max"`, `configurationLimit = 5`, `timeout = 10`, EFI at `/boot`. |
 | `secure-boot.nix` | Lanzaboote Secure Boot: `boot.lanzaboote.enable = true`, pkiBundle at `/var/lib/sbctl`, auto-generate + auto-enroll keys. Forces `boot.loader.systemd-boot.enable = false` via `lib.mkForce`. Installs `sbctl`. |
 | `networking.nix` | NetworkManager with `dns = "none"` (delegating to local proxy), openvpn plugin. `dnscrypt-proxy2` with AdGuard DNS over HTTPS via IPv6, DNSSEC enforcement. Local DNS on `127.0.0.1` / `::1`. |

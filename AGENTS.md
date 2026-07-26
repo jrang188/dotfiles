@@ -201,7 +201,7 @@ The flake uses **separate nixpkgs inputs** per platform to avoid Darwin paying t
 - **Hyprland pinned to v0.54.3** on `kirby` via direct flake input `inputs.hyprland` (not an overlay), with `hy3` at `hl0.54.2.1` ABI-locked via `follows`. Bump both together. Do not upgrade to 0.55+ until `hy3` supports it (hy3#320, #321).
 - **Darwin pre-commit from stable** — overlay pulls `pre-commit` from `pkgs-stable` to avoid a `dotnet` dependency issue ([NixOS/nixpkgs#450554](https://github.com/NixOS/nixpkgs/issues/450554)).
 - **Darwin nodejs_24 stdenv pin** — overlay rebuilds `nodejs-slim_24` (the underlying derivation; `nodejs_24` is a symlinkJoin wrapper around it) against `llvmPackages_20.libcxxStdenv` to dodge a V8 `std::hash<int>` ODR violation with libc++ 21 that spams "File descriptor … unmanaged mode" warnings from pnpm 11's worker pool. Cosmetic. Safe to drop once nixpkgs ships a V8 with upstream commit [v8/v8@65ce14d8](https://github.com/v8/v8/commit/65ce14d8). ([NixOS/nixpkgs#536039](https://github.com/NixOS/nixpkgs/issues/536039))
-- **Determinate Nix on Darwin** — `nix.enable = false` in Darwin modules because Determinate Nix manages the daemon.
+- **Lix on Darwin** — `nix.package = pkgs.lixPackageSets.stable.lix` replaces the Nix daemon binary; `nix.enable` is not set in Darwin modules (the nix-darwin module does not manage the daemon). Determinate Nix is no longer used.
 
 ### Helper Functions in `flake.nix`
 

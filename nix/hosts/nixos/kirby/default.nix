@@ -13,10 +13,14 @@
     # Several packages depend on pinned pnpm versions that are currently marked
     # insecure (e.g. vesktop, podman-desktop, unocss-language-server). Permit
     # them until upstream nixpkgs updates the dependent packages.
+    # electron-40.10.5 is pulled in transitively by an electron-based package
+    # (likely todoist-electron / webcord / vesktop / discord) and was flagged
+    # EOL when nixpkgs bumped the threshold to 41.0.0.
     config.permittedInsecurePackages = [
       "pnpm-9.15.9"
       "pnpm-10.29.2"
       "pnpm-10.34.0"
+      "electron-40.10.5"
     ];
   };
 

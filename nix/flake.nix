@@ -42,65 +42,15 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
-    # Upstream Hyprland 0.56.0 + matching hy3 hl0.56.0.1. Use direct flakes (not
-    # nixpkgs) so the hy3 build is ABI-locked to this exact Hyprland via `follows`.
-    # Bump both together. nixpkgs still ships 0.54.3, so the upstream pin is
-    # required to keep ABI alignment (nixpkgs' hyprlandPlugins.hy3 already moved
-    # past the nixpkgs hyprland and is unusable against the in-tree version).
-    #
-    # hypr* transitive deps: pinned to upstream tags. The hyprland flake's
-    # transitive inputs default to the moving HEAD of hyprwm/*, which is older
-    # than the latest tag and is ABI-mismatched with Hyprland 0.56.0 (CMake's
-    # pkg-config check rejects them). Drop the overrides once nixpkgs catches
-    # up to versions new enough to satisfy Hyprland's >= constraints.
-    hyprland = {
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1&ref=refs/tags/v0.56.0";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        hyprutils.follows = "hyprutils";
-        aquamarine.follows = "aquamarine";
-        hyprgraphics.follows = "hyprgraphics";
-        hyprwire.follows = "hyprwire";
-        hyprland-protocols.follows = "hyprland-protocols";
-      };
-    };
+    # Upstream hy3 hl0.56.0.1 flake. nixpkgs-unstable has been at hyprland
+    # 0.56.0 since 2026-07-20 (commit 035c487b), so we use nixpkgs' hyprland
+    # package directly. nixpkgs' hyprlandPlugins.hy3 is at 0.55.0 (one minor
+    # behind), so we still pin hy3 upstream to get the matching 0.56.0.1 ABI.
+    # The upstream hy3 is built against the same source as nixpkgs' hyprland
+    # (both pull from github:hyprwm/Hyprland?ref=v0.56.0), so the C++ ABI
+    # matches.
     hy3 = {
       url = "github:outfoxxed/hy3?ref=hl0.56.0.1";
-      inputs.hyprland.follows = "hyprland";
-    };
-    hyprutils = {
-      url = "github:hyprwm/hyprutils?ref=v0.14.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    aquamarine = {
-      url = "github:hyprwm/aquamarine?ref=v0.13.0";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        hyprutils.follows = "hyprutils";
-        hyprwayland-scanner.follows = "hyprwayland-scanner";
-      };
-    };
-    hyprgraphics = {
-      url = "github:hyprwm/hyprgraphics?ref=v0.5.1";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        hyprutils.follows = "hyprutils";
-      };
-    };
-    hyprwire = {
-      url = "github:hyprwm/hyprwire?ref=v0.3.1";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        hyprutils.follows = "hyprutils";
-      };
-    };
-    hyprwayland-scanner = {
-      url = "github:hyprwm/hyprwayland-scanner?ref=v0.4.6";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprland-protocols = {
-      url = "github:hyprwm/hyprland-protocols?ref=v0.7.0";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -248,7 +198,6 @@
           inherit (inputs)
             zen-browser
             llm-agents
-            hyprland
             hy3
             ;
         };

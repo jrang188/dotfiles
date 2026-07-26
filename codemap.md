@@ -23,7 +23,7 @@ Declarative, reproducible system configuration for two personal machines — **`
 Only two hosts are exported from `flake.nix`:
 
 - **`Sterling-MBP`** — macOS (Darwin), aarch64. Uses Lix (`nix.package = pkgs.lixPackageSets.stable.lix`), `mac-app-util` pinned independently, nix-homebrew, Home Manager (darwin branch).
-- **`kirby`** — NixOS, x86_64. Secure boot via lanzaboote, Hyprland (pinned flake input) with hy3 plugin, KDE Plasma 6, autoUpgrade (commented), `pkgs-stable` from nixos-26.05.
+- **`kirby`** — NixOS, x86_64. Secure boot via lanzaboote, Hyprland (from nixpkgs 0.56.0) with hy3 plugin (upstream `hl0.56.0.1`), KDE Plasma 6, autoUpgrade (commented), `pkgs-stable` from nixos-26.05.
 
 > **Orphaned configs** (`hosts/nixos/wsl/`, `home/nixos/wsl/`, `home/ubuntu/`) exist in the tree but are **NOT exported** from `flake.nix`. Do not re-wire them without confirming with the user.
 
@@ -31,7 +31,7 @@ Only two hosts are exported from `flake.nix`:
 
 - **Multiple nixpkgs inputs** per platform to avoid Darwin paying for NixOS tests: `nixpkgs` (nixos-unstable), `nixpkgs-darwin` (nixpkgs-unstable), `nixpkgs-stable-nixos`, `nixpkgs-stable-darwin`.
 - **`pkgs-stable`** injected into `specialArgs` / `extraSpecialArgs` for all hosts via `mkSpecialArgs`.
-- **Known pinning / overrides**: `mac-app-util` does NOT follow nixpkgs (SBCL 2.6.0 build failure); Hyprland pinned for `hy3` ABI compatibility; `lanzaboote` pinned to v1.1.0; Darwin `pre-commit` pulled from `pkgs-stable` (dotnet dependency issue); Darwin `nodejs-slim_24` rebuilt against `llvmPackages_20.libcxxStdenv` (V8 ODR with libc++ 21).
+- **Known pinning / overrides**: `mac-app-util` does NOT follow nixpkgs (SBCL 2.6.0 build failure); `hy3` pinned to upstream `hl0.56.0.1` because nixpkgs' `hyprlandPlugins.hy3` lags at 0.55.0 (one minor behind the matching Hyprland 0.56.0 ABI); `lanzaboote` pinned to v1.1.0; Darwin `pre-commit` pulled from `pkgs-stable` (dotnet dependency issue); Darwin `nodejs-slim_24` rebuilt against `llvmPackages_20.libcxxStdenv` (V8 ODR with libc++ 21).
 - **Helper functions** in `flake.nix`: `mkSpecialArgs`, `mkStablePkgs`, `mkHomeManagerConfig`, `mkSystem`, `mkDarwin`.
 
 ## Directory Map (Aggregated)
@@ -57,7 +57,7 @@ Only two hosts are exported from `flake.nix`:
 | `nix/modules/common/` | Cross-platform leaf modules: `apps.nix`, `nix-core.nix` (Nix daemon tuning, caches, fonts, zsh, CLI essentials). | [View Map](nix/modules/common/codemap.md) |
 | `nix/modules/darwin/` | Darwin modules: pre-commit overlay from `pkgs-stable`, `nodejs-slim_24` libcxxStdenv rebuild, system defaults, dock, Touch ID (PAM), Lix as Nix daemon. | [View Map](nix/modules/darwin/codemap.md) |
 | `nix/modules/home/` | Shared Home Manager modules: `gui.nix` (Ghostty base config, TokyoNight theme) with host-override pattern. | [View Map](nix/modules/home/codemap.md) |
-| `nix/modules/nixos/` | NixOS leaf modules: podman, hyprland (pinned flake), nix-ld, 1password, flatpak, localsend + inline GC config. | [View Map](nix/modules/nixos/codemap.md) |
+| `nix/modules/nixos/` | NixOS leaf modules: podman, hyprland (nixpkgs), nix-ld, 1password, flatpak, localsend + inline GC config. | [View Map](nix/modules/nixos/codemap.md) |
 | `nvim/` | LazyVim Neovim config root: `init.lua`, `stylua.toml`, `lazyvim.json` (36 extras), `lazy-lock.json` pinning. | [View Map](nvim/codemap.md) |
 | `nvim/lua/` | Lua namespace root; auto-discovery via `require("lazy").setup({ spec = { { import = "plugins" } } })`. | [View Map](nvim/lua/codemap.md) |
 | `nvim/lua/config/` | LazyVim config overrides: `lazy.lua` (bootstrap + spec wiring), `options.lua`, `keymaps.lua`, `autocmds.lua`. | [View Map](nvim/lua/config/codemap.md) |

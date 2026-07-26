@@ -11,11 +11,11 @@ Namespace directory for NixOS host configurations. Contains two subdirectories: 
 
 ## Flow
 1. `nix/flake.nix` calls `mkSystem { hostname = "kirby-machine"; system = "x86_64-linux"; modules = [ ./hosts/nixos/kirby ]; ... }`.
-2. `mkSystem` assembles the final `nixosSystem` by merging: host module → `determinate.nixosModules.default` → `home-manager.nixosModules.home-manager` + Home Manager config + any extra flake inputs (zen-browser, llm-agents, hyprland, hy3).
+2. `mkSystem` assembles the final `nixosSystem` by merging: host module → `determinate.nixosModules.default` → `home-manager.nixosModules.home-manager` + Home Manager config + any extra flake inputs (zen-browser, llm-agents, hy3).
 3. The host module imports shared platform modules and its own specialized submodules.
 4. `make nixos` or `nixos-rebuild switch --flake .#kirby` materializes the final configuration.
 
 ## Integration
 - **Consumer**: `nix/flake.nix` via `mkSystem` — references `./hosts/nixos/kirby` as the host module. `wsl` is not referenced.
 - **Provider to**: `kirby/default.nix` imports `../../../modules/common` and `../../../modules/nixos`.
-- **Related flake inputs**: `nixpkgs` (nixos-unstable), `nixpkgs-stable-nixos`, `lanzaboote` (secure boot), `determinate`, `home-manager`, `hyprland`, `hy3`, `zen-browser`, `llm-agents`.
+- **Related flake inputs**: `nixpkgs` (nixos-unstable), `nixpkgs-stable-nixos`, `lanzaboote` (secure boot), `determinate`, `home-manager`, `hy3`, `zen-browser`, `llm-agents`.

@@ -10,7 +10,7 @@ Central configuration root for the flake-based Nix system. Owns the entry point 
 - **Helper-function abstraction layer (`mkSpecialArgs`, `mkStablePkgs`, `mkHomeManagerConfig`, `mkSystem`, `mkDarwin`)** reduces duplication across the two active hosts. These functions inject common `specialArgs`/`extraSpecialArgs` (username, hostname, inputs, `pkgs-stable`) and wire up mandatory infrastructure modules (home-manager, determinate Nix, mac-app-util, nix-homebrew, lanzaboote) so host-level configs only need to specify their own imports.
 - **Platform-separated nixpkgs inputs**: Four nixpkgs channels — `nixpkgs` (nixos-unstable, heavy with NixOS tests), `nixpkgs-darwin` (nixpkgs-unstable, lighter), `nixpkgs-stable-nixos` (nixos-26.05), `nixpkgs-stable-darwin` (nixpkgs-26.05-darwin). The `getStableNixpkgs` function dispatches to the correct stable channel based on `system`.
 - **Module Composition pattern**: Each host output assembles a module list by concatenating its own host module with shared infrastructure modules. The `mkHomeManagerConfig` call is injected as one of those modules, making Home Manager a first-class participant in the system module stack.
-- **External flake pinning for stability**: `mac-app-util` is pinned independently (does not follow nixpkgs) to avoid an SBCL build regression. `hyprland` and `hy3` are pinned together with ABI-locked follows. `lanzaboote` is pinned to v1.1.0.
+- **External flake pinning for stability**: `mac-app-util` is pinned independently (does not follow nixpkgs) to avoid an SBCL build regression. `hy3` is pinned to upstream `hl0.56.0.1` because nixpkgs' `hyprlandPlugins.hy3` lags at 0.55.0 (one minor behind the matching Hyprland 0.56.0 ABI); nixpkgs' `hyprland` (0.56.0) is used directly. `lanzaboote` is pinned to v1.1.0.
 - **Determinate Nix on Darwin**: `nix.enable = false` in the Darwin module stack because Determinate Nix manages the Nix daemon instead.
 
 ## Flow
@@ -20,7 +20,7 @@ Central configuration root for the flake-based Nix system. Owns the entry point 
 3. **For `Sterling-MBP` (Darwin)** → `mkDarwin` is called with `hostname = "Sterling-MBP"`, module list `[ ./hosts/darwin/Sterling-MBP ]`, and home imports `[ ./home ./home/darwin mac-app-util.homeManagerModules ]`.
    - `mkDarwin` injects: `{ nix.enable = false }` + mac-app-util + home-manager-darwin + `mkHomeManagerConfig(...)` + nix-homebrew.
    - `mkHomeManagerConfig` creates the `home-manager` submodule with `extraSpecialArgs` built by `mkSpecialArgs`, which includes `pkgs-stable` (from nixpkgs-stable-darwin).
-4. **For `kirby` (NixOS)** → `mkSystem` is called with `hostname = "kirby-machine"`, `system = "x86_64-linux"`, modules `[ ./hosts/nixos/kirby lanzaboote.nixosModules.lanzaboote ]`, home imports `[ ./home ./home/nixos/kirby ]`, and extra args carrying `zen-browser`, `llm-agents`, `hyprland`, `hy3`.
+4. **For `kirby` (NixOS)** → `mkSystem` is called with `hostname = "kirby-machine"`, `system = "x86_64-linux"`, modules `[ ./hosts/nixos/kirby lanzaboote.nixosModules.lanzaboote ]`, home imports `[ ./home ./home/nixos/kirby ]`, and extra args carrying `zen-browser`, `llm-agents`, `hy3`.
    - `mkSystem` injects: determinate Nix module + home-manager + `mkHomeManagerConfig(...)`.
    - `pkgs-stable` comes from nixpkgs-stable-nixos.
 5. **Home Manager evaluates** → `extraSpecialArgs` make `username`, `hostname`, `inputs`, and `pkgs-stable` available to every Home Manager module. The user's `home.nix` and platform-specific configs are imported.
@@ -37,4 +37,4 @@ Central configuration root for the flake-based Nix system. Owns the entry point 
 - **`pkgs/`** (dependency): Custom package derivations available via `pkgs.callPackage`.
 - **`lib/`** (currently empty): Intended for shared Nix helper functions.
 - **`flake.lock`**: Pinned dependency manifest, updated via `nix flake update`.
-- **External inputs**: `nixpkgs`, `nixpkgs-darwin`, `nixpkgs-stable-nixos`, `nixpkgs-stable-darwin`, `determinate`, `darwin`, `mac-app-util`, `nix-homebrew`, `home-manager`, `home-manager-darwin`, `zen-browser`, `lanzaboote`, `hyprland`, `hy3`, `llm-agents`.
+- **External inputs**: `nixpkgs`, `nixpkgs-darwin`, `nixpkgs-stable-nixos`, `nixpkgs-stable-darwin`, `determinate`, `darwin`, `mac-app-util`, `nix-homebrew`, `home-manager`, `home-manager-darwin`, `zen-browser`, `lanzaboote`, `hy3`, `llm-agents`.

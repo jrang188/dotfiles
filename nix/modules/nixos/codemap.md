@@ -21,7 +21,7 @@ NixOS-specific system modules for the `kirby` host. Configures containerization 
 3. Each leaf module evaluates independently and contributes config to the global NixOS configuration merge.
 
 ## Integration
-- **Depends on**: `pkgs`, `lib` (in default.nix); `inputs` (in hyprland.nix for the pinned Hyprland package); `username` (in 1password.nix for PolKit owner).
+- **Depends on**: `pkgs`, `lib` (in default.nix); `pkgs` only (in hyprland.nix, which uses `pkgs.hyprland` directly — no flake input needed); `username` (in 1password.nix for PolKit owner).
 - **Consumed by**: `hosts/nixos/kirby/default.nix`.
 - **Not consumed by**: The orphaned `hosts/nixos/wsl/default.nix` imports `common` only, not `nixos` — the WSL host config manually duplicates some settings (Nix GC, auto-optimise, default shell) rather than importing this module set.
 - **Complemented by**: `modules/common` (separately imported by the host) for cross-platform Nix and font settings.
@@ -50,7 +50,7 @@ NixOS-specific system modules for the `kirby` host. Configures containerization 
 - **Purpose**: Hyprland Wayland compositor integration.
 - **Key assignments**:
   - `programs.hyprland.enable = true`.
-  - `programs.hyprland.package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland` — uses the flake-pinned Hyprland input (currently v0.54.3, with the kirby host using a Hyprland pinned to 0.53.3 via overlay for `hy3` compat).
+  - `programs.hyprland.package = pkgs.hyprland` — nixpkgs' Hyprland package directly (currently 0.56.0, since nixpkgs-unstable 2026-07-20). No overlay or upstream flake pin needed; nixpkgs keeps up with Hyprland releases.
   - `programs.hyprland.xwayland.enable = true`.
   - `programs.hyprland.portalPackage = pkgs.xdg-desktop-portal-hyprland`.
   - `programs.hyprland.withUWSM = true`.

@@ -9,6 +9,7 @@
     ./localsend.nix
   ];
   nix = {
+    package = pkgs.lixPackageSets.stable.lix;
 
     # Auto upgrade nix package and the daemon service.
     optimise.automatic = true;
@@ -18,7 +19,6 @@
       options = lib.mkDefault "--delete-older-than 7d";
       dates = "Daily";
     };
-    settings.eval-cores = 0;
   };
   users.defaultUserShell = pkgs.zsh;
 }

@@ -86,10 +86,6 @@
           "workspacesOut, 1, 1.94, almostLinear, fade"
         ];
       };
-      "dwindle" = {
-        "pseudotile" = true;
-        "preserve_split" = true;
-      };
       "master" = {
         "new_status" = "master";
       };

@@ -10,7 +10,6 @@
     nixpkgs-stable-nixos.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
 
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
@@ -41,19 +40,68 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Upstream Hyprland 0.54.3 + matching hy3. Use direct flakes (not nixpkgs) so
-    # the hy3 build is ABI-locked to this exact Hyprland via `follows`. Bump both
-    # together when ready. (0.55+ has known hy3 ABI churn — see hy3#320, #321.)
+    llm-agents.url = "github:numtide/llm-agents.nix";
+
+    # Upstream Hyprland 0.56.0 + matching hy3 hl0.56.0.1. Use direct flakes (not
+    # nixpkgs) so the hy3 build is ABI-locked to this exact Hyprland via `follows`.
+    # Bump both together. nixpkgs still ships 0.54.3, so the upstream pin is
+    # required to keep ABI alignment (nixpkgs' hyprlandPlugins.hy3 already moved
+    # past the nixpkgs hyprland and is unusable against the in-tree version).
+    #
+    # hypr* transitive deps: pinned to upstream tags. The hyprland flake's
+    # transitive inputs default to the moving HEAD of hyprwm/*, which is older
+    # than the latest tag and is ABI-mismatched with Hyprland 0.56.0 (CMake's
+    # pkg-config check rejects them). Drop the overrides once nixpkgs catches
+    # up to versions new enough to satisfy Hyprland's >= constraints.
     hyprland = {
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1&ref=refs/tags/v0.54.3";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "git+https://github.com/hyprwm/Hyprland?submodules=1&ref=refs/tags/v0.56.0";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        hyprutils.follows = "hyprutils";
+        aquamarine.follows = "aquamarine";
+        hyprgraphics.follows = "hyprgraphics";
+        hyprwire.follows = "hyprwire";
+        hyprland-protocols.follows = "hyprland-protocols";
+      };
     };
     hy3 = {
-      url = "github:outfoxxed/hy3?ref=hl0.54.2.1";
+      url = "github:outfoxxed/hy3?ref=hl0.56.0.1";
       inputs.hyprland.follows = "hyprland";
     };
-
-    llm-agents.url = "github:numtide/llm-agents.nix";
+    hyprutils = {
+      url = "github:hyprwm/hyprutils?ref=v0.14.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    aquamarine = {
+      url = "github:hyprwm/aquamarine?ref=v0.13.0";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        hyprutils.follows = "hyprutils";
+        hyprwayland-scanner.follows = "hyprwayland-scanner";
+      };
+    };
+    hyprgraphics = {
+      url = "github:hyprwm/hyprgraphics?ref=v0.5.1";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        hyprutils.follows = "hyprutils";
+      };
+    };
+    hyprwire = {
+      url = "github:hyprwm/hyprwire?ref=v0.3.1";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        hyprutils.follows = "hyprutils";
+      };
+    };
+    hyprwayland-scanner = {
+      url = "github:hyprwm/hyprwayland-scanner?ref=v0.4.6";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprland-protocols = {
+      url = "github:hyprwm/hyprland-protocols?ref=v0.7.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -118,7 +166,6 @@
           inherit system;
           specialArgs = mkSpecialArgs { inherit hostname system extraArgs; };
           modules = modules ++ [
-            inputs.determinate.nixosModules.default
             inputs.home-manager.nixosModules.home-manager
             (mkHomeManagerConfig {
               inherit

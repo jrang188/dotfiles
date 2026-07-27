@@ -8,7 +8,7 @@ Host-specific nix-darwin module for the **Sterling-MBP** machine (Apple Silicon 
 - **Composition over inheritance**: Imports three layers — shared modules (`../../../modules/common`), Darwin platform modules (`../../../modules/darwin`), and this host's `./homebrew.nix`.
 - **Mixed package management**: Combines Nix-managed packages (via shared/darwin modules) with Homebrew-managed GUI apps and CLI tools (via `nix-homebrew` flake input, configured in `flake.nix`). Homebrew `onActivation.cleanup = "zap"` ensures only listed formulae/casks remain installed.
 - **Determinate Nix integration**: `nix.enable = false` is set in `flake.nix`'s `mkDarwin` (not here), deferring Nix daemon management to Determinate Nix.
-- **mac-app-util pinning**: The `mac-app-util` flake input is pinned independently (does not follow nixpkgs) to avoid SBCL 2.6.0 build failures. Its Darwin module and Home Manager module are imported in `mkDarwin`.
+- **mac-app-util integration**: The `mac-app-util` flake input now follows `nixpkgs-darwin` (the independent pin was removed 2026-07 after the SBCL 2.6.0 build failure could not be reproduced). Its Darwin module and Home Manager module are imported in `mkDarwin`.
 
 ## Files
 | File | Role |
@@ -35,7 +35,6 @@ Host-specific nix-darwin module for the **Sterling-MBP** machine (Apple Silicon 
 - `mac-app-util.darwinModules.default` — provides macOS application utilities via nix-darwin module
 - `nix-homebrew.darwinModules.nix-homebrew` — installs and manages Homebrew
 - `homebrew.autoMigrate = true`, `enableRosetta = true`
-- Darwin pre-commit pinned via overlay in `modules/darwin/default.nix`: pulls `pre-commit` from `pkgs-stable` to avoid dotnet dependency ([NixOS/nixpkgs#450554](https://github.com/NixOS/nixpkgs/issues/450554))
 
 ## Flow
 `make darwin` → `nh darwin switch` → evaluates `darwinConfigurations."Sterling-MBP"` from flake → `mkDarwin` composes host module + shared modules + platform modules + flake-input modules → applies to nix-darwin → updates system.

@@ -1,12 +1,10 @@
 # nix/modules/darwin/
 
 ## Responsibility
-macOS-specific nix-darwin system modules that configure system preferences, security (Touch ID), Nix daemon settings for macOS, and platform-specific package overrides (pre-commit from stable, nodejs-slim_24 stdenv rebuild, permitted insecure packages). These modules only activate on Sterling-MBP (Darwin).
+macOS-specific nix-darwin system modules that configure system preferences, security (Touch ID), Nix daemon settings for macOS, and permitted insecure packages. These modules only activate on Sterling-MBP (Darwin).
 
 ## Design
-- **Aggregation entry point**: `default.nix` re-exports two leaf modules (`system.nix`, `security.nix`) and additionally contributes inline config for nixpkgs overrides, Nix daemon optimization, and two overlays.
-- **Overlay pattern for pre-commit**: Uses `nixpkgs.overlays` to substitute the `pre-commit` package from `pkgs-stable`, avoiding a `dotnet` build failure in unstable nixpkgs (see [NixOS/nixpkgs#450554](https://github.com/NixOS/nixpkgs/issues/450554)).
-- **Overlay for nodejs-slim_24 stdenv**: A second overlay rebuilds `nodejs-slim_24` against `llvmPackages_20.libcxxStdenv` to work around a V8 `std::hash<int>` ODR violation with libc++ 21 that produces cosmetic warnings from pnpm 11's worker pool (see [NixOS/nixpkgs#536039](https://github.com/NixOS/nixpkgs/issues/536039)).
+- **Aggregation entry point**: `default.nix` re-exports two leaf modules (`system.nix`, `security.nix`) and additionally contributes inline config for nixpkgs config and Nix daemon optimization.
 - **Lix on Darwin**: `nix.package = pkgs.lixPackageSets.stable.lix` replaces the upstream Nix daemon binary with Lix (fork). The host config no longer relies on the Determinate Nix installer; `nix.enable` is intentionally not set here.
 - **No module option declarations**: All three files (`default.nix`, `system.nix`, `security.nix`) assign nix-darwin option values directly without defining custom options. The module interface is purely the nix-darwin options namespace.
 
@@ -14,15 +12,14 @@ macOS-specific nix-darwin system modules that configure system preferences, secu
 1. `hosts/darwin/Sterling-MBP/default.nix` imports `../../../modules/darwin`.
 2. Nix resolves to `modules/darwin/default.nix`, which imports `./system.nix` and `./security.nix`.
 3. `default.nix` also inlines:
-   - `nixpkgs.config.permittedInsecurePackages` — allows `pnpm-9.15.9` and `pnpm-10.34.0`.
-   - `nixpkgs.overlays` — overrides `pre-commit` from `pkgs-stable` and rebuilds `nodejs-slim_24` against libcxxStdenv 20.
+   - `nixpkgs.config.permittedInsecurePackages` — allows `pnpm-9.15.9`.
    - `nix.package` — pins Lix from the stable Lix package set.
    - `nix.optimise.interval` — weekly optimization on Monday at 02:00.
 4. `system.nix` sets `system.stateVersion = 5`, `system.primaryUser`, dock preferences (autohide off, tilsize 24, no recents, disable bottom-right hot corner), key repeat rate, and installs `sketchybar-app-font`.
 5. `security.nix` enables Touch ID for sudo via `security.pam.services.sudo_local` with `enable`, `touchIdAuth`, and `reattach` all set to `true`.
 
 ## Integration
-- **Depends on**: `pkgs`, `pkgs-stable`, `username` (passed as function arguments from the host config).
+- **Depends on**: `pkgs`, `username` (passed as function arguments from the host config).
 - **Imported by**: `hosts/darwin/Sterling-MBP/default.nix`.
 - **Also consumed (via common)**: `modules/common` is separately imported by the host for cross-platform settings.
 - **Key option interactions**:
@@ -31,10 +28,9 @@ macOS-specific nix-darwin system modules that configure system preferences, secu
   - `nixpkgs.config` from `default.nix` merges with `modules/common/nix-core.nix`'s `nixpkgs.config`.
 
 ### Module: `default.nix`
-- **Purpose**: Darwin-specific nixpkgs configuration, pre-commit overlay, Nix package/optimize settings.
+- **Purpose**: Darwin-specific nixpkgs configuration, Nix package/optimize settings.
 - **Key assignments**:
-  - `nixpkgs.config.permittedInsecurePackages`: allows two pinned pnpm versions.
-  - `nixpkgs.overlays`: overrides `pre-commit` from `pkgs-stable` and rebuilds `nodejs-slim_24` against `llvmPackages_20.libcxxStdenv` (two overlay entries).
+  - `nixpkgs.config.permittedInsecurePackages`: allows a pinned pnpm version (9.15.9).
   - `nix.package = pkgs.lixPackageSets.stable.lix`.
   - `nix.optimise.interval = { Weekday = 1; Hour = 2; Minute = 0; }`.
 

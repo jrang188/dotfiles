@@ -15,10 +15,11 @@
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
-    # Don't follow nixpkgs to avoid SBCL 2.6.0 build failure
-    # See: https://github.com/hraban/mac-app-util/issues/42
     mac-app-util = {
       url = "github:hraban/mac-app-util";
+      # Follow Darwin nixpkgs (the SBCL 2.6.0 build failure was
+      # closed as cannot-repro; the pin was removed 2026-07).
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";

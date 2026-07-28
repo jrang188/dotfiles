@@ -24,7 +24,6 @@ _: {
       "nikitabobko/tap"
       "FelixKratz/formulae"
       "homebrew/services"
-      "grishka/grishka"
     ];
 
     # `brew install`
@@ -55,6 +54,7 @@ _: {
       "google-drive"
       "adobe-acrobat-reader"
       "android-platform-tools"
+      "kde-connect"
     ];
   };
 }

@@ -98,6 +98,10 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             extraSpecialArgs = mkSpecialArgs { inherit hostname system extraArgs; };
+            # Rename clobbered paths to <name>.backup instead of failing,
+            # so home-manager can replace a previously-managed file with a
+            # directory (or vice versa) without manual intervention.
+            backupFileExtension = "backup";
             users.${username} = {
               imports = homeImports;
             };

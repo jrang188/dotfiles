@@ -42,13 +42,5 @@
       "disable": true
     }
   },
-  "permission": {
-    "read": {
-      "~/.config/opencode/gsd-core/*": "allow"
-    },
-    "external_directory": {
-      "~/.config/opencode/gsd-core/*": "allow"
-    }
-  },
   "lsp": true
 }

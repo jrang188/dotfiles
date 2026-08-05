@@ -80,6 +80,8 @@ in
       talosctl
       packer
       hcloud
+      tflint
+      trivy
     ]
     ++ [
       inputs.llm-agents.packages.${system}.opencode

@@ -39,7 +39,7 @@ Only two hosts are exported from `flake.nix`:
 | Directory | Responsibility Summary | Detailed Map |
 |-----------|------------------------|--------------|
 | `nix/` | Flake entry point, build automation, lint/format config; orchestrates both hosts via helper functions. | [View Map](nix/codemap.md) |
-| `nix/pkgs/` | Custom package derivations via `callPackage` (e.g. `unocss-language-server.nix`). Not overlays. | [View Map](nix/pkgs/codemap.md) |
+| `nix/pkgs/` | Custom package derivations via `callPackage` (e.g. `unocss-language-server.nix`; vendored `1password-cli` 2.38.1 pin). Not overlays. | [View Map](nix/pkgs/codemap.md) |
 | `nix/home/` | Shared Home Manager profile root: zsh, neovim, yazi, git, oh-my-posh, packages, ai. Platform-conditional `homeDirectory`. | [View Map](nix/home/codemap.md) |
 | `nix/home/ai/` | AI/MCP Home Manager modules: `claude-code` (from llm-agents flake) + 4 MCP servers (nixos, astro, kubernetes, pulumi). | [View Map](nix/home/ai/codemap.md) |
 | `nix/home/darwin/` | Darwin Home Manager overlay: ghostty-bin override, macos oh-my-zsh plugin, audio tools, shared `gui.nix`. | [View Map](nix/home/darwin/codemap.md) |

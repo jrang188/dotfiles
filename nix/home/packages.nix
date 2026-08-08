@@ -1,4 +1,8 @@
 { pkgs, ... }:
+let
+  # Vendored pin (2.38.1); nixpkgs lags at 2.34.x. See nix/pkgs/1password-cli.nix.
+  _1password-cli = pkgs.callPackage ../pkgs/1password-cli.nix { };
+in
 {
   home.packages = with pkgs; [
     # ============================================
@@ -45,7 +49,7 @@
     # ============================================
     gh # GitHub CLI
     stripe-cli # Stripe CLI
-    _1password-cli # 1Password CLI
+    _1password-cli # 1Password CLI (vendored pin 2.38.1)
     gnumake # Build automation tool
     golangci-lint # Go linter
     spring-boot-cli # Spring Boot CLI

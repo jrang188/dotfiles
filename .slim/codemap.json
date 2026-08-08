@@ -91,6 +91,7 @@
     "nix/modules/nixos/nix-ld.nix": "43079210225fdb24f4d53b3097574743",
     "nix/modules/nixos/podman.nix": "e2234f922660a89cf3179f21b8014592",
     "nix/package.json": "c83757a73fe10bfbe05e04be60b5da8a",
+    "nix/pkgs/1password-cli.nix": "32a36eb8d9829dd8e1d44c221a195ead",
     "nix/pkgs/unocss-language-server.nix": "5b138b6fea2973c8acd47c173631c0d6",
     "nvim/.neoconf.json": "8471bfc3f000e00f5f830159e3d9d37e",
     "nvim/init.lua": "d9646e1a180b5f6da5f8732fa974743d",

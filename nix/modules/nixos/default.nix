@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ ... }:
 {
   imports = [
     ./flatpak.nix
@@ -7,18 +7,11 @@
     ./hyprland.nix
     ./podman.nix
     ./localsend.nix
+    ./user-shell.nix
   ];
-  nix = {
-    package = pkgs.lixPackageSets.stable.lix;
 
-    # Auto upgrade nix package and the daemon service.
+  nix = {
+    gc.dates = "Daily";
     optimise.automatic = true;
-    settings.auto-optimise-store = true; # May make rebuilds longer but less size
-    gc = {
-      automatic = true;
-      options = lib.mkDefault "--delete-older-than 7d";
-      dates = "Daily";
-    };
   };
-  users.defaultUserShell = pkgs.zsh;
 }

@@ -277,3 +277,17 @@ nix-store --gc
 - Replace the `clean:` target with `xattr -dr com.apple.macl` — permanently broken on Tahoe.
 - Use `2>/dev/null || true` to mask GC failures — the root cause is deterministic, not transient.
 - Attempt to strip `com.apple.macl` with any `xattr` variant — blocked by TCC on macOS 26.x.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context — `CONTEXT.md` + `docs/adr/` at repo root. See `docs/agents/domain.md`.

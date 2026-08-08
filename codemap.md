@@ -16,7 +16,7 @@ Declarative, reproducible system configuration for two personal machines — **`
 | `sketchybar/sketchybarrc` | sketchybar bootstrap script (loads `helpers/` + `init.lua`). |
 | `aerospace/aerospace.toml` | AeroSpace tiling WM config; launches sketchybar + borders on login. |
 | `nvim/init.lua` | LazyVim entry; loads `lua/config/` and `lua/plugins/`. |
-| `opencode/opencode.json` | OpenCode agent settings + MCP server registry (NixOS, Astro, Kubernetes, Pulumi). |
+| `opencode/opencode.json` | OpenCode agent config (model, plugins, agent toggles, LSP). **Nix-managed** via `nix/home/ai/opencode.nix`; MCP servers come from `nix/home/ai/mcp.nix` — not stowed, gitignored. |
 
 ## Active Hosts
 
@@ -54,10 +54,10 @@ Only two hosts are exported from `flake.nix`:
 | `nix/hosts/nixos/kirby/` | Kirby NixOS host: secure boot (lanzaboote), Hyprland flake pin, KDE Plasma 6, dnscrypt-proxy2, OpenRGB, Howdy, 10 submodules. | [View Map](nix/hosts/nixos/kirby/codemap.md) |
 | `nix/hosts/nixos/wsl/` | Orphaned WSL host config; only imports `modules/common`. NOT wired into flake. | [View Map](nix/hosts/nixos/wsl/codemap.md) |
 | `nix/modules/` | Reusable Nix modules root (no `default.nix`); platform-split: `common/`, `darwin/`, `home/`, `nixos/`. | [View Map](nix/modules/codemap.md) |
-| `nix/modules/common/` | Cross-platform leaf modules: `apps.nix`, `nix-core.nix` (Nix daemon tuning, caches, fonts, zsh, CLI essentials). | [View Map](nix/modules/common/codemap.md) |
-| `nix/modules/darwin/` | Darwin modules: pre-commit overlay from `pkgs-stable`, `nodejs-slim_24` libcxxStdenv rebuild, system defaults, dock, Touch ID (PAM), Lix as Nix daemon. | [View Map](nix/modules/darwin/codemap.md) |
-| `nix/modules/home/` | Shared Home Manager modules: `gui.nix` (Ghostty base config, TokyoNight theme) with host-override pattern. | [View Map](nix/modules/home/codemap.md) |
-| `nix/modules/nixos/` | NixOS leaf modules: podman, hyprland (nixpkgs), nix-ld, 1password, flatpak, localsend + inline GC config. | [View Map](nix/modules/nixos/codemap.md) |
+| `nix/modules/common/` | Cross-platform leaf modules: `apps.nix`, `nix-core.nix` (caches, fonts, zsh, CLI essentials), `nix-daemon.nix` (shared Lix/GC config). | [View Map](nix/modules/common/codemap.md) |
+| `nix/modules/darwin/` | Darwin modules: pre-commit overlay from `pkgs-stable`, `nodejs-slim_24` libcxxStdenv rebuild, system defaults, dock, Touch ID (PAM), `insecure-packages.nix`; Darwin timer overlay on shared `nix-daemon.nix`. | [View Map](nix/modules/darwin/codemap.md) |
+| `nix/modules/home/` | Shared Home Manager modules: `gui.nix` (Ghostty base config, TokyoNight theme) with host-override pattern. (No `default.nix` — dead aggregator removed.) | [View Map](nix/modules/home/codemap.md) |
+| `nix/modules/nixos/` | NixOS leaf modules: podman, hyprland (nixpkgs), nix-ld, 1password, flatpak, localsend, `user-shell.nix`; NixOS timer overlay on shared `nix-daemon.nix`. | [View Map](nix/modules/nixos/codemap.md) |
 | `nvim/` | LazyVim Neovim config root: `init.lua`, `stylua.toml`, `lazyvim.json` (36 extras), `lazy-lock.json` pinning. | [View Map](nvim/codemap.md) |
 | `nvim/lua/` | Lua namespace root; auto-discovery via `require("lazy").setup({ spec = { { import = "plugins" } } })`. | [View Map](nvim/lua/codemap.md) |
 | `nvim/lua/config/` | LazyVim config overrides: `lazy.lua` (bootstrap + spec wiring), `options.lua`, `keymaps.lua`, `autocmds.lua`. | [View Map](nvim/lua/config/codemap.md) |

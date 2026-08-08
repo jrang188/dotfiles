@@ -13,10 +13,11 @@ This directory does **not** have its own `default.nix` — it is a pure organiza
 
 ## Flow
 1. A host config (e.g. `hosts/nixos/kirby/default.nix`) lists `../../../modules/common` and `../../../modules/nixos` in its `imports`.
-2. Nix resolves `modules/common` → `modules/common/default.nix`, which in turn imports `./apps.nix` and `./nix-core.nix`.
-3. Nix resolves `modules/nixos` → `modules/nixos/default.nix`, which imports `./flatpak.nix`, `./nix-ld.nix`, `./1password.nix`, `./hyprland.nix`, `./podman.nix`, and `./localsend.nix`.
-4. All resolved module definitions and configs are merged by Nix's module system into a single attribute set, with `mkIf`/`mkDefault`/`mkMerge` resolving conflicts per standard Nix semantics.
-5. Home Manager host configs independently import `modules/home/gui.nix` (or the full `modules/home/default.nix`) to apply user-scoped settings.
+2. Nix resolves `modules/common` → `modules/common/default.nix`, which in turn imports `./apps.nix`, `./nix-core.nix`, and `./nix-daemon.nix` (shared Nix daemon Lix/GC config, imported by both platforms).
+3. Nix resolves `modules/nixos` → `modules/nixos/default.nix`, which imports `./flatpak.nix`, `./nix-ld.nix`, `./1password.nix`, `./hyprland.nix`, `./podman.nix`, `./localsend.nix`, and `./user-shell.nix`. NixOS leaves hold platform-specific timers (`gc.dates`, `optimise.automatic`) that overlay the shared `nix-daemon.nix` defaults.
+4. Nix resolves `modules/darwin` → `modules/darwin/default.nix`, which imports `./system.nix`, `./security.nix`, and `./insecure-packages.nix`, plus the Darwin timer overlay (`gc.interval`, `optimise.interval`) on the shared `nix-daemon.nix`.
+5. All resolved module definitions and configs are merged by Nix's module system into a single attribute set, with `mkIf`/`mkDefault`/`mkMerge` resolving conflicts per standard Nix semantics.
+6. Home Manager host configs independently import `modules/home/gui.nix` to apply user-scoped settings.
 
 ## Integration
 - **Consumed by**: `hosts/darwin/Sterling-MBP/default.nix` (imports `common` + `darwin`), `hosts/nixos/kirby/default.nix` (imports `common` + `nixos`), `hosts/nixos/wsl/default.nix` (imports `common` only).

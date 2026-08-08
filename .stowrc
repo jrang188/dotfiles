@@ -3,3 +3,4 @@
 --ignore='^nix$'
 --ignore='^archive$'
 --ignore=.stowrc
+--ignore='^opencode/opencode\.json$'

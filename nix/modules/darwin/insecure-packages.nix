@@ -1,5 +1,4 @@
-_:
-{
+_: {
   nixpkgs.config.permittedInsecurePackages = [
     "pnpm-9.15.9"
   ];

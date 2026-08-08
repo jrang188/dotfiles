@@ -8,6 +8,9 @@ gsd-file-manifest.json
 gsd-install-state.json
 .gsd-profile
 
+# Managed by Nix (nix/home/ai/opencode.nix + mcp.nix) — not stowed
+opencode.json
+
 # Runtime/deps
 node_modules/
 package.json

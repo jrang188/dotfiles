@@ -9,7 +9,7 @@ Declarative, reproducible system configuration for two personal machines — **`
 | Entry Point | Role |
 |-------------|------|
 | `nix/flake.nix` | Flake orchestrator. Declares the two active host outputs and the helper-function layer (`mkSpecialArgs`, `mkStablePkgs`, `mkHomeManagerConfig`, `mkSystem`, `mkDarwin`). |
-| `nix/Makefile` | Build automation: `make darwin`, `make nixos`, `make update`, `make clean`, `make lint`, `make format`. Run from `nix/`. |
+| `nix/Makefile` | Build automation: `make darwin`, `make nixos`, `make update`, `make clean` (includes Tahoe macl workaround), `make lint`, `make format`. Run from `nix/`. |
 | `nix/flake.lock` | Pinned input manifest. |
 | `.stowrc` | Stow target (`~/.config`); ignores `nix/`, `archive/`, `.stowrc`. Drives symlinking of `nvim/`, `sketchybar/`, `aerospace/`. |
 | `AGENTS.md` | Agent guidelines and repo architecture reference. |

@@ -28,7 +28,7 @@ Central configuration root for the flake-based Nix system. Owns the entry point 
 
 ## Integration
 
-- **Makefile** (consumer): Wraps `nh darwin switch`, `nh os switch`, `nh clean all`, `nix flake update`, `statix`, `nix fmt`. Run from the `nix/` directory.
+- **Makefile** (consumer): Wraps `nh darwin switch`, `nh os switch`, `nh clean all`, `nix flake update`, `statix`, `nix fmt`. Run from the `nix/` directory. The `clean` target includes a Tahoe `com.apple.macl` workaround that prunes stale `.app` store paths via `rm -rf` before GC — see AGENTS.md for the full story.
 - **`.editorconfig`**: Enforces 2-space indentation for `*.nix`, LF line endings, UTF-8, trailing-newline, and trim-trailing-whitespace.
 - **`.pre-commit-config.yaml`**: Local hooks run `treefmt` (nixfmt-tree) and `statix check .` on Nix files; generic hooks from `pre-commit-hooks` v6.0.0 handle trailing-whitespace, end-of-file-fixer, check-yaml, check-json. Activated by `pre-commit install` in `nix/`.
 - **`home/`** (dependency): Home Manager module tree consumed by `mkHomeManagerConfig`. Contains shared profile (`default.nix`, `packages.nix`, `zsh.nix`, `git.nix`, `neovim.nix`, `oh-my-posh.nix`, `yazi.nix`, `ai/`) and platform-specific directories (`darwin/`, `nixos/`).

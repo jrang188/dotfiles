@@ -262,3 +262,18 @@ nix-store --gc
 4. **Use flakes**: All active configurations use the flake-based setup.
 5. **Follow the structure**: Place files in appropriate directories per the project structure.
 6. **Do not expand orphaned configs**: WSL/Ubuntu configs exist but are not wired up; do not add them back without confirming with the user.
+
+## Known Issues
+
+### macOS Tahoe (26.x): `com.apple.macl` blocks `nix-collect-garbage`
+
+**Root cause:** When Ghostty (or any GUI app launched from `/nix/store/...`) runs, macOS stamps the `com.apple.macl` extended attribute on every file inside the `.app` bundle. On macOS 26.x (Tahoe), this xattr is **TCC-protected** — not even root can strip it with `xattr -d` (confirmed: all nested files return `EPERM`). `nix-collect-garbage` calls `chmod -R +w` on stale store paths before deleting them; the chmod hits EPERM on every macl'd file, and the entire GC aborts with "0 store paths deleted".
+
+**The old workaround (`sudo xattr -dr com.apple.macl ...`) is permanently broken on Tahoe.** Do not re-add it. The Makefile `clean:` target now handles this via a pre-clean step that discovers all `.app` bundles in the nix store, queries `nix-store --query --referrers` for each, and `sudo rm -rf`s any with zero non-self referrers. Root can unlink entries from `/nix/store` without chmod'ing the files (unlink only needs write-perm on the parent dir, not the file), which sidesteps the SACL entirely.
+
+**Recurrence:** Every `make darwin` cycle produces a new `ghostty-bin` hash. Once it becomes stale and has been launched, it retains macl and blocks GC. The pre-clean step handles this automatically on every `make clean`.
+
+**Do NOT:**
+- Replace the `clean:` target with `xattr -dr com.apple.macl` — permanently broken on Tahoe.
+- Use `2>/dev/null || true` to mask GC failures — the root cause is deterministic, not transient.
+- Attempt to strip `com.apple.macl` with any `xattr` variant — blocked by TCC on macOS 26.x.

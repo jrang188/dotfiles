@@ -4,7 +4,7 @@
 macOS-specific nix-darwin system modules that configure system preferences, security (Touch ID), Nix daemon settings for macOS, and permitted insecure packages. These modules only activate on Sterling-MBP (Darwin).
 
 ## Design
-- **Aggregation entry point**: `default.nix` re-exports two leaf modules (`system.nix`, `security.nix`) and additionally contributes inline config for nixpkgs config and Nix daemon optimization.
+- **Aggregation entry point**: `default.nix` re-exports two leaf modules (`system.nix`, `security.nix`) and additionally contributes inline config for nixpkgs config, Nix daemon settings, and automatic GC/optimization (matching NixOS's `nix.gc.automatic` + `auto-optimise-store` pattern).
 - **Lix on Darwin**: `nix.package = pkgs.lixPackageSets.stable.lix` replaces the upstream Nix daemon binary with Lix (fork). The host config no longer relies on the Determinate Nix installer; `nix.enable` is intentionally not set here.
 - **No module option declarations**: All three files (`default.nix`, `system.nix`, `security.nix`) assign nix-darwin option values directly without defining custom options. The module interface is purely the nix-darwin options namespace.
 
@@ -14,7 +14,9 @@ macOS-specific nix-darwin system modules that configure system preferences, secu
 3. `default.nix` also inlines:
    - `nixpkgs.config.permittedInsecurePackages` — allows `pnpm-9.15.9`.
    - `nix.package` — pins Lix from the stable Lix package set.
-   - `nix.optimise.interval` — weekly optimization on Monday at 02:00.
+   - `nix.settings.auto-optimise-store = true` — deduplicates identical store files via hardlinks (post-build).
+   - `nix.optimise.interval` — weekly full store optimization on Monday at 02:00.
+   - `nix.gc` — weekly automatic GC on Sunday at 03:00 with `--delete-older-than 7d` retention.
 4. `system.nix` sets `system.stateVersion = 5`, `system.primaryUser`, dock preferences (autohide off, tilsize 24, no recents, disable bottom-right hot corner), key repeat rate, and installs `sketchybar-app-font`.
 5. `security.nix` enables Touch ID for sudo via `security.pam.services.sudo_local` with `enable`, `touchIdAuth`, and `reattach` all set to `true`.
 
@@ -28,11 +30,15 @@ macOS-specific nix-darwin system modules that configure system preferences, secu
   - `nixpkgs.config` from `default.nix` merges with `modules/common/nix-core.nix`'s `nixpkgs.config`.
 
 ### Module: `default.nix`
-- **Purpose**: Darwin-specific nixpkgs configuration, Nix package/optimize settings.
+- **Purpose**: Darwin-specific nixpkgs configuration, Nix daemon settings (package, optimize, GC).
 - **Key assignments**:
   - `nixpkgs.config.permittedInsecurePackages`: allows a pinned pnpm version (9.15.9).
   - `nix.package = pkgs.lixPackageSets.stable.lix`.
-  - `nix.optimise.interval = { Weekday = 1; Hour = 2; Minute = 0; }`.
+  - `nix.settings.auto-optimise-store = true` — hardlinks identical files across store paths (post-build daemon step, ~5-15s overhead per rebuild).
+  - `nix.optimise.interval = { Weekday = 1; Hour = 2; Minute = 0; }` — weekly full store optimisation (Monday 02:00).
+  - `nix.gc.automatic = true` — weekly automatic garbage collection (Sunday 03:00).
+  - `nix.gc.options = lib.mkDefault "--delete-older-than 7d"` — matches NixOS 7-day retention.
+  - `nix.gc.interval = { Weekday = 0; Hour = 3; Minute = 0; }` — Sunday 03:00, avoids overlap with optimise.
 
 ### Module: `system.nix`
 - **File**: `modules/darwin/system.nix`

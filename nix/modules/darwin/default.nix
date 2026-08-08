@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   imports = [
     ./system.nix
@@ -18,10 +18,20 @@
 
   nix = {
     package = pkgs.lixPackageSets.stable.lix;
+    settings.auto-optimise-store = true;
     optimise = {
       interval = {
         Weekday = 1;
         Hour = 2;
+        Minute = 0;
+      };
+    };
+    gc = {
+      automatic = true;
+      options = lib.mkDefault "--delete-older-than 7d";
+      interval = {
+        Weekday = 0;
+        Hour = 3;
         Minute = 0;
       };
     };

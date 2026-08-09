@@ -51,6 +51,8 @@ Two presets, each defining sub-agent roles:
 | fixer | `openai/gpt-5.4-mini` (low) | `opencode-go/deepseek-v4-flash` (high) | none | none |
 | observer | — | `opencode-go/kimi-k2.6` | none | none |
 
+**Multiplexer (tmux) integration** (`multiplexer` key): `type: auto` detects a terminal multiplexer (tmux/zellij/herdr/cmux/kitty) and opens a pane per background agent so sub-agent work is visible live. `layout: main-vertical` keeps the main session at `main_pane_size: 60` with agents stacked in the side pane. **Requires an explicit `--port` at launch** (OpenCode >= 1.17.18 default `port 0` exposes no attachable listener) — handled transparently by the `opencode()` wrapper in `nix/home/zsh.nix` (`initContent`), which picks a free port via python3 when inside `$TMUX`.
+
 **Skills directory** (`skills/`): Contains three custom skill packages, each with a `SKILL.md`, `README.md`, and `codemap.md`:
 
 | Skill | Purpose (from SKILL.md) |

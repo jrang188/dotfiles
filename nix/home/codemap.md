@@ -11,6 +11,7 @@ Shared Home Manager configuration root — the base user environment applied to 
 - **Platform-conditional home directory**: Uses `pkgs.stdenv.hostPlatform.system` to determine `homeDirectory` — Darwin gets `/Users/${username}`, Linux gets `/home/${username}`.
 - **Helper injection via `extraSpecialArgs`**: Receives `username`, `pkgs`, `inputs` (and `pkgs-stable`) from `flake.nix`'s `mkSpecialArgs` / `mkHomeManagerConfig`. The `packages.nix` module depends on `inputs` for the `llm-agents` flake reference.
 - **Home Manager state version pinned**: `home.stateVersion = "24.11"` — must only be bumped when breaking changes are adopted.
+- **1Password CLI shell plugins**: `zsh.nix` sources `~/.config/op/plugins.sh` (if present) in `initContent`, enabling `op plugin init` aliases (e.g. `hcloud`, `tofu`) that wrap `op plugin run`. Guarded by `[[ -f ... ]]` so hosts without the file (e.g. `kirby`) don't error.
 
 ## Flow
 

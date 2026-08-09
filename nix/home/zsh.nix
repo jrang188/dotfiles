@@ -32,6 +32,10 @@
       export GOPATH=$HOME/go
       export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
+      # 1Password CLI shell plugins (op plugin init). Source if present so
+      # hosts without the file don't error.
+      [[ -f "$HOME/.config/op/plugins.sh" ]] && source "$HOME/.config/op/plugins.sh"
+
       function brew() {
         command brew "$@"
 

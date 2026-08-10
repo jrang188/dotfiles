@@ -43,6 +43,7 @@
       # Vim-like copy mode (y yanks to system clipboard via tmux-yank)
       bind -T copy-mode-vi v send-keys -X begin-selection
       bind -T copy-mode-vi C-v send-keys -X rectangle-toggle
+
     '';
   };
 }

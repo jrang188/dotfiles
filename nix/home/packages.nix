@@ -59,6 +59,7 @@ in
     devbox
     pnpm
     yarn-berry
+    sops
 
     # ============================================
     # DevOps & Cloud Tools

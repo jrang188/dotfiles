@@ -10,7 +10,6 @@ in
     settings = {
       model = "opencode-go/mimo-v2-pro";
       plugin = [
-        "superpowers@git+https://github.com/obra/superpowers.git"
         "oh-my-opencode-slim"
       ];
       agent = {

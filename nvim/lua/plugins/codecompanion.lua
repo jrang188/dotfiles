@@ -8,15 +8,21 @@ return {
   opts = {
     adapters = {
       http = {
-        minimax = function()
-          return require("codecompanion.adapters").extend("anthropic", {
-            url = "https://opencode.ai/zen/go/v1/messages", -- The endpoint from your image
+        deepseek_flash = function()
+          return require("codecompanion.adapters").extend("openai_compatible", {
             env = {
+              url = "https://opencode.ai/zen/go",
+              chat_url = "/v1/chat/completions",
               api_key = "cmd:op read 'op://Development/opencode_go/credential' --no-newline",
             },
             schema = {
               model = {
-                default = "minimax-m2.7", -- The Model ID from your image
+                default = "deepseek-v4-flash",
+                choices = {
+                  ["deepseek-v4-flash"] = {
+                    formatted_name = "DeepSeek V4 Flash",
+                  },
+                },
               },
             },
           })
@@ -45,10 +51,10 @@ return {
         },
       },
       cmd = {
-        adapter = "minimax",
+        adapter = "deepseek_flash",
       },
       inline = {
-        adapter = "minimax",
+        adapter = "deepseek_flash",
       },
     },
   },

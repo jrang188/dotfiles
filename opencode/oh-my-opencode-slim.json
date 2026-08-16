@@ -63,11 +63,11 @@
         "variant": "thinking"
       },
       "oracle": {
-        "model": "opencode-go/qwen3.7-max",
+        "model": "opencode-go/glm-5.2",
         "variant": "max"
       },
       "librarian": {
-        "model": "opencode-go/deepseek-v4-flash",
+        "model": "opencode-go/mimo-v2.5",
         "variant": "high",
         "mcps": [
           "websearch",
@@ -76,14 +76,14 @@
         ]
       },
       "explorer": {
-        "model": "opencode-go/deepseek-v4-flash",
+        "model": "opencode-go/mimo-v2.5",
         "variant": "high"
       },
       "designer": {
         "model": "opencode-go/kimi-k2.7-code"
       },
       "fixer": {
-        "model": "opencode-go/deepseek-v4-flash",
+        "model": "opencode-go/mimo-v2.5",
         "variant": "high"
       },
       "observer": {

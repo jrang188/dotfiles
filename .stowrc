@@ -4,3 +4,4 @@
 --ignore='^archive$'
 --ignore=.stowrc
 --ignore='^opencode/opencode\.json$'
+--ignore='^opencode/tui\.json$'

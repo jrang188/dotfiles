@@ -30,6 +30,7 @@ in
     xxd
     cachix
     tmux
+    pdftk
 
     # ============================================
     # Programming Languages & Runtimes
@@ -82,6 +83,7 @@ in
     hcloud
     tflint
     trivy
+    argocd # ArgoCD CLI
   ];
 
   # Enable Nix-Direnv

@@ -67,7 +67,7 @@ Only two hosts are exported from `flake.nix`:
 | `sketchybar/items/` | Declarative bar items: apple, workspaces, front_app, calendar, media, widgets. Observer pattern via `item:subscribe()`. | [View Map](sketchybar/items/codemap.md) |
 | `sketchybar/items/widgets/` | Provider-consumer widgets (battery, volume, wifi, cpu) with popup-details and mouse event wiring. | [View Map](sketchybar/items/widgets/codemap.md) |
 | `aerospace/` | AeroSpace tiling WM config (`aerospace.toml`): binding modes, startup lifecycle (borders + sketchybar), workspace-to-monitor assignments, window rules. | [View Map](aerospace/codemap.md) |
-| `opencode/` | OpenCode agent config: `opencode.json` (MCP registry, plugin pipeline), `oh-my-opencode-slim.json` (presets + sub-agent roles), `tui.json` (tokyonight), `skills/`. | [View Map](opencode/codemap.md) |
+| `opencode/` | OpenCode agent config: `opencode.json` + `tui.json` (both Nix-managed via `nix/home/ai/opencode.nix`), `oh-my-opencode-slim.json` (presets + sub-agent roles), `skills/`. | [View Map](opencode/codemap.md) |
 
 ## Build & Validation Commands
 

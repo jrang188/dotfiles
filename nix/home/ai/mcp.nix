@@ -1,4 +1,8 @@
-_: {
+{ pkgs, ... }:
+let
+  inherit (pkgs) _1password-cli nodejs uv;
+in
+{
   programs.mcp = {
     enable = true;
     servers = {
@@ -17,9 +21,22 @@ _: {
           "kubernetes-mcp-server@latest"
         ];
       };
-      pulumi = {
-        "type" = "remote";
-        "url" = "https://mcp.ai.pulumi.com/mcp";
+      opentofu = {
+        type = "streamable-http";
+        url = "https://mcp.opentofu.org/mcp";
+      };
+      grafana = {
+        command = "${_1password-cli}/bin/op";
+        args = [
+          "run"
+          "--"
+          "${uv}/bin/uvx"
+          "mcp-grafana"
+        ];
+        env = {
+          GRAFANA_URL = "https://grafana.tail8255cc.ts.net";
+          GRAFANA_SERVICE_ACCOUNT_TOKEN = "op://Development/victoria-metrics-grafana-admin/mcp-token";
+        };
       };
     };
   };

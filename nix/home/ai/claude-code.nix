@@ -9,4 +9,5 @@ in
     package = inputs.llm-agents.packages.${system}.claude-code;
     enableMcpIntegration = true;
   };
+  home.packages = [ pkgs.claude-agent-acp ];
 }

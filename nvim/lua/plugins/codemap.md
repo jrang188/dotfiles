@@ -40,6 +40,7 @@ Houses all custom plugin specifications and LazyVim plugin overrides. Every `.lu
 | `opencode.lua` | `nickjvandyke/opencode.nvim` | OpenCode AI provider integration, snacks.nvim dependency for input/picker/terminal, keymaps for ask/select/toggle/operator, scroll fix for native `<C-a>`/`<C-x>` |
 | `unocss.lua` | `neovim/nvim-lspconfig` | Registers `unocss` LSP server |
 | `vim-tmux-navigator.lua` | `christoomey/vim-tmux-navigator` | Seamless Neovim<->tmux pane navigation via Ctrl-h/j/k/l, lazy-loaded on commands and keys |
+| `terraform.lua` | `mfussenegger/nvim-lint` | Registers empty linter overrides for `terraform`/`tf` filetypes (disables default linters) |
 
 ### Detailed per-file documentation
 
@@ -101,6 +102,8 @@ Houses all custom plugin specifications and LazyVim plugin overrides. Every `.lu
 - `keys`: `<C-h>` (left), `<C-j>` (down), `<C-k>` (up), `<C-l>` (right), `<C-\>` (previous pane).
 - Keymaps use `"<cmd><C-U>TmuxNavigate*<cr>"` pattern allowing count-prefixed navigation from visual mode.
 - Pairs with the tmux-side `vim-tmux-navigator` tmux plugin configured in `nix/home/tmux.nix`.
+
+**`terraform.lua`** — Targets `mfussenegger/nvim-lint` with `opts.linters_by_ft` setting `terraform = {}` and `tf = {}`. Registers empty linter tables for Terraform filetypes, effectively overriding any default linters LazyVim may bundle for these filetypes.
 
 ## Flow
 

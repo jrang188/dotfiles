@@ -10,6 +10,7 @@ gsd-install-state.json
 
 # Managed by Nix (nix/home/ai/opencode.nix + mcp.nix) — not stowed
 opencode.json
+tui.json
 
 # Runtime/deps
 node_modules/

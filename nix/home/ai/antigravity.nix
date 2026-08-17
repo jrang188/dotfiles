@@ -1,6 +1,6 @@
 { ... }:
 {
-  program.antigravity-cli = {
+  programs.antigravity-cli = {
     enable = true;
     enableMcpIntegration = true;
   };

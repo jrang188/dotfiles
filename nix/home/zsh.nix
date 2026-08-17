@@ -32,10 +32,6 @@
       export GOPATH=$HOME/go
       export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
-      # 1Password CLI shell plugins (op plugin init). Source if present so
-      # hosts without the file don't error.
-      [[ -f "$HOME/.config/op/plugins.sh" ]] && source "$HOME/.config/op/plugins.sh"
-
       function brew() {
         command brew "$@"
 
@@ -44,18 +40,18 @@
         fi
       }
 
-      # oh-my-opencode-slim tmux multiplexer: child panes attach to opencode over
-      # a TCP port, which needs an explicit --port (OpenCode >= 1.17.18 default
-      # port 0 exposes no listener).
-      function opencode() {
-        if [[ -n "$TMUX" ]] && [[ "$*" != *"--port"* ]]; then
-          local port
-          port="$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1]); s.close()')"
-          command opencode --port "$port" "$@"
-        else
-          command opencode "$@"
-        fi
-      }
+      # # oh-my-opencode-slim tmux multiplexer: child panes attach to opencode over
+      # # a TCP port, which needs an explicit --port (OpenCode >= 1.17.18 default
+      # # port 0 exposes no listener).
+      # function opencode() {
+      #   if [[ -n "$TMUX" ]] && [[ "$*" != *"--port"* ]]; then
+      #     local port
+      #     port="$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1]); s.close()')"
+      #     command opencode --port "$port" "$@"
+      #   else
+      #     command opencode "$@"
+      #   fi
+      # }
     '';
   };
 }

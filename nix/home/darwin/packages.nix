@@ -5,6 +5,7 @@
     # GUI Applications
     # ============================================
     ghostty-bin # Terminal emulator (needs to be in packages for mac-app-util trampolining)
+    syncthing-macos # Syncthing GUI
 
     # ============================================
     # macOS Audio Tools

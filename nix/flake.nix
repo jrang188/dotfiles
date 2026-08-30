@@ -49,17 +49,6 @@
       url = "github:NousResearch/hermes-agent/v2026.8.27";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # Upstream hy3 hl0.56.0.1 flake. nixpkgs-unstable has been at hyprland
-    # 0.56.0 since 2026-07-20 (commit 035c487b), so we use nixpkgs' hyprland
-    # package directly. nixpkgs' hyprlandPlugins.hy3 is at 0.55.0 (one minor
-    # behind), so we still pin hy3 upstream to get the matching 0.56.0.1 ABI.
-    # The upstream hy3 is built against the same source as nixpkgs' hyprland
-    # (both pull from github:hyprwm/Hyprland?ref=v0.56.0), so the C++ ABI
-    # matches.
-    hy3 = {
-      url = "github:outfoxxed/hy3?ref=hl0.56.0.1";
-    };
   };
 
   outputs =
@@ -211,7 +200,6 @@
           inherit (inputs)
             zen-browser
             llm-agents
-            hy3
             ;
         };
       };

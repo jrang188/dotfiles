@@ -5,7 +5,11 @@ _: {
     enable = true;
     systemd = {
       enable = true;
-      target = "hyprland-session.target";
+      # graphical-session.target, not hyprland-session.target: the latter is
+      # only started by wayland.windowManager.hyprland.systemd.enable, which
+      # is false here (see the comment on that option in hyprland.nix) --
+      # under uwsm, graphical-session.target is what actually comes up.
+      target = "graphical-session.target";
     };
     settings = {
       # Modules

@@ -198,8 +198,9 @@ The flake uses **separate nixpkgs inputs** per platform to avoid Darwin paying t
 ### Known Pinning / Overrides
 
 - **`mac-app-util` follows `nixpkgs-darwin`** — the previously independent pin (to avoid SBCL 2.6.0 build failures) was removed 2026-07 after [hraban/mac-app-util#42](https://github.com/hraban/mac-app-util/issues/42) was closed as cannot-repro.
-- **hy3 pinned to upstream `hl0.56.0.1`** on `kirby` because nixpkgs' `hyprlandPlugins.hy3` lags one minor behind the matching Hyprland ABI (0.55.0 vs Hyprland 0.56.0). The upstream hy3 is built against the same source as nixpkgs' hyprland (both pull from `github:hyprwm/Hyprland?ref=v0.56.0`), so the C++ ABI matches. When nixpkgs catches up to hy3 0.56.x, drop the upstream pin and use `pkgs.hyprlandPlugins.hy3` directly.
-- **hyprlang config deprecation (FOLLOW-UP NEEDED):** as of Hyprland 0.55 the `.conf` config format is deprecated in favor of `hyprland.lua`. The repo still uses `configType = "hyprlang"` in `home/nixos/kirby/hyprland.nix:7` and is on `home.stateVersion = "24.11"` (which defaults to hyprlang). Works fine on 0.56 because home-manager only writes `hyprland.conf` (never both files), so Hyprland loads it as hyprlang. The maintainer stated hyprlang will be supported for "1–2 releases starting from 0.22" — removal expected in 0.57 or 0.58. **Before the next Hyprland major bump, migrate to Lua**: change `configType` to `"lua"` and rewrite `home/nixos/kirby/hyprland.nix` (settings table + `extraConfig` `plugin { hy3 { } }` block) to Lua. Also bump `home.stateVersion` to `26.05` in `home/nixos/kirby/default.nix` so home-manager's default flips to `"lua"`. Tracked as a separate todo.
+- **hy3 removed (2026-08-29).** `kirby` previously used the hy3 plugin (pinned to upstream `hl0.56.0.1`, ABI-matched to Hyprland 0.56.0 specifically — hy3's `hl<hyprland-version>` tag scheme ties each release to one exact Hyprland patch version, so every nixpkgs Hyprland point-release broke it again). After repeated breakage across nixpkgs bumps, hy3 was dropped in favor of Hyprland's built-in `dwindle` layout. `home/nixos/kirby/hyprland.nix` now sets `general.layout = "dwindle"` with a `dwindle.preserve_split` block, and the old `hy3:movewindow` / `hy3:changegroup` binds were remapped to core dispatchers (`movewindow`, `togglegroup` — confirmed against Hyprland's archived 0.54.0 dispatcher docs, since these predate the plugin and need no plugin to work).
+- **`nixpkgs` unpinned again (2026-08-29), tracks `nixos-unstable`.** Briefly pinned to `e2587caef70cea85dd97d7daab492899902dbf5d` (2026-07-23) after nixpkgs-unstable shipped a Qt6 regression sometime before 2026-08-23 — every Qt6 app in a Wayland session failed with "no Qt platform plugin could be initialized," which crashed `hyprpolkitagent` (looping uwsm Hyprland logins back to SDDM) and broke `hyprlandPlugins`/hy3 ABI compat via an unrelated Hyprland version bump in the same window. Root cause was never bisected to an exact nixpkgs commit. The pin was dropped and `programs.zen-browser` re-enabled once hy3 itself was removed (see above) — hy3 was the only thing forcing an exact Hyprland version, and zen-browser's build needs a post-2026-08-03 nixpkgs (`ffmpeg_8` support, `nixpkgs#e7e521c4f`) that the pin was blocking. **The Qt6 regression's fix status upstream is unverified** — if uwsm Hyprland logins start looping back to SDDM again after a `nix flake update`, check `journalctl -b -1 | grep -i "no Qt platform plugin"` for `hyprpolkitagent` first; re-pinning `nixpkgs` to a known-good rev (check `nixos-version --json` on whatever generation last worked) is the fastest fix.
+- **hyprlang config deprecation (FOLLOW-UP NEEDED):** as of Hyprland 0.55 the `.conf` config format is deprecated in favor of `hyprland.lua`. The repo still uses `configType = "hyprlang"` in `home/nixos/kirby/hyprland.nix:7` and is on `home.stateVersion = "24.11"` (which defaults to hyprlang). Works fine on 0.56 because home-manager only writes `hyprland.conf` (never both files), so Hyprland loads it as hyprlang. The maintainer stated hyprlang will be supported for "1–2 releases starting from 0.22" — removal expected in 0.57 or 0.58. **Before the next Hyprland major bump, migrate to Lua**: change `configType` to `"lua"` and rewrite `home/nixos/kirby/hyprland.nix`'s settings table to Lua (using the new `hl.dsp.*` dispatcher API — see [Hyprland's example `hyprland.lua`](https://github.com/hyprwm/Hyprland/blob/main/example/hyprland.lua)). Also bump `home.stateVersion` to `26.05` in `home/nixos/kirby/default.nix` so home-manager's default flips to `"lua"`. Tracked as a separate todo.
 - **Lix on Darwin** — `nix.package = pkgs.lixPackageSets.stable.lix` replaces the Nix daemon binary; `nix.enable` is not set in Darwin modules (the nix-darwin module does not manage the daemon). Determinate Nix is no longer used.
 
 ### Helper Functions in `flake.nix`
@@ -277,6 +278,48 @@ nix-store --gc
 - Replace the `clean:` target with `xattr -dr com.apple.macl` — permanently broken on Tahoe.
 - Use `2>/dev/null || true` to mask GC failures — the root cause is deterministic, not transient.
 - Attempt to strip `com.apple.macl` with any `xattr` variant — blocked by TCC on macOS 26.x.
+
+### kirby: uwsm Hyprland login loop — `systemd.enable` must stay `false` (RESOLVED 2026-08-29)
+
+**Symptom:** selecting "Hyprland (uwsm-managed)" at SDDM appeared to log in, then immediately returned to the greeter. The plain `hyprland.desktop` session worked fine. No error surfaced anywhere: no crash, no coredump, exit code 0.
+
+**Why it was hard to spot:** in the journal the compositor unit looks *successful* —
+```
+wayland-wm@hyprland.desktop.service: Consumed ~800ms CPU time over ~1.0s wall clock time
+wayland-wm@hyprland.desktop.service: Triggering OnSuccess= dependencies.
+```
+Hyprland's own detailed log goes to `/run/user/1000/hypr/<instance>/hyprland.log`, which is **deleted when the instance exits**, so the actual reason is gone by the time you look. The `~1.0s` runtime plus `OnSuccess=` is the fingerprint.
+
+**Root cause:** home-manager's `wayland.windowManager.hyprland.systemd.enable` defaults to **true**, which injects into `hyprland.conf`:
+```
+exec-once = ... && systemctl --user stop hyprland-session.target && systemctl --user start hyprland-session.target
+```
+`hyprland-session.target` has `PropagatesStopTo=graphical-session.target`. Under uwsm the compositor is chained to that target (`wayland-session@hyprland.desktop.target` `BindsTo=graphical-session.target`; `wayland-wm@hyprland.desktop.service` `BindsTo=wayland-session@...`), so the momentary `stop` propagates *back into the compositor's own unit* and SIGTERMs Hyprland about a second after a fully successful start. Upstream report: [hyprwm/Hyprland#15688](https://github.com/hyprwm/Hyprland/issues/15688).
+
+**Fix:** `systemd.enable = false` in `home/nixos/kirby/hyprland.nix`. uwsm brings up `graphical-session.target` itself, so nothing is lost under uwsm. **Do not remove this** — it is not redundant, and the default is `true`.
+
+**Trade-off:** the plain (non-uwsm) `hyprland.desktop` session no longer starts `graphical-session.target`, so `hypridle` / `hyprpaper` / `hyprsunset` / `swaync` (all `WantedBy=graphical-session.target`) will not autostart there. Log in via "Hyprland (uwsm-managed)".
+
+**It is a race, and it was latent for months — not introduced by any update.** The hook fires from the compositor's own `exec-once` chain: `dbus-update-activation-environment` exports `WAYLAND_DISPLAY` (which releases uwsm's `wayland-session-waitenv.service` and lets uwsm begin activating `graphical-session.target`), and the very next command in the same `&&` chain is the `systemctl --user stop`. If the stop job lands before `graphical-session.target` activates, it's a no-op and the session lives; if activation wins, the stop cascades and kills the compositor. Journal proof from 2026-08-29: **the same generation 143 closure survived 1h38m at 20:52 and died in 1.0s at 22:35 the same evening** (and had survived 22min and 6h sessions on Jul 26–27). The win/loss is visible in the user-session target order: winners log `Reached target Current graphical user session` → `Reached target Hyprland compositor session` with no stops; losers log `Reached target Startup of XDG autostart applications` immediately followed by `Stopped target ...` cascading down. gen143's generated config (still in the nix store, `home-manager-files/.config/hypr/hyprland.conf` line 1) contains the identical hook, confirming no config change caused the flip. Why the race bias flipped on Aug 29 was never identified (ruled out: uwsm 0.26.6→0.26.7 is cosmetic, systemd/HM identical across win+loss on the same closure, NTP clock-jump timing doesn't correlate).
+
+**This was documented online all along:** the [NixOS Wiki Hyprland page](https://wiki.nixos.org/wiki/Hyprland) carries an explicit warning — "If you use the Home Manager module, make sure to disable systemd integration, as it conflicts with UWSM" with the exact `systemd.enable = false` fix — plus [hyprwm/Hyprland#15688](https://github.com/hyprwm/Hyprland/issues/15688) (Aug 2026, with a comment diagnosing the identical home-manager mechanism). Home-manager's own docs do NOT mention uwsm (repo searched, zero hits), so the wiki is the discoverable source.
+
+This reproduced identically on Hyprland 0.56.0 and 0.56.2, with and without hy3, and on both the old and new nixpkgs — because it is a home-manager config issue. The Qt6 "no Qt platform plugin could be initialized" errors seen in the same journals were a real *concurrent* nixpkgs regression (it broke `hyprpolkitagent` and Plasma), but it was never what caused the uwsm loop; that regression is gone as of nixpkgs `83199d0` (0 occurrences).
+
+### kirby: KDE Plasma session fails to start (kwin/DRM, unrelated to Hyprland)
+
+**Symptom:** Selecting `plasma.desktop` at SDDM starts the session but every Plasma component (`plasmashell`, `ksmserver`, `kded6`, `ksplashqml`, etc.) immediately fails with "no Qt platform plugin could be initialized." Hyprland (uwsm or not) is unaffected — `hyprpolkitagent`, also Qt6, starts fine in the same boot.
+
+**Root cause (partial):** `journalctl` shows Plasma's own `kwin_wayland` compositor failing before any Plasma app can connect:
+```
+kwin_vulkan: Device AMD Radeon RX 480 Graphics (RADV POLARIS10) misses required Vulkan extensions
+kwin_vulkan: VK_EXT_image_drm_format_modifier
+...
+kwin_wayland_drm: atomic commit failed: Permission denied
+```
+"No Qt platform plugin" is a downstream symptom — there's no live Wayland socket for Plasma's apps to connect to because kwin itself didn't come up. The "Permission denied" on the atomic commit looks like a DRM-master handoff conflict: SDDM's greeter also runs its own `kwin_wayland` for the login screen, and the Plasma session's `kwin_wayland` may be failing to acquire the GPU because the greeter's compositor didn't release it cleanly. Not yet root-caused past this point (not bisected, no fix attempted).
+
+**Confirmed pre-existing and unrelated to hy3/nixpkgs pinning:** reproduced identically on 2026-07-26 (before any of the hy3/uwsm/Qt6-regression work documented above) and on nixpkgs rev `e2587ca` (2026-07-23, briefly pinned then dropped — see "Known Pinning / Overrides"). Removing hy3 or (un)pinning `nixpkgs` does not touch this.
 
 ## Agent skills
 

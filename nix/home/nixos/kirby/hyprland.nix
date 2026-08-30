@@ -1,10 +1,33 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 {
   # Hyprland window manager configuration
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
     configType = "hyprlang";
+
+    # MUST stay false while the session is launched through uwsm
+    # (`programs.hyprland.withUWSM = true` in modules/nixos/hyprland.nix).
+    #
+    # When true (the home-manager default), the module injects
+    #   exec-once = ... && systemctl --user stop hyprland-session.target \
+    #                   && systemctl --user start hyprland-session.target
+    # into hyprland.conf. `hyprland-session.target` has
+    # PropagatesStopTo=graphical-session.target, and under uwsm the compositor
+    # unit is chained to it (wayland-session@hyprland.desktop.target
+    # BindsTo=graphical-session.target, wayland-wm@hyprland.desktop.service
+    # BindsTo=wayland-session@...). So that momentary `stop` propagates back
+    # into the compositor's own unit and SIGTERMs Hyprland ~1s after a fully
+    # successful start. Hyprland shuts down cleanly, systemd sees OnSuccess=
+    # (exit 0, no crash, no coredump) and SDDM just returns to the greeter --
+    # which is why this looked like a login loop with no error anywhere.
+    # Upstream: hyprwm/Hyprland#15688.
+    #
+    # uwsm brings up graphical-session.target itself, so nothing is lost here.
+    # Trade-off: the plain (non-uwsm) `hyprland.desktop` session no longer
+    # starts graphical-session.target, so hypridle/hyprpaper/hyprsunset/swaync
+    # won't autostart there. Log in via "Hyprland (uwsm-managed)".
+    systemd.enable = false;
     settings = {
 
       # Set programs that you use
@@ -24,6 +47,7 @@
         "systemctl --user start hyprpolkitagent"
         "1password --silent" # 1password in the background
         "kdeconnect-indicator" # KDE Connect indicator
+        "tailscale-systray" # Tailscale status/control tray icon
       ];
 
       "monitor" = [
@@ -43,7 +67,7 @@
         "col.inactive_border" = "rgba(565f89cc) rgba(414868cc) 45deg";
         "resize_on_border" = true;
         "allow_tearing" = false;
-        "layout" = "hy3";
+        "layout" = "dwindle";
       };
       "decoration" = {
         "rounding" = 10;
@@ -86,8 +110,8 @@
           "workspacesOut, 1, 1.94, almostLinear, fade"
         ];
       };
-      "master" = {
-        "new_status" = "master";
+      "dwindle" = {
+        "preserve_split" = true;
       };
       "misc" = {
         "force_default_wallpaper" = -1;
@@ -117,7 +141,7 @@
         "$mainMod, V, togglefloating" # Toggle floating mode
         "$mainMod, space, exec, $menu" # Open application menu
         "$mainMod, P, pseudo" # Toggle pseudotiling (dwindle layout)
-        "$mainMod, backslash, layoutmsg, togglesplit" # Toggle split direction (hy3 layout, togglesplit was removed in Hyprland 0.54)
+        "$mainMod, backslash, layoutmsg, togglesplit" # Toggle split direction (dwindle only)
         "$mainMod, B, exec, $browser" # Open browser
         "$superShift, 1, exec, $1pass" # Open 1Password
         "$superShift, D, exec, $discord" # Open Discord
@@ -139,15 +163,14 @@
         "$mainMod, k, movefocus, u" # Focus up
         "$mainMod, l, movefocus, r" # Focus right
 
-        # Window movement (hy3 - Alt+Shift+vim keys)
-        "$mainMod SHIFT, h, hy3:movewindow, l" # Move window left
-        "$mainMod SHIFT, j, hy3:movewindow, d" # Move window down
-        "$mainMod SHIFT, k, hy3:movewindow, u" # Move window up
-        "$mainMod SHIFT, l, hy3:movewindow, r" # Move window right
+        # Window movement (Alt+Shift+vim keys)
+        "$mainMod SHIFT, h, movewindow, l" # Move window left
+        "$mainMod SHIFT, j, movewindow, d" # Move window down
+        "$mainMod SHIFT, k, movewindow, u" # Move window up
+        "$mainMod SHIFT, l, movewindow, r" # Move window right
 
         # Layout toggles (like aerospace)
-        "$mainMod, slash, hy3:changegroup, toggletab" # Toggle tabbed/stacked layout
-        "$mainMod, comma, hy3:makegroup, opposite" # Create opposite split
+        "$mainMod, slash, togglegroup" # Toggle tabbed/stacked layout
 
         # Resize (like aerospace - smart resize)
         "$mainMod, minus, resizeactive, -50 -50" # Shrink window
@@ -219,25 +242,6 @@
         # "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0" # Fix XWayland focus issues
       ];
     };
-
-    plugins = [
-      inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
-    ];
-
-    extraConfig = ''
-      # hy3 configuration
-      plugin {
-        hy3 {
-          # Use hy3 layout instead of dwindle
-          # Set layout to hy3 in general section below
-        }
-      }
-
-      # Enable hy3 layout
-      general {
-        layout = hy3
-      }
-    '';
   };
 
   # Hyprland-related packages

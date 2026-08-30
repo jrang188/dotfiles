@@ -15,6 +15,9 @@
     "::1"
   ];
 
+  # Tailscale VPN
+  services.tailscale.enable = true;
+
   # Encrypted DNS using dnscrypt-proxy2 with AdGuard DNS
   services.dnscrypt-proxy = {
     enable = true;

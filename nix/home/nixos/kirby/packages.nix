@@ -11,5 +11,6 @@
     # ============================================
     chntpw # Windows registry editor
     clang # C/C++ compiler (macOS has clang by default, but needed on NixOS)
+    tailscale-systray # Tray icon for Tailscale status/control
   ];
 }

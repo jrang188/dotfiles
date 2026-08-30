@@ -11,6 +11,7 @@
     ./ashell.nix
     ./swaync.nix
     ./kde.nix
+    ./hermes-agent.nix
   ];
 
   # Override ghostty package for NixOS (use regular ghostty)

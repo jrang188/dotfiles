@@ -43,6 +43,13 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    # Nix/NixOS packaging is Tier 2 upstream (best-effort; main may break),
+    # so pin to a tagged release rather than following main.
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent/v2026.8.27";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Upstream hy3 hl0.56.0.1 flake. nixpkgs-unstable has been at hyprland
     # 0.56.0 since 2026-07-20 (commit 035c487b), so we use nixpkgs' hyprland
     # package directly. nixpkgs' hyprlandPlugins.hy3 is at 0.55.0 (one minor
@@ -198,6 +205,7 @@
         homeImports = [
           ./home
           ./home/nixos/kirby
+          inputs.hermes-agent.homeManagerModules.default
         ];
         extraArgs = {
           inherit (inputs)

@@ -8,15 +8,22 @@ let
   cfg = config.wayland.windowManager.hyprland;
 in
 {
-  # Tokyo Night Dark theme configuration for all GUI applications
+  # Dark theme configuration for all GUI applications
   # Only enabled when using Hyprland
+  #
+  # NOTE: previously used pkgs.tokyonight-gtk-theme, but it (and every other
+  # murrine-based GTK theme) was removed from nixpkgs 2026-07-22 because it
+  # depended on gtk-engine-murrine, which was removed for being unmaintained
+  # and GTK2-only. adw-gtk3 is the actively-maintained replacement (a GTK3
+  # port of libadwaita, no murrine dependency); Tokyo Night accent colors
+  # still come through via the Hyprland border/decoration colors.
 
-  # GTK dark theme - Tokyo Night
+  # GTK dark theme
   gtk = lib.mkIf cfg.enable {
     enable = true;
     theme = {
-      name = "Tokyonight-Dark";
-      package = pkgs.tokyonight-gtk-theme;
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -31,7 +38,7 @@ in
     };
   };
 
-  # Qt dark theme - use gtk2 platform theme to match Tokyo Night GTK theme
+  # Qt dark theme - use gtk2 platform theme to match the GTK theme
   qt = lib.mkIf cfg.enable {
     enable = true;
     platformTheme.name = "gtk2";
@@ -51,8 +58,8 @@ in
 
   # Environment variables for dark theme
   home.sessionVariables = lib.mkIf cfg.enable {
-    # GTK dark theme - Tokyo Night
-    GTK_THEME = "Tokyonight-Dark";
+    # GTK dark theme
+    GTK_THEME = "adw-gtk3-dark";
     # Qt dark theme - use gtk2 to match GTK theme
     # QT_QPA_PLATFORMTHEME is managed by the qt module via platformTheme.name
     QT_STYLE_OVERRIDE = "gtk2";
@@ -62,7 +69,7 @@ in
 
   # Additional packages for theming
   home.packages = lib.mkIf cfg.enable [
-    pkgs.tokyonight-gtk-theme
+    pkgs.adw-gtk3
     pkgs.papirus-icon-theme
     pkgs.qt6Packages.qt6gtk2
     pkgs.libsForQt5.qt5ct

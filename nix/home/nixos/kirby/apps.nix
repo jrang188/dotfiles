@@ -7,7 +7,7 @@
     code-cursor # Cursor IDE
     vscode # Visual Studio Code
     zed-editor # Zed Editor
-    jetbrains.idea-oss # Intellij IDEA
+    jetbrains.idea # Intellij IDEA Ultimate
 
     # ============================================
     # Terminals

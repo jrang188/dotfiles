@@ -42,13 +42,6 @@
     };
 
     llm-agents.url = "github:numtide/llm-agents.nix";
-
-    # Nix/NixOS packaging is Tier 2 upstream (best-effort; main may break),
-    # so pin to a tagged release rather than following main.
-    hermes-agent = {
-      url = "github:NousResearch/hermes-agent/v2026.8.27";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =

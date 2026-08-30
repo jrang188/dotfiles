@@ -187,7 +187,6 @@
         homeImports = [
           ./home
           ./home/nixos/kirby
-          inputs.hermes-agent.homeManagerModules.default
         ];
         extraArgs = {
           inherit (inputs)

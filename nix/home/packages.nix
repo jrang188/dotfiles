@@ -27,6 +27,7 @@
     cachix
     tmux
     pdftk
+    mkcert
 
     # ============================================
     # Programming Languages & Runtimes

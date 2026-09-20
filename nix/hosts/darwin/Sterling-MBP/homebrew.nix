@@ -35,6 +35,7 @@ _: {
       "mole"
       "media-control"
       "scrcpy"
+      "nss"
     ];
 
     # `brew install --cask`

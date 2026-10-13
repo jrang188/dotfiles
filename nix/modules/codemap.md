@@ -1,7 +1,7 @@
 # nix/modules/
 
 ## Responsibility
-Entry-point directory for reusable NixOS and nix-darwin system modules and shared Home Manager modules. Serves as the canonical import path consumed by host-specific configurations (`hosts/darwin/Sterling-MBP/`, `hosts/nixos/kirby/`, and the orphaned `hosts/nixos/wsl/`). Each subdirectory (`common/`, `darwin/`, `nixos/`, `home/`) exposes its own `default.nix` that aggregates platform-specific or cross-platform functionality.
+Entry-point directory for reusable NixOS and nix-darwin system modules and shared Home Manager modules. Serves as the canonical import path consumed by the two active host-specific configurations (`hosts/darwin/Sterling-MBP/` and `hosts/nixos/kirby/`); the former orphaned `hosts/nixos/wsl/` tree no longer exists. Each subdirectory (`common/`, `darwin/`, `nixos/`, `home/`) exposes its own `default.nix` that aggregates platform-specific or cross-platform functionality.
 
 This directory does **not** have its own `default.nix` — it is a pure organizational namespace. Consumers import subdirectory paths directly (e.g. `../../../modules/common`, `../../../modules/nixos`).
 
@@ -20,6 +20,6 @@ This directory does **not** have its own `default.nix` — it is a pure organiza
 6. Home Manager host configs independently import `modules/home/gui.nix` to apply user-scoped settings.
 
 ## Integration
-- **Consumed by**: `hosts/darwin/Sterling-MBP/default.nix` (imports `common` + `darwin`), `hosts/nixos/kirby/default.nix` (imports `common` + `nixos`), `hosts/nixos/wsl/default.nix` (imports `common` only).
+- **Consumed by**: `hosts/darwin/Sterling-MBP/default.nix` (imports `common` + `darwin`) and `hosts/nixos/kirby/default.nix` (imports `common` + `nixos`).
 - **Consumed by**: `home/darwin/default.nix` and `home/nixos/kirby/default.nix` (import `modules/home/gui.nix` directly).
 - **Not consumed by**: `flake.nix` — the flake does not reference this directory directly; it is purely a path-based import target.

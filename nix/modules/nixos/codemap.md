@@ -22,7 +22,7 @@ NixOS-specific system modules for the `kirby` host. Configures containerization 
 ## Integration
 - **Depends on**: `pkgs` (in `user-shell.nix`); `pkgs` only (in `hyprland.nix`, which uses `pkgs.hyprland` directly — no flake input needed); `username` (in `1password.nix` for PolKit owner).
 - **Consumed by**: `hosts/nixos/kirby/default.nix`.
-- **Not consumed by**: The orphaned `hosts/nixos/wsl/default.nix` imports `common` only, not `nixos` — the WSL host config manually duplicates some settings (Nix GC, auto-optimise, default shell) rather than importing this module set.
+- **Not consumed by**: Nothing else — `kirby` is the only NixOS host, and the former orphaned `hosts/nixos/wsl/` config has been removed from the tree.
 - **Complemented by**: `modules/common` (separately imported by the host) for cross-platform Nix and font settings, including the shared `nix-daemon.nix`.
 
 ### Module: `default.nix`

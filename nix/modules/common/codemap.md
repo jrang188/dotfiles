@@ -17,7 +17,7 @@ Cross-platform system-level Nix modules that apply identically to both macOS (Da
 
 ## Integration
 - **Depends on**: `pkgs` (via function argument) — expects the nixpkgs package set passed by the caller.
-- **Consumed by**: `hosts/darwin/Sterling-MBP/default.nix`, `hosts/nixos/kirby/default.nix`, `hosts/nixos/wsl/default.nix`.
+- **Consumed by**: `hosts/darwin/Sterling-MBP/default.nix` and `hosts/nixos/kirby/default.nix`.
 - **Provides configuration for**:
   - `environment.systemPackages` (from `apps.nix`)
   - `nix.settings` — experimental-features, substituters, trusted-users (from `nix-core.nix`)

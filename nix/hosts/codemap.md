@@ -12,7 +12,7 @@ Logical namespace grouping platform-specific host configurations. There is no `d
 ## Flow
 1. `nix/flake.nix` defines the `outputs` with two host entries: `darwinConfigurations."Sterling-MBP"` and `nixosConfigurations."kirby"`.
 2. Each entry passes a host-specific module directory (under this tree) to `mkDarwin` / `mkSystem`.
-3. The helper function merges that host module with shared modules (`modules/common`, `modules/darwin` or `modules/nixos`), Home Manager configs, and flake-input modules (determinate, lanzaboote, mac-app-util, nix-homebrew, home-manager).
+3. The helper function merges that host module with shared modules (`modules/common`, `modules/darwin` or `modules/nixos`), Home Manager configs, and flake-input modules (mac-app-util, nix-homebrew, home-manager, plus host-supplied modules such as lanzaboote). There is no Determinate Nix module — Determinate is no longer used (the daemon binary comes from Lix, configured in `modules/common/nix-daemon.nix`).
 4. Build commands (`make darwin`, `make nixos`) invoke `nh darwin switch` / `nh os switch` which evaluate the final `darwinSystem` / `nixosSystem` from the flake.
 
 ## Integration

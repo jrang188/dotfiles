@@ -2,14 +2,14 @@
 
 ## Responsibility
 
-NixOS Home Manager directory — serves as a namespace container for NixOS-specific home configs. Does **not** contain a `default.nix` (no shared NixOS-only home config exists). Instead, it hosts subdirectories for individual NixOS hosts: `kirby/` (active) and `wsl/` (orphaned).
+NixOS Home Manager directory — serves as a namespace container for NixOS-specific home configs. Does **not** contain a `default.nix` (no shared NixOS-only home config exists). Instead, it hosts subdirectories for individual NixOS hosts: `kirby/` (the only one, active).
 
 ## Design
 
 - **Namespace directory**: No module logic at this level. The folder structure separates NixOS home configs from Darwin and shared configs.
-- **Two subdirectories**:
+- **Single subdirectory**:
   - `kirby/` — active, wired into `flake.nix` outputs (host `kirby`, x86_64-linux).
-  - `wsl/` — orphaned, **not exported** from `flake.nix` (left over from a prior WSL iteration).
+- The former `wsl/` config has been removed from the tree; do not re-add it or other orphaned WSL/Ubuntu configs without confirming with the user.
 
 ## Flow
 
@@ -17,6 +17,5 @@ Not applicable — no module is defined at this directory level. Host-specific c
 
 ## Integration
 
-- **Active consumer**: `nix/flake.nix` line 199 — `homeImports = [ ./home ./home/nixos/kirby ]`.
-- **Orphaned subdirectory**: `nix/home/nixos/wsl/` — present in the filesystem but not referenced in any flake output.
+- **Active consumer**: `nix/flake.nix` lines 187–190 — `homeImports = [ ./home ./home/nixos/kirby ]`.
 - **Sibling**: `nix/home/darwin/` for the macOS counterpart.

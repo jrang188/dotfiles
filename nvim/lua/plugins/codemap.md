@@ -27,30 +27,32 @@ Houses all custom plugin specifications and LazyVim plugin overrides. Every `.lu
 
 ### Plugin inventory
 
+11 spec files (all `*.lua` except this `codemap.md`):
+
 | File | Plugin(s) configured | Purpose |
 |------|---------------------|---------|
 | `colorscheme.lua` | `LazyVim/LazyVim` | Overrides colorscheme to `tokyonight-night` |
-| `codecompanion.lua` | `olimorris/codecompanion.nvim` | AI coding assistant with custom adapters (Anthropic-based minimax via opencode.ai, opencode chat), CLI agent integration, keymaps |
+| `codecompanion.lua` | `olimorris/codecompanion.nvim` | AI coding assistant with a custom `deepseek_flash` adapter (OpenAI-compatible, routed via opencode.ai), opencode chat adapter, CLI agent integration, keymaps |
 | `cord.lua` | `vyfor/cord.nvim` | Discord Rich Presence integration, build step via `:Cord update` |
 | `example.lua` | (multiple, disabled) | Disabled reference spec demonstrating LazyVim patterns (adding plugins, overriding opts, disabling, extending) |
 | `img-clip.lua` | `HakonHarnes/img-clip.nvim` | Paste images from system clipboard into markdown, base64-free, drag-and-drop support |
 | `mason.lua` | `mason-org/mason-lspconfig.nvim`, `mason-org/mason.nvim` | Disables both mason-lspconfig and mason.nvim entirely (no auto-LSP-install) |
 | `nil.lua` | `neovim/nvim-lspconfig` | Disables `nil_ls` LSP server |
 | `nixd.lua` | `neovim/nvim-lspconfig` | Configures nixd LSP with flake-based system and home-manager options evaluation using `builtins.getFlake` |
-| `opencode.lua` | `nickjvandyke/opencode.nvim` | OpenCode AI provider integration, snacks.nvim dependency for input/picker/terminal, keymaps for ask/select/toggle/operator, scroll fix for native `<C-a>`/`<C-x>` |
+| `terraform.lua` | `mfussenegger/nvim-lint` | Registers empty linter overrides for `terraform`/`tf` filetypes (disables default linters) |
 | `unocss.lua` | `neovim/nvim-lspconfig` | Registers `unocss` LSP server |
 | `vim-tmux-navigator.lua` | `christoomey/vim-tmux-navigator` | Seamless Neovim<->tmux pane navigation via Ctrl-h/j/k/l, lazy-loaded on commands and keys |
-| `terraform.lua` | `mfussenegger/nvim-lint` | Registers empty linter overrides for `terraform`/`tf` filetypes (disables default linters) |
 
 ### Detailed per-file documentation
 
 **`colorscheme.lua`** — Overrides `LazyVim/LazyVim` opts to set `colorscheme = "tokyonight-night"`. This is the standard LazyVim mechanism for choosing a colorscheme: setting it on the LazyVim meta-plugin rather than calling `vim.cmd.colorscheme` directly.
 
-**`codecompanion.lua`** — Configures `olimorris/codecompanion.nvim` v19 with:
-- A custom adapter `"minimax"` extending the `"anthropic"` adapter, routing to `https://opencode.ai/zen/go/v1/messages` with the API key fetched from 1Password CLI.
-- Interaction routing: `chat` → `"opencode"` adapter, `cmd`/`inline` → `"minimax"` adapter.
-- CLI agents: `claude_code` (`claude` command) and `opencode` (`opencode` command), both terminal-based.
-- Keymaps: `<C-a>` (actions), `<LocalLeader>a` (toggle chat), `ga` (add to chat), cab abbreviation `cc` → `CodeCompanion`.
+**`codecompanion.lua`** — Configures `olimorris/codecompanion.nvim` v19 (`version = "^19.0.0"`) with:
+- Dependencies: `nvim-lua/plenary.nvim`, `nvim-treesitter/nvim-treesitter`.
+- A custom adapter `"deepseek_flash"` extending the `"openai_compatible"` adapter, routed to `https://opencode.ai/zen/go` (chat URL `/v1/chat/completions`), API key fetched from 1Password CLI (`op://Development/opencode_go/credential`). Default model `deepseek-v4-flash` ("DeepSeek V4 Flash").
+- Interaction routing: `chat` → `"opencode"` adapter; `cmd`/`inline` → `"deepseek_flash"` adapter.
+- CLI agents: `claude_code` (`claude` command) and `opencode` (`opencode` command), both terminal-provider.
+- `init` (eager): keymaps `<C-a>` (actions), `<LocalLeader>a` (toggle chat), `ga` (add to chat), plus cab abbreviation `cc` → `CodeCompanion`.
 
 **`cord.lua`** — Basic Declaration for `vyfor/cord.nvim` with a `build = ":Cord update"` hook. No `opts` configured (commented-out log_level trace).
 
@@ -83,17 +85,7 @@ Houses all custom plugin specifications and LazyVim plugin overrides. Every `.lu
 - The hostname is detected at runtime via `vim.loop.os_gethostname()`, username from `$USER`.
 - Sets `nixd` formatting command to `nixfmt`.
 
-**`opencode.lua`** — Configures `nickjvandyke/opencode.nvim` with:
-- `dependencies`: `folke/snacks.nvim` with `input`, `picker`, and `terminal` opts (required for `snacks` provider).
-- `config` (imperative): sets `vim.g.opencode_opts`, enables `autoread`, registers keymaps.
-- Keymaps:
-  - `<C-a>` → `opencode.ask("@this: ", { submit = true })` (normal/visual)
-  - `<C-x>` → `opencode.select()` (normal/visual)
-  - `<C-.>` → `opencode.toggle()` (normal/terminal)
-  - `go` → `opencode.operator("@this ")` (expr, normal/visual)
-  - `goo` → `opencode.operator("@this ")` with suffix (expr, normal)
-  - `<S-C-u>` / `<S-C-d>` → scroll half-page up/down (normal)
-  - `+` / `-` → remaps native `<C-a>`/`<C-x>` increment/decrement (normal, avoids conflict)
+**`terraform.lua`** — Targets `mfussenegger/nvim-lint` with `opts.linters_by_ft` setting `terraform = {}` and `tf = {}`. Registers empty linter tables for Terraform filetypes, effectively overriding any default linters LazyVim may bundle for these filetypes.
 
 **`unocss.lua`** — Targets `neovim/nvim-lspconfig` with `opts.servers.unocss = {}`. Registers the UnoCSS LSP server for Tailwind-like utility class support.
 
@@ -102,8 +94,6 @@ Houses all custom plugin specifications and LazyVim plugin overrides. Every `.lu
 - `keys`: `<C-h>` (left), `<C-j>` (down), `<C-k>` (up), `<C-l>` (right), `<C-\>` (previous pane).
 - Keymaps use `"<cmd><C-U>TmuxNavigate*<cr>"` pattern allowing count-prefixed navigation from visual mode.
 - Pairs with the tmux-side `vim-tmux-navigator` tmux plugin configured in `nix/home/tmux.nix`.
-
-**`terraform.lua`** — Targets `mfussenegger/nvim-lint` with `opts.linters_by_ft` setting `terraform = {}` and `tf = {}`. Registers empty linter tables for Terraform filetypes, effectively overriding any default linters LazyVim may bundle for these filetypes.
 
 ## Flow
 
@@ -122,7 +112,6 @@ Houses all custom plugin specifications and LazyVim plugin overrides. Every `.lu
 - **Cross-file references**:
   - `nixd.lua` reads `~/dotfiles/nix` flake path and environment variables (`$USER`, hostname)
   - `codecompanion.lua` calls `op` CLI for API key retrieval (1Password)
-  - `opencode.lua` depends on `folke/snacks.nvim` (input, picker, terminal modules)
   - `example.lua` references `lazyvim.plugins.extras.lang.typescript` import
 - **Interaction with other config modules**:
   - `lazy.lua` sets the install colorscheme fallback to `tokyonight` which matches `colorscheme.lua`'s override

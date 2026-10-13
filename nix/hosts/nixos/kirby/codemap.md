@@ -1,7 +1,7 @@
 # nix/hosts/nixos/kirby/
 
 ## Responsibility
-Host-specific NixOS module for the **kirby** machine (x86_64-linux desktop). Defines the complete system-level configuration: bootloader (systemd-boot + lanzaboote secure boot), hardware (AMD, Bluetooth), networking (NetworkManager + dnscrypt-proxy2), desktop environment (KDE Plasma 6 + Hyprland via flake pin), user accounts, services (printing, PipeWire, OpenSSH, OpenRGB, Howdy facial recognition), and system-wide Nix settings.
+Host-specific NixOS module for the **kirby** machine (x86_64-linux desktop). Defines the complete system-level configuration: bootloader (systemd-boot + lanzaboote secure boot), hardware (AMD, Bluetooth), networking (NetworkManager + dnscrypt-proxy2 + Tailscale), desktop environment (KDE Plasma 6 + Hyprland with the built-in dwindle layout), user accounts, services (printing, PipeWire, OpenSSH, OpenRGB, Howdy facial recognition), and system-wide Nix settings.
 
 ## Design
 - **Modular decomposition**: The host config is split across 10 focused `.nix` files, each responsible for a single concern. The `default.nix` acts as the composition root, importing all submodules plus shared platform modules.
@@ -10,17 +10,19 @@ Host-specific NixOS module for the **kirby** machine (x86_64-linux desktop). Def
   2. `../../../modules/nixos` — NixOS-specific modules (flatpak, nix-ld, 1password, hyprland, podman, localsend)
   3. Host-specific files: `packages.nix`, `secure-boot.nix`, `boot.nix`, `networking.nix`, `desktop.nix`, `hardware.nix`, `openrgb.nix`, `howdy.nix`, `hardware-configuration.nix`
 - **Secure Boot**: `boot.nix` configures systemd-boot as the default; `secure-boot.nix` overrides it with `lanzaboote` (Secure Boot via sbctl) using `lib.mkForce false` on `boot.loader.systemd-boot.enable`.
-- **Hyprland**: Hyprland is enabled via `modules/nixos/hyprland.nix` which uses `pkgs.hyprland` from nixpkgs (currently 0.56.0). No direct upstream flake pin is used for the compositor itself. The hy3 plugin is loaded as a separate upstream flake input (`github:outfoxxed/hy3?ref=hl0.56.0.1`) because nixpkgs' `hyprlandPlugins.hy3` lags at 0.55.0, one minor behind the matching Hyprland 0.56.0 ABI.
-- **autoUpgrade**: `system.autoUpgrade` is **commented out** in `default.nix` — not currently active. The AGENTS.md reference to autoUpgrade being enabled describes a prior state; the source code shows the block is disabled.
+- **Hyprland**: Enabled via `modules/nixos/hyprland.nix` (`programs.hyprland` using `pkgs.hyprland` from the unpinned `nixpkgs`, `withUWSM = true`). No upstream compositor flake pin. The **hy3 plugin was removed** — layout is Hyprland's built-in `dwindle` (see `nix/home/nixos/kirby/hyprland.nix`), and the old `hy3:*` binds were remapped to core dispatchers (`movewindow`, `togglegroup`). The `hy3` flake input and the `hy3` extra arg are both gone from `flake.nix`.
+- **nixpkgs pinning**: `nixpkgs` is **unpinned** (tracks `nixos-unstable`); the earlier pin to `e2587caef70cea85dd97d7daab492899902dbf5d` was dropped once hy3 was removed.
+- **pnpmDeps overlay**: `default.nix` carries a temporary `nixpkgs.overlays` entry that `overrideAttrs`s `typescript-language-server`'s `pnpmDeps` with the corrected hash (`sha256-xR/EF60lVBsITKgH7wCM2wHM46PFQevD51KfCENSUH4=`), working around the bad FOD hash in nixpkgs rev `7fd4004` (upstream fix merge `eabfbbcf`, 2026-10-11). **Remove once nixpkgs is updated past `eabfbbcf`.**
+- **autoUpgrade**: `system.autoUpgrade` is **enabled** in `default.nix`, running `Mon,Thu 04:00` against `/home/sirwayne/dotfiles/nix#kirby` with `--update-input nixpkgs` and `--update-input nixpkgs-darwin`; `allowReboot = false`.
 - **Time/locale**: America/Vancouver timezone, `en_CA.UTF-8` locale. `hardwareClockInLocalTime = true` (dual-boot compatibility).
 
 ## Files
 | File | Role |
 |------|------|
-| `default.nix` | Composition root. Sets `networking.hostName`, user `sirwayne` (groups: networkmanager, wheel, podman), `nix.settings.trusted-users`, timezone, locale, `programs.kdeconnect`, `programs.firefox`, `system.stateVersion = "25.05"`. Permits insecure pnpm versions and electron-40.10.5. |
+| `default.nix` | Composition root. Sets `networking.hostName`, user `sirwayne` (groups: networkmanager, wheel, podman), `nix.settings.trusted-users`, timezone, locale, `programs.kdeconnect`, `programs.firefox`, `system.stateVersion = "25.05"`. Declares the `typescript-language-server` `pnpmDeps` overlay and permits insecure pnpm versions plus electron-40.10.5. Enables `system.autoUpgrade`. |
 | `boot.nix` | systemd-boot loader: `consoleMode = "max"`, `configurationLimit = 5`, `timeout = 10`, EFI at `/boot`. |
 | `secure-boot.nix` | Lanzaboote Secure Boot: `boot.lanzaboote.enable = true`, pkiBundle at `/var/lib/sbctl`, auto-generate + auto-enroll keys. Forces `boot.loader.systemd-boot.enable = false` via `lib.mkForce`. Installs `sbctl`. |
-| `networking.nix` | NetworkManager with `dns = "none"` (delegating to local proxy), openvpn plugin. `dnscrypt-proxy2` with AdGuard DNS over HTTPS via IPv6, DNSSEC enforcement. Local DNS on `127.0.0.1` / `::1`. |
+| `networking.nix` | NetworkManager with `dns = "none"` (delegating to local proxy), openvpn plugin. `services.tailscale.enable = true`. `dnscrypt-proxy2` with AdGuard DNS over HTTPS via IPv6, DNSSEC enforcement. Local DNS on `127.0.0.1` / `::1`. |
 | `desktop.nix` | KDE Plasma 6 + SDDM display manager. X11 enabled (needed by SDDM). PipeWire audio (ALSA + PulseAudio compat, no PulseAudio). OpenSSH server. `coolercontrol` for fan/thermals. `rtkit` for realtime audio. |
 | `hardware.nix` | Bluetooth with `powerOnBoot = true`, `Experimental = true` (battery reporting). |
 | `hardware-configuration.nix` | Auto-generated by `nixos-generate-config`. Detects NVMe, USB storage. Sets `kvm-amd` kernel module, AMD microcode, ext4 root, vfat boot. Do not modify. |
@@ -41,7 +43,8 @@ Host-specific NixOS module for the **kirby** machine (x86_64-linux desktop). Def
 | `services.xserver.enable` | `true` (needed by SDDM) |
 | `services.desktopManager.plasma6.enable` | `true` |
 | `services.displayManager.sddm.enable` | `true` |
-| `programs.hyprland.enable` | `true` (via `modules/nixos/hyprland.nix`, using nixpkgs' Hyprland 0.56.0) |
+| `programs.hyprland.enable` | `true` (via `modules/nixos/hyprland.nix`, using nixpkgs' `pkgs.hyprland`; `withUWSM = true`; no hy3 plugin, dwindle layout) |
+| `services.tailscale.enable` | `true` |
 | `boot.lanzaboote.enable` | `true` (Secure Boot) |
 | `services.dnscrypt-proxy.enable` | `true` (AdGuard DNS over HTTPS, DNSSEC) |
 | `networking.networkmanager.dns` | `"none"` (delegates to dnscrypt-proxy) |
@@ -50,9 +53,9 @@ Host-specific NixOS module for the **kirby** machine (x86_64-linux desktop). Def
 
 ## Flake-level Configuration (in `mkSystem`, not in this module)
 - `lanzaboote.nixosModules.lanzaboote` — provides `boot.lanzaboote` options
-- `determinate.nixosModules.default` — Determinate Nix installer module
+- `determinate.nixosModules.default` — Determinate Nix installer module — **no longer present** in `flake.nix`; Determinate Nix is not used.
 - `home-manager.nixosModules.home-manager` — Home Manager integration
-- Extra args passed to `mkSystem`: `zen-browser`, `llm-agents`, `hy3` — `hy3` is consumed by `home/nixos/kirby/hyprland.nix` (line 228, `plugins` list).
+- Extra args passed to `mkSystem`: `zen-browser`, `llm-agents` (the `hy3` arg was removed along with the hy3 plugin).
 - `system = "x86_64-linux"` — sets `nixpkgs.hostPlatform`
 
 ## Flow
@@ -62,4 +65,4 @@ Host-specific NixOS module for the **kirby** machine (x86_64-linux desktop). Def
 - **Imports**: `../../../modules/common` (nix-core, apps), `../../../modules/nixos` (flatpak, nix-ld, 1password, hyprland, podman, localsend), plus 10 host-specific submodules.
 - **Consumer**: `nix/flake.nix`'s `mkSystem` call with `hostname = "kirby-machine"`.
 - **Home Manager**: configs from `nix/home/` and `nix/home/nixos/kirby/`.
-- **Hyprland + hy3**: Hyprland is nixpkgs' 0.56.0 (used directly in `modules/nixos/hyprland.nix`). hy3 is pinned to upstream `hl0.56.0.1` and loaded as a Hyprland plugin from `home/nixos/kirby/hyprland.nix` line 223. The pin is needed because nixpkgs' `hyprlandPlugins.hy3` is at 0.55.0, one minor behind the matching Hyprland 0.56.0 ABI. Drop the upstream pin once nixpkgs catches up to hy3 0.56.x.
+- **Hyprland**: nixpkgs' `pkgs.hyprland` used directly via `modules/nixos/hyprland.nix` with `withUWSM = true`. No hy3 plugin — the built-in `dwindle` layout is used (`nix/home/nixos/kirby/hyprland.nix`), and `systemd.enable = false` must stay set there to avoid the uwsm login-loop (see AGENTS.md).

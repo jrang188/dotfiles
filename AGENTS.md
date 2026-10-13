@@ -40,7 +40,7 @@ Only two hosts are wired in `flake.nix` outputs:
 
 > **Hostname gotcha:** the `kirby` flake output passes `hostname = "kirby-machine"` to `mkSystem` (not `"kirby"`). The `hostname` specialArg seen inside NixOS modules is `"kirby-machine"`; the flake attribute is `"kirby"`.
 
-> **Note:** WSL (`hosts/nixos/wsl/`, `home/nixos/wsl/`, `home/ubuntu/`) and Ubuntu home configs exist in the tree but are **not currently exported** from `flake.nix`. They are orphaned configs left over from prior iterations.
+> **Note:** The former WSL (`hosts/nixos/wsl/`, `home/nixos/wsl/`) and Ubuntu (`home/ubuntu/`) configs have been **deleted from the working tree** — they are no longer present, not merely un-exported. Do not attempt to restore them without confirming with the user.
 
 ## Build Commands
 
@@ -264,7 +264,7 @@ nix-store --gc
 3. **Document host-specifics**: Add comments for non-obvious configurations.
 4. **Use flakes**: All active configurations use the flake-based setup.
 5. **Follow the structure**: Place files in appropriate directories per the project structure.
-6. **Do not expand orphaned configs**: WSL/Ubuntu configs exist but are not wired up; do not add them back without confirming with the user.
+6. **Do not resurrect deleted configs**: the WSL/Ubuntu configs have been removed from the tree; do not add them back without confirming with the user.
 
 ## Known Issues
 

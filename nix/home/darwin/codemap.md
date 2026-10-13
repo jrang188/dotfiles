@@ -10,7 +10,7 @@ Darwin-specific Home Manager overlay for macOS host `Sterling-MBP`. Sets platfor
 - **Host-specific package override**: `programs.ghostty.package = pkgs.ghostty-bin` — uses the pre-built binary rather than building from source (NixOS counterpart uses `pkgs.ghostty`).
 - **macOS-specific additions**:
   - `programs.zsh.oh-my-zsh.plugins` gets `"macos"` appended (provides `man`, `pman`, `osx` utility functions).
-  - `home.packages` includes `ghostty-bin`, `switchaudio-osx`, `nowplaying-cli` (audio device switching and media info).
+  - `home.packages` includes `ghostty-bin`, `syncthing-macos` (Syncthing GUI), `switchaudio-osx`, `nowplaying-cli` (audio device switching and media info). Mobile-dev deps (`flutter`, `cocoapods`, `android-tools`) and `scrcpy` are present but commented out.
   - `programs.neovim.extraPackages` adds `pngpaste` (paste images from clipboard into Neovim).
 - **External module import**: `../../modules/home/gui.nix` provides the shared Ghostty base config (`JetBrainsMono Nerd Font Mono`, `TokyoNight` theme, 88% opacity, blur, Zsh integration).
 

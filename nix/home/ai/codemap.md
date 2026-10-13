@@ -2,14 +2,14 @@
 
 ## Responsibility
 
-Home Manager configuration for AI/agent tooling — `claude-code`, `opencode`, `antigravity-cli`, and the MCP (Model Context Protocol) server registry. Installs and configures AI coding assistants and their integration points (language servers, remote APIs) for all hosts.
+Home Manager configuration for AI/agent tooling — `claude-code`, `opencode`, `antigravity-cli`, and the MCP (Model Context Protocol) server registry. Installs and configures AI coding assistants and their integration points (MCP servers, remote APIs) for all hosts.
 
 ## Design
 
 - **Module aggregation via `default.nix`**: The directory is imported as `./ai` from `nix/home/default.nix`. Its `default.nix` re-exports four child modules: `claude-code.nix`, `mcp.nix`, `opencode.nix`, and `antigravity.nix`.
-- **Flake input dependency**: `claude-code.nix` and `opencode.nix` depend on `inputs.llm-agents` (from `github:numtide/llm-agents.nix`) to source their packages. This input is injected via `extraSpecialArgs` from `flake.nix`.
-- **Single source of truth for MCP servers**: `mcp.nix` defines the server registry once in `programs.mcp.servers`. Both `claude-code.nix` (`enableMcpIntegration`) and `opencode.nix` (`enableMcpIntegration`) consume it, so adding/removing a server requires editing only `mcp.nix`.
-- **opencode config is Nix-managed**: `opencode.nix` sets `programs.opencode.settings` (written to `~/.config/opencode/opencode.json`) and `xdg.configFile."opencode/cli.json"` (OpenCode v2 terminal settings at `~/.config/opencode/cli.json`), both at build time. The stowed `opencode/opencode.json` and `opencode/cli.json` are gitignored and no longer edited by hand.
+- **Package source vs. option provider**: `claude-code.nix` and `opencode.nix` source their packages from `inputs.llm-agents` (`github:numtide/llm-agents.nix`); `antigravity.nix` uses the default nixpkgs package. The `programs.*` options themselves come from the `home-manager` input — `llm-agents` ships packages only, no Home Manager modules. `llm-agents` is injected via `extraArgs` (→ `mkSpecialArgs` → `extraSpecialArgs`) from `flake.nix`.
+- **Single source of truth for MCP servers**: `mcp.nix` defines the server registry once in `programs.mcp.servers`. `claude-code.nix`, `opencode.nix`, and `antigravity.nix` all set `enableMcpIntegration = true` to consume it, so adding/removing a server requires editing only `mcp.nix`.
+- **opencode config is Nix-managed**: `opencode.nix` sets `programs.opencode.settings` (written to `~/.config/opencode/opencode.json`) and `xdg.configFile."opencode/cli.json"` (OpenCode v2 terminal settings at `~/.config/opencode/cli.json`), both at build time. These paths are gitignored in `opencode/.gitignore`, ignored by `.stowrc`, and no longer edited by hand.
 - **Flat, self-contained**: No submodules or conditional logic — the AI tools are enabled unconditionally across all hosts.
 
 ## Flow
@@ -17,9 +17,9 @@ Home Manager configuration for AI/agent tooling — `claude-code`, `opencode`, `
 1. `nix/home/default.nix` imports `./ai`.
 2. `./ai/default.nix` delegates to `./claude-code.nix`, `./mcp.nix`, `./opencode.nix`, and `./antigravity.nix`.
 3. `claude-code.nix` sets `programs.claude-code.enable = true`, using the package from `inputs.llm-agents.packages.${system}.claude-code`, enables MCP integration, and adds `pkgs.claude-agent-acp` to `home.packages`.
-4. `opencode.nix` sets `programs.opencode.enable = true`, using the `inputs.llm-agents.packages.${system}.opencode2` package (OpenCode v2), enables MCP integration, and declares native v2 settings (`model`, `plugins`, `agents` with `disabled`, `experimental.subagent_depth`) plus the terminal theme via the Nix-managed `~/.config/opencode/cli.json`.
-5. `antigravity.nix` enables `programs.antigravity-cli` with MCP integration.
-6. `mcp.nix` sets `programs.mcp.enable = true` and registers five servers (the single source of truth for both consumers):
+4. `opencode.nix` sets `programs.opencode.enable = true`, wrapping the `inputs.llm-agents.packages.${system}.opencode2` package (OpenCode v2) in a `symlinkJoin` that aliases `bin/opencode2` → `bin/opencode`, enables MCP integration, and declares native v2 settings (`model = "opencode-go/deepseek-v4.1-flash"`, `plugins = [ "oh-my-opencode-slim" ]`, `agents.{explore,general}.disabled`, `experimental.subagent_depth = 2`) plus the terminal theme via the Nix-managed `~/.config/opencode/cli.json` (`theme.name = "tokyonight"`).
+5. `antigravity.nix` enables `programs.antigravity-cli` (default nixpkgs package) with MCP integration.
+6. `mcp.nix` sets `programs.mcp.enable = true` and registers five servers (the single source of truth for all three consumers):
    - **nixos** — local via `uvx mcp-nixos`
    - **astro** — remote at `https://mcp.docs.astro.build/mcp`
    - **kubernetes** — local via `npx kubernetes-mcp-server@latest`
@@ -29,7 +29,7 @@ Home Manager configuration for AI/agent tooling — `claude-code`, `opencode`, `
 ## Integration
 
 - **Parent**: `nix/home/default.nix` (imported as `./ai`).
-- **Dependency**: `inputs.llm-agents` from `nix/flake.nix` line 56, exposed via `extraSpecialArgs`.
-- **Consumers**: The `programs.claude-code`, `programs.opencode`, and `programs.mcp` Home Manager options, provided by the `llm-agents` flake.
-- **MCP integration**: `programs.mcp.servers` feeds both `programs.claude-code.mcpServers` and `programs.opencode.settings.mcp` via `enableMcpIntegration` on each.
+- **Dependency**: `inputs.llm-agents` from `nix/flake.nix` line 44, passed via `extraArgs` (line 194) → `extraSpecialArgs`.
+- **Consumers**: The `programs.claude-code`, `programs.opencode`, `programs.antigravity-cli`, and `programs.mcp` Home Manager options, provided by the `home-manager` input (not `llm-agents`).
+- **MCP integration**: `programs.mcp.servers` feeds `programs.claude-code.mcpServers`, `programs.opencode.settings.mcp`, and `programs.antigravity-cli.mcpServers` via `enableMcpIntegration` on each.
 - **MCP servers depend on**: `uvx` (from `uv` package in common packages), `npx` (from `nodejs` in common packages), `_1password-cli` (for grafana credential injection), and network access for remote servers.

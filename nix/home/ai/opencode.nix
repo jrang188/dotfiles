@@ -24,7 +24,7 @@ in
     # runs no language servers, exposes no LSP tools, and produces no
     # diagnostics); flat v1 `mcp` from enableMcpIntegration still works.
     settings = {
-      model = "opencode-go/mimo-v2.5";
+      model = "opencode-go/deepseek-v4.1-flash";
       plugins = [
         "oh-my-opencode-slim"
       ];

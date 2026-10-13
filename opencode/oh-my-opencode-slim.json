@@ -67,7 +67,7 @@
         "variant": "max"
       },
       "librarian": {
-        "model": "opencode-go/mimo-v2.5",
+        "model": "opencode-go/deepseek-v4.1-flash",
         "variant": "high",
         "mcps": [
           "websearch",
@@ -76,11 +76,11 @@
         ]
       },
       "explorer": {
-        "model": "opencode-go/mimo-v2.5",
+        "model": "opencode-go/deepseek-v4.1-flash",
         "variant": "high"
       },
       "designer": {
-        "model": "opencode-go/deepseek-v4-flash-vision-exp"
+        "model": "opencode-go/mimo-v2.6-flash"
       },
       "fixer": {
         "model": "opencode-go/deepseek-v4.1-flash",

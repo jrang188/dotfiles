@@ -1,6 +1,19 @@
 { pkgs, ... }:
 let
   unocss-language-server = pkgs.callPackage ../pkgs/unocss-language-server.nix { };
+
+  # debugpy 1.8.22 adds test_add_code_to_python_process.py::test_lldb_command, which
+  # asserts the lldb attach command starts with the bare "lldb" name. nixpkgs'
+  # hardcode-lldb.patch rewrites it to the store path, so the test fails on Darwin.
+  # Fixed upstream in NixOS/nixpkgs#572564 (merged 2026-10-11) but not yet on the
+  # nixpkgs-unstable branch this flake tracks. Remove this override once it lands.
+  debugpy = pkgs.python314Packages.debugpy.overrideAttrs (old: {
+    disabledTestPaths =
+      (old.disabledTestPaths or [ ])
+      ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+        "tests/debugpy/server/test_add_code_to_python_process.py::test_lldb_command"
+      ];
+  });
 in
 {
   programs.neovim = {
@@ -53,7 +66,7 @@ in
 
       # DAP (debugging)
       delve # Go debugger
-      python314Packages.debugpy
+      debugpy
 
       # Misc tools
       ripgrep # for snacks_picker/telescope

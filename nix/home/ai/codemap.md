@@ -9,7 +9,7 @@ Home Manager configuration for AI/agent tooling — `claude-code`, `opencode`, `
 - **Module aggregation via `default.nix`**: The directory is imported as `./ai` from `nix/home/default.nix`. Its `default.nix` re-exports four child modules: `claude-code.nix`, `mcp.nix`, `opencode.nix`, and `antigravity.nix`.
 - **Flake input dependency**: `claude-code.nix` and `opencode.nix` depend on `inputs.llm-agents` (from `github:numtide/llm-agents.nix`) to source their packages. This input is injected via `extraSpecialArgs` from `flake.nix`.
 - **Single source of truth for MCP servers**: `mcp.nix` defines the server registry once in `programs.mcp.servers`. Both `claude-code.nix` (`enableMcpIntegration`) and `opencode.nix` (`enableMcpIntegration`) consume it, so adding/removing a server requires editing only `mcp.nix`.
-- **opencode config is Nix-managed**: `opencode.nix` sets `programs.opencode.settings` and `programs.opencode.tui`, which Home Manager writes to `~/.config/opencode/opencode.json` and `~/.config/opencode/tui.json` at build time. The stowed `opencode/opencode.json` and `opencode/tui.json` are gitignored and no longer edited by hand.
+- **opencode config is Nix-managed**: `opencode.nix` sets `programs.opencode.settings` (written to `~/.config/opencode/opencode.json`) and `xdg.configFile."opencode/cli.json"` (OpenCode v2 terminal settings at `~/.config/opencode/cli.json`), both at build time. The stowed `opencode/opencode.json` and `opencode/cli.json` are gitignored and no longer edited by hand.
 - **Flat, self-contained**: No submodules or conditional logic — the AI tools are enabled unconditionally across all hosts.
 
 ## Flow
@@ -17,7 +17,7 @@ Home Manager configuration for AI/agent tooling — `claude-code`, `opencode`, `
 1. `nix/home/default.nix` imports `./ai`.
 2. `./ai/default.nix` delegates to `./claude-code.nix`, `./mcp.nix`, `./opencode.nix`, and `./antigravity.nix`.
 3. `claude-code.nix` sets `programs.claude-code.enable = true`, using the package from `inputs.llm-agents.packages.${system}.claude-code`, enables MCP integration, and adds `pkgs.claude-agent-acp` to `home.packages`.
-4. `opencode.nix` sets `programs.opencode.enable = true`, using the `inputs.llm-agents.packages.${system}.opencode` package, enables MCP integration, and declares model/plugin/agent/lsp settings plus the TUI theme (`tui.theme = "tokyonight"`).
+4. `opencode.nix` sets `programs.opencode.enable = true`, using the `inputs.llm-agents.packages.${system}.opencode2` package (OpenCode v2), enables MCP integration, and declares native v2 settings (`model`, `plugins`, `agents` with `disabled`, `experimental.subagent_depth`) plus the terminal theme via the Nix-managed `~/.config/opencode/cli.json`.
 5. `antigravity.nix` enables `programs.antigravity-cli` with MCP integration.
 6. `mcp.nix` sets `programs.mcp.enable = true` and registers five servers (the single source of truth for both consumers):
    - **nixos** — local via `uvx mcp-nixos`

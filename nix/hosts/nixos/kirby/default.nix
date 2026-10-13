@@ -10,6 +10,22 @@
 
 {
   nixpkgs = {
+    # Upstream fix for NixOS/nixpkgs#572951 (wrong pnpm-deps hash for
+    # typescript-language-server 6.0.2 in the pinned rev 7fd4004, 2026-10-11).
+    # Remove once nixpkgs is updated past the fix merge eabfbbcf (2026-10-11).
+    overlays = [
+      (final: prev: {
+        typescript-language-server = prev.typescript-language-server.overrideAttrs (old: {
+          pnpmDeps = prev.fetchPnpmDeps {
+            inherit (old) pname version src;
+            pnpm = prev.pnpm_12;
+            fetcherVersion = 4;
+            hash = "sha256-xR/EF60lVBsITKgH7wCM2wHM46PFQevD51KfCENSUH4=";
+          };
+        });
+      })
+    ];
+
     # Several packages depend on pinned pnpm versions that are currently marked
     # insecure (e.g. vesktop, podman-desktop, unocss-language-server). Permit
     # them until upstream nixpkgs updates the dependent packages.

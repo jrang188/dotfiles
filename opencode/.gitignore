@@ -17,3 +17,6 @@ node_modules/
 package.json
 package-lock.json
 bun.lock
+
+# Written by the opencode server on startup — contains a generated password
+service.json

@@ -43,6 +43,7 @@ Only two hosts are exported from `flake.nix`:
   - `darwin`, `mac-app-util`, and `home-manager-darwin` follow `nixpkgs-darwin`; `home-manager` and `lanzaboote` follow `nixpkgs`.
   - `lanzaboote` is pinned to tag `v1.1.0`.
   - **`typescript-language-server` overlay (kirby):** `hosts/nixos/kirby/default.nix` overrides `pnpmDeps` with the corrected hash from [nixpkgs#572951](https://github.com/NixOS/nixpkgs/pull/572951). Remove once `nixpkgs` advances past `eabfbbcf`.
+  - **`debugpy` test-skip override (Darwin):** `home/neovim.nix` wraps `pkgs.python314Packages.debugpy` to append `test_add_code_to_python_process.py::test_lldb_command` to `disabledTestPaths` on Darwin — debugpy 1.8.22's bare-`lldb` assertion fails against nixpkgs' `hardcode-lldb.patch` store-path rewrite. Fixed upstream in [nixpkgs#572564](https://github.com/NixOS/nixpkgs/pull/572564) (merged 2026-10-11); remove once `nixpkgs-darwin` (`nixpkgs-unstable`) contains it.
   - **hy3 is gone.** The Hyprland plugin was removed 2026-08-29 in favour of Hyprland's built-in `dwindle` layout; the `hy3` flake input and extraArg no longer exist.
 - **Lix on Darwin:** `nix.package = pkgs.lixPackageSets.stable.lix` in the shared `modules/common/nix-daemon.nix`; `nix.enable` is intentionally not set (the nix-darwin module does not manage the daemon). Determinate Nix is no longer used anywhere.
 
@@ -76,7 +77,7 @@ Only two hosts are exported from `flake.nix`:
 | `sketchybar/items/` | Declarative bar items: apple, workspaces, front_app, calendar, media, widgets. Observer pattern via `item:subscribe()`. | [View Map](sketchybar/items/codemap.md) |
 | `sketchybar/items/widgets/` | Provider-consumer widgets (battery, volume, wifi, cpu) with popup-details and mouse event wiring. | [View Map](sketchybar/items/widgets/codemap.md) |
 | `aerospace/` | AeroSpace tiling WM config (`aerospace.toml`): binding modes, startup lifecycle (borders + sketchybar), workspace-to-monitor assignments, window rules. | [View Map](aerospace/codemap.md) |
-| `opencode/` | OpenCode v2 agent runtime: `oh-my-opencode-slim.json` (presets + sub-agent roles), `settings.json` (empty placeholder), `skills/`, `.oh-my-opencode-slim/` bookkeeping. `opencode.json`/`cli.json` are Nix-generated and gitignored. | [View Map](opencode/codemap.md) |
+| `opencode/` | OpenCode v2 agent runtime: `oh-my-opencode-slim.json` (presets + sub-agent roles), `settings.json` (empty placeholder), `skills/`, `.oh-my-opencode-slim/` bookkeeping. `opencode.json`/`cli.json` are Nix-generated and gitignored; there is **no local lockfile or install tree** — v2 installs plugin deps under `~/.cache/opencode/npm/<pkg>@latest/<ts>/node_modules`. | [View Map](opencode/codemap.md) |
 
 ### Untracked / Excluded Root Assets
 

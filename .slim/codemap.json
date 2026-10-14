@@ -1,8 +1,8 @@
 {
   "metadata": {
     "version": "1.0.0",
-    "last_run": "2026-10-13T04:07:31.159Z",
-    "root": "/home/sirwayne/dotfiles",
+    "last_run": "2026-10-14T02:26:51.774Z",
+    "root": "/Users/sirwayne/dotfiles",
     "include_patterns": [
       "**/*.nix",
       "**/*.lua",
@@ -24,7 +24,8 @@
       "node_modules/**",
       ".git/**",
       ".idea/**",
-      "opencode/skills/**"
+      "opencode/skills/**",
+      "opencode/service.json"
     ],
     "exceptions": []
   },
@@ -46,7 +47,7 @@
     "nix/home/darwin/packages.nix": "ffdc0a158b7e6b1c69f2de842ea65f63",
     "nix/home/default.nix": "6cfb404fdd97207013fed571b8d3efda",
     "nix/home/git.nix": "244fb800937aea20566557cf0d3ba59f",
-    "nix/home/neovim.nix": "ba84d6dd3b40925ec5dc5f4fd1ae889b",
+    "nix/home/neovim.nix": "e45932891e547cf653813fee8280514d",
     "nix/home/nixos/kirby/apps.nix": "bad5d233099a989a4c8ee610c81603fb",
     "nix/home/nixos/kirby/ashell.nix": "b4c9b845f0383b3e1d12892d3804f9ee",
     "nix/home/nixos/kirby/default.nix": "ddcaeac22b0793995ccb6a29a1b382ec",
@@ -114,7 +115,7 @@
     "nvim/lua/plugins/vim-tmux-navigator.lua": "7ecdc638c0a7f091fa26fe72868e1514",
     "nvim/stylua.toml": "0ec0668a40f59f499838897688e8755b",
     "opencode/oh-my-opencode-slim.json": "823ec43572b07d72ca8599ae375dc8cc",
-    "opencode/package-lock.json": "6ecd9d56e712612dd455d1e7dc4c58e0",
+    "opencode/package.json": "30571d6b15d223cc18243ca189600c53",
     "opencode/settings.json": "8a80554c91d9fca8acb82f023de02f11",
     "sketchybar/bar.lua": "230aaefd4d0be50382867f4228fa766e",
     "sketchybar/colors.lua": "7c79bfde0871c7dcb0c650c0f7e0ea7e",
@@ -140,8 +141,8 @@
   "folder_hashes": {
     ".": "efc2b8b87374e311169fd7c556868e3c",
     "aerospace": "9de98f8ac3d570f7e01ce1737dcfaa37",
-    "nix": "c885830c982141600e3d4874ef3d57b3",
-    "nix/home": "e6efe8419f8e5834bbf8d5a0c90924b7",
+    "nix": "0d1cdb5fad6578d33e24dbe919ba1b73",
+    "nix/home": "812a91a8d8cf35f7921e001a8e00b3ba",
     "nix/home/ai": "dd25d5544b26b9dfe77f48735e3ea78d",
     "nix/home/darwin": "85f9e9ad515ab6a3e4effe6c0e623d96",
     "nix/home/nixos": "fe8e9f9d770f67a4522afb5ad1b50206",
@@ -161,7 +162,7 @@
     "nvim/lua": "23dbba082a1f04ce76e831f1dc533d4f",
     "nvim/lua/config": "d6da7f4144d2cd1523ef14cb15f22ac6",
     "nvim/lua/plugins": "ed383523c5c332dc6b1f0ff29ff1e5e3",
-    "opencode": "eb40cbe74c98398f6cce0561e0e4c7ea",
+    "opencode": "191830adf1b1467fb058d071fe67f3bd",
     "sketchybar": "4c89aa68978a1d18149c7b38a3a9d180",
     "sketchybar/helpers": "17701c6772babd3480905399c762f2f4",
     "sketchybar/items": "7208d6024c58c3f26625465ccba1381a",

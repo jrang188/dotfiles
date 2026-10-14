@@ -14,6 +14,8 @@ Agent configuration for OpenCode (v2, the npm `@opencode/cli` line) — the AI c
 - `.oh-my-opencode-slim/` — Plugin bookkeeping (tracked): `skills-manifest.json` records each installed skill's package version, source/last-seen hash, and status (`managed` vs `customized`); `skill-updates/<version>/` stages upstream skill bundles pending review.
 - `settings.json` — Empty placeholder (no user overrides)
 - `.gitignore` — Excludes runtime artifacts installed by tools (`agents/`, `command/`, `get-shit-done/`, `hooks/`, `plugins/`, `gsd-*` state), Nix-managed configs (`opencode.json`, `cli.json`), and runtime/deps (`node_modules/`, `package.json`, `package-lock.json`, `bun.lock`)
+- **No lockfile or install tree lives in this directory** — opencode v2 installs and loads plugins under `~/.cache/opencode/npm/<pkg>@latest/<timestamp>/node_modules/…` (log: `entrypoint=file:///…/oh-my-opencode-slim@latest/1791879293444/node_modules/oh-my-opencode-slim/dist/server/index.js`), where `toml` resolves to 4.3.0. The v1 install-tree artifacts that used to sit here (`node_modules/`, `package-lock.json`, `bun.lock`) were deleted/untracked in `056c3cd`; the lockfile was the repo's only tracked npm manifest, so Dependabot's two `toml` advisories (GHSA-v5mp-jgw5-2x6j, GHSA-82x6q7mm-w9cf) closed with it. Only the `{"type":"commonjs"}` stub `package.json` was deliberately kept.
+- `plugins/petdex.js` — **Stale v1 artifact** (petdex-generated, gitignored via `plugins/`): exports a v1-style function default, but v2 requires a default object with an `id` plus an `effect`/`setup`, so it fails to load every session (`WARN … PluginModule.LoadError: Plugin must export a default definition with an id and an effect or setup function`).
 
 **Agent configuration (`opencode.json` — Nix-managed):**
 
@@ -83,4 +85,4 @@ The remaining `skills/` entries (`deepwork/`, `loop-engineering/`, `oh-my-openco
 | **Home Manager (`nix/home/ai/mcp.nix`)** | `programs.mcp.servers` | Single source of truth for the MCP registry; merged into `opencode.json` via `enableMcpIntegration` |
 | **oh-my-opencode-slim plugin** | `plugins` key | JSON config loaded as a plugin; defines sub-agent role topology and model routing |
 | **MCP servers (external)** | `mcp` key in `opencode.json` | NixOS (local uvx), Astro (remote), Kubernetes (local npx), OpenTofu (remote), Grafana (local via 1Password) — defined in `nix/home/ai/mcp.nix` |
-| **Stow / dotfiles** | `.gitignore` | Lockfiles, runtime artifacts, and `opencode.json` / `cli.json` (Nix-managed) excluded from version control |
+| **Stow / dotfiles** | `.gitignore` | Runtime artifacts and `opencode.json` / `cli.json` (Nix-managed) excluded from version control. No npm lockfile is tracked — v1's was untracked in `056c3cd`; v2 keeps its plugin install tree in `~/.cache/opencode` |

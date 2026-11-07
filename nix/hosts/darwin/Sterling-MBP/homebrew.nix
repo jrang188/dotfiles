@@ -6,15 +6,11 @@ _: {
 
     onActivation = {
       upgrade = true;
-      # 'zap': uninstalls all formulae(and related files) not listed here.
-      cleanup = "zap";
+      # Bundle cleanup can try to remove libraries still needed by installed
+      # formulae, aborting activation. Clean up unwanted packages manually.
+      cleanup = "none";
 
-      # Workaround: Homebrew 6.x introduced tap trust, and `brew bundle
-      # --force-cleanup` deletes `~/.homebrew/trust.json` on a failed cleanup,
-      # so re-trusting via `brew trust` does not survive the next activation.
-      # Disabling the requirement is the documented escape hatch.
-      # TODO: remove when upstream fixes the trust.json clobber on cleanup failure,
-      # or when nix-homebrew exposes a first-class way to pre-trust taps.
+      # Existing tap-trust workaround; this variable is deprecated by Homebrew.
       extraEnv = {
         HOMEBREW_NO_REQUIRE_TAP_TRUST = "1";
       };

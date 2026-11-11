@@ -1,8 +1,21 @@
-_: {
+{ pkgs, ... }:
+let
+  # nixpkgs' cargo setup hook forces system libraries (AWS_LC_SYS_USE_SYSTEM=1),
+  # and ashell 0.11.0 pulls in aws-lc-sys >= 0.42, so it needs the aws-lc
+  # package in its buildInputs to be discovered via pkg-config. Upstream fixed
+  # this in NixOS/nixpkgs commit 1fb6001460b6 (2026-11-09), after the pinned
+  # nixpkgs rev (f4a03c0, 2026-11-07). Remove this override once nixpkgs is
+  # updated past that commit.
+  ashell = pkgs.ashell.overrideAttrs (old: {
+    buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.aws-lc ];
+  });
+in
+{
   # ashell (replacing hyprpanel)
   # Only enable ashell when Hyprland is enabled
   programs.ashell = {
     enable = true;
+    package = ashell;
     systemd = {
       enable = true;
       # graphical-session.target, not hyprland-session.target: the latter is

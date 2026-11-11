@@ -44,13 +44,20 @@ in
     };
   };
 
-  # v2 replaces v1's layered tui.json with one global cli.json
-  # (theme lives under theme.name). Writing cli.json directly skips v2's
-  # one-shot tui.json auto-migration and keeps the theme declarative.
-  xdg.configFile."opencode/cli.json".text = builtins.toJSON {
-    "$schema" = "https://opencode.ai/v2/cli.json";
-    theme = {
-      name = "tokyonight";
+  # v2 replaces v1's layered tui.json with one global cli.json (theme lives
+  # under theme.name); writing it directly skips v2's one-shot tui.json
+  # auto-migration and keeps the theme declarative. `force` is required:
+  # OpenCode v2's `serve --service` rewrites this path at runtime, and with
+  # `backupFileExtension = "backup"` (flake.nix) Home Manager would otherwise
+  # abort activation with "Existing file '…/cli.json.backup' would be
+  # clobbered" once the first backup exists.
+  xdg.configFile."opencode/cli.json" = {
+    force = true;
+    text = builtins.toJSON {
+      "$schema" = "https://opencode.ai/v2/cli.json";
+      theme = {
+        name = "tokyonight";
+      };
     };
   };
 }

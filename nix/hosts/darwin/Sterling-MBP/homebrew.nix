@@ -9,23 +9,26 @@ _: {
       # Bundle cleanup can try to remove libraries still needed by installed
       # formulae, aborting activation. Clean up unwanted packages manually.
       cleanup = "none";
-
-      # Existing tap-trust workaround; this variable is deprecated by Homebrew.
-      extraEnv = {
-        HOMEBREW_NO_REQUIRE_TAP_TRUST = "1";
-      };
     };
 
     taps = [
       "nikitabobko/tap"
-      "FelixKratz/formulae"
-      "homebrew/services"
+      "felixkratz/formulae"
     ];
 
     # `brew install`
+    # Non-official taps require tap trust (Homebrew 6+). Fully-qualified
+    # names let nix-darwin emit `trusted: true` in the generated Brewfile,
+    # which records the trust during activation before anything is loaded.
     brews = [
-      "sketchybar"
-      "borders"
+      {
+        name = "felixkratz/formulae/sketchybar";
+        trusted = true;
+      }
+      {
+        name = "felixkratz/formulae/borders";
+        trusted = true;
+      }
       "lua"
       "kafka"
       "mole"
@@ -39,7 +42,10 @@ _: {
       "raycast"
       "scroll-reverser"
       "warp"
-      "aerospace"
+      {
+        name = "nikitabobko/tap/aerospace";
+        trusted = true;
+      }
       "karabiner-elements"
       "sf-symbols" # font for sketchybar
       "font-sf-mono"

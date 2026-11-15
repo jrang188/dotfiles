@@ -1,9 +1,13 @@
 {
+  hostname,
+  inputs,
   pkgs,
   username,
-  hostname,
   ...
 }:
+let
+  llm = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+in
 {
   imports = [
     ../../../modules/common
@@ -34,8 +38,9 @@
     "/Applications/Zed.app"
     "/Applications/Visual Studio Code.app"
     "/Applications/IntelliJ IDEA.app/"
-    "/Applications/OpenCode.app"
+    "${llm.opencode2-desktop}/Applications/OpenCode 2.app"
     "/Applications/Claude.app"
+    "${llm.chatgpt}/Applications/ChatGPT.app"
     "/Applications/Antigravity.app"
     "/Applications/Antigravity IDE.app/"
     "/Applications/Obsidian.app"

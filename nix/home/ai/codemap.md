@@ -2,11 +2,11 @@
 
 ## Responsibility
 
-Home Manager configuration for AI/agent tooling — `claude-code`, `opencode`, `antigravity-cli`, and the MCP (Model Context Protocol) server registry. Installs and configures AI coding assistants and their integration points (MCP servers, remote APIs) for all hosts.
+Home Manager configuration for AI/agent tooling — `claude-code`, `opencode`, `codex` (CLI + ChatGPT desktop), `antigravity-cli`, and the MCP (Model Context Protocol) server registry. Installs and configures AI coding assistants and their integration points (MCP servers, remote APIs) for all hosts.
 
 ## Design
 
-- **Module aggregation via `default.nix`**: The directory is imported as `./ai` from `nix/home/default.nix`. Its `default.nix` re-exports four child modules: `claude-code.nix`, `mcp.nix`, `opencode.nix`, and `antigravity.nix`.
+- **Module aggregation via `default.nix`**: The directory is imported as `./ai` from `nix/home/default.nix`. Its `default.nix` re-exports five child modules: `claude-code.nix`, `mcp.nix`, `opencode.nix`, `codex.nix`, and `antigravity.nix`.
 - **Package source vs. option provider**: `claude-code.nix` and `opencode.nix` source their packages from `inputs.llm-agents` (`github:numtide/llm-agents.nix`); `antigravity.nix` uses the default nixpkgs package. The `programs.*` options themselves come from the `home-manager` input — `llm-agents` ships packages only, no Home Manager modules. `llm-agents` is injected via `extraArgs` (→ `mkSpecialArgs` → `extraSpecialArgs`) from `flake.nix`.
 - **Single source of truth for MCP servers**: `mcp.nix` defines the server registry once in `programs.mcp.servers`. `claude-code.nix`, `opencode.nix`, and `antigravity.nix` all set `enableMcpIntegration = true` to consume it, so adding/removing a server requires editing only `mcp.nix`.
 - **opencode config is Nix-managed**: `opencode.nix` sets `programs.opencode.settings` (written to `~/.config/opencode/opencode.json`) and `xdg.configFile."opencode/cli.json"` (OpenCode v2 terminal settings at `~/.config/opencode/cli.json`), both at build time. These paths are gitignored in `opencode/.gitignore`, ignored by `.stowrc`, and no longer edited by hand. The `cli.json` entry carries `force = true` because v2's `serve --service` rewrites that file at runtime; without it, HM's `checkLinkTargets` aborts activation on the second backup (`Existing file '…/cli.json.backup' would be clobbered`).
@@ -15,10 +15,11 @@ Home Manager configuration for AI/agent tooling — `claude-code`, `opencode`, `
 ## Flow
 
 1. `nix/home/default.nix` imports `./ai`.
-2. `./ai/default.nix` delegates to `./claude-code.nix`, `./mcp.nix`, `./opencode.nix`, and `./antigravity.nix`.
+2. `./ai/default.nix` delegates to `./claude-code.nix`, `./mcp.nix`, `./opencode.nix`, `./codex.nix`, and `./antigravity.nix`.
 3. `claude-code.nix` sets `programs.claude-code.enable = true`, using the package from `inputs.llm-agents.packages.${system}.claude-code`, enables MCP integration, and adds `pkgs.claude-agent-acp` to `home.packages`.
 4. `opencode.nix` sets `programs.opencode.enable = true`, wrapping the `inputs.llm-agents.packages.${system}.opencode2` package (OpenCode v2) in a `symlinkJoin` that aliases `bin/opencode2` → `bin/opencode`, enables MCP integration, and declares native v2 settings (`model = "opencode-go/deepseek-v4.1-flash"`, `plugins = [ "oh-my-opencode-slim" ]`, `agents.{explore,general}.disabled`, `experimental.subagent_depth = 2`) plus the terminal theme via the Nix-managed `~/.config/opencode/cli.json` (`theme.name = "tokyonight"`).
-5. `antigravity.nix` enables `programs.antigravity-cli` (default nixpkgs package) with MCP integration.
+5. `codex.nix` adds `inputs.llm-agents.packages.${system}.codex` (CLI) to `home.packages` on all hosts, plus `…chatgpt` on Darwin only — "Codex desktop" is the ChatGPT desktop app, since Codex became a mode inside it in 2026-07. Config/auth stay in `~/.codex`, outside Nix.
+6. `antigravity.nix` enables `programs.antigravity-cli` (default nixpkgs package) with MCP integration.
 6. `mcp.nix` sets `programs.mcp.enable = true` and registers five servers (the single source of truth for all three consumers):
    - **nixos** — local via `uvx mcp-nixos`
    - **astro** — remote at `https://mcp.docs.astro.build/mcp`

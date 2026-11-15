@@ -387,6 +387,12 @@
         } # Open browser
         {
           _args = [
+            "ALT + A"
+            (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("chatgpt")'')
+          ];
+        } # Open ChatGPT (Codex desktop; Linux preview, runs under XWayland)
+        {
+          _args = [
             "SUPER + SHIFT + 1"
             (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("1password")'')
           ];

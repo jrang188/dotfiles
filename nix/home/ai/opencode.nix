@@ -1,4 +1,9 @@
-{ inputs, pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (pkgs.stdenv.hostPlatform) system;
 
@@ -7,8 +12,15 @@ let
   # bin names — alias `opencode` so the standard command keeps working and
   # runs v2. v1 and v2 cannot be installed side by side anyway.
   opencode-v2 = inputs.llm-agents.packages.${system}.opencode2;
+
+  # Desktop client, version-locked to the CLI above. Installs as
+  # "OpenCode 2.app" so it can coexist with a v1 install.
+  opencode2-desktop = inputs.llm-agents.packages.${system}.opencode2-desktop;
 in
 {
+  # Desktop app only exists for macOS.
+  home.packages = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [ opencode2-desktop ];
+
   programs.opencode = {
     enable = true;
     package = pkgs.symlinkJoin {

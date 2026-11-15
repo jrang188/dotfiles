@@ -29,7 +29,7 @@ Host-specific nix-darwin module for the **Sterling-MBP** machine (Apple Silicon 
 | `homebrew.onActivation.extraEnv` | not set — the deprecated `HOMEBREW_NO_REQUIRE_TAP_TRUST` escape hatch was replaced by nix-darwin's first-class `trusted` option |
 | `homebrew.taps` | `nikitabobko/tap`, `felixkratz/formulae` |
 | `homebrew.brews` | `felixkratz/formulae/sketchybar` (trusted), `felixkratz/formulae/borders` (trusted), lua, kafka, mole, media-control, scrcpy, nss |
-| `homebrew.casks` | raycast, scroll-reverser, warp, `nikitabobko/tap/aerospace` (trusted), karabiner-elements, sf-symbols, font-sf-mono, font-sf-pro, orbstack, localsend, intellij-idea, zed, google-drive, adobe-acrobat-reader, android-platform-tools, kde-connect |
+| `homebrew.casks` | raycast, scroll-reverser, warp, karabiner-elements, sf-symbols, font-sf-mono, font-sf-pro, orbstack, localsend, intellij-idea, zed, google-drive, adobe-acrobat-reader, android-platform-tools, kde-connect |
 
 ## Flake-level Configuration (in `mkDarwin`, not in this module)
 - Nix daemon binary is Lix (`nix.package` from shared `modules/common/nix-daemon.nix`); `nix.enable` is not set (Determinate Nix no longer used)
@@ -44,4 +44,4 @@ Host-specific nix-darwin module for the **Sterling-MBP** machine (Apple Silicon 
 - **Imports**: `../../../modules/common` (nix-core, apps), `../../../modules/darwin` (system defaults, security), `./homebrew.nix`.
 - **Consumer**: `nix/flake.nix`'s `mkDarwin` call with `hostname = "Sterling-MBP"`.
 - **Home Manager**: Home Manager for Darwin runs via `home-manager-darwin` flake input, with configs from `nix/home/` and `nix/home/darwin/`.
-- **Sketchybar/Aerospace**: GUI apps managed via Homebrew casks; their configs live outside Nix in the repo root (`sketchybar/`, `aerospace/`).
+- **Sketchybar**: a GUI app managed via a Homebrew formula; its config lives outside Nix in the repo root (`sketchybar/`). **AeroSpace is no longer a cask** — it is installed and configured by Home Manager (`nix/home/darwin/aerospace.nix`, `programs.aerospace`).

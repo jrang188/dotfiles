@@ -13,7 +13,6 @@ Declarative, reproducible system configuration for two personal machines — **`
 | `nix/pkgs/` | Custom package derivations via `callPackage` |
 | `nvim/` | Neovim config (LazyVim) |
 | `sketchybar/` | macOS status bar config (Lua) |
-| `aerospace/` | AeroSpace tiling WM config |
 | `opencode/` | OpenCode agent config and skills |
 | `codemap.md` | Full repository atlas |
 
@@ -59,10 +58,10 @@ sudo nixos-rebuild dry-run --flake .#kirby       # NixOS
 
 ## Stow / symlinking
 
-`.stowrc` targets `~/.config` and ignores `nix/`, `archive/`, and `.stowrc`. The `nvim/`, `sketchybar/`, and `aerospace/` directories stow into `~/.config`:
+`.stowrc` targets `~/.config` and ignores `nix/`, `archive/`, and `.stowrc`. The `nvim/` and `sketchybar/` directories stow into `~/.config`:
 
 ```bash
-stow nvim sketchybar aerospace
+stow nvim sketchybar
 ```
 
 ## Flake architecture

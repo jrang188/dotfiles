@@ -2,6 +2,7 @@
 {
   imports = [
     ../../modules/home/gui.nix
+    ./aerospace.nix
     ./packages.nix
     ./gui.nix
   ];

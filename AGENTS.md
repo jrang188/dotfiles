@@ -27,7 +27,6 @@ For deep work on a specific folder, also read that folder's `codemap.md`.
 │   ├── lua/                # Lua plugins and config
 │   └── stylua.toml         # Lua formatter config
 ├── sketchybar/             # macOS status bar config (Lua-based)
-├── aerospace/              # macOS tiling window manager config
 └── opencode/               # OpenCode agent configuration
 ```
 
@@ -179,7 +178,7 @@ stylua lua/
 ## macOS Configs (sketchybar, aerospace)
 
 - **`sketchybar/`**: Lua-based status bar. Entry point is `sketchybarrc`, which loads `helpers/` and `init.lua`.
-- **`aerospace/`**: Tiling window manager config in `aerospace.toml`. Starts `sketchybar` and `borders` on launch.
+- **AeroSpace**: Nix-managed since 2026-11 — `nix/home/darwin/aerospace.nix` uses the `programs.aerospace` Home Manager module (config at `~/.aerospace.toml`, autostart via a launchd agent). The old stowed `aerospace/` directory is gone; it still starts `sketchybar` and `borders` on launch via `after-startup-command`.
 
 ## Flake Architecture Notes
 
@@ -234,7 +233,7 @@ pre-commit install
 
 ## Stow / Dotfiles Symlinking
 
-`.stowrc` targets `~/.config` and ignores `nix/`, `archive/`, and `.stowrc`. The `nvim/`, `sketchybar/`, and `aerospace/` directories are intended to be stowed into `~/.config`.
+`.stowrc` targets `~/.config` and ignores `nix/`, `archive/`, and `.stowrc`. The `nvim/` and `sketchybar/` directories are intended to be stowed into `~/.config`.
 
 ## AI / MCP Configuration
 

@@ -12,7 +12,6 @@ _: {
     };
 
     taps = [
-      "nikitabobko/tap"
       "felixkratz/formulae"
     ];
 
@@ -42,10 +41,6 @@ _: {
       "raycast"
       "scroll-reverser"
       "warp"
-      {
-        name = "nikitabobko/tap/aerospace";
-        trusted = true;
-      }
       "karabiner-elements"
       "sf-symbols" # font for sketchybar
       "font-sf-mono"

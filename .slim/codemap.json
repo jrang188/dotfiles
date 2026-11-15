@@ -138,7 +138,7 @@
     "sketchybar/items/widgets/wifi.lua": "618cd777f7d7a09c26c39e8b2b03f69e",
     "sketchybar/items/workspaces.lua": "eebf674c93eb1320ff114197dd399430",
     "sketchybar/settings.lua": "9611b7a6f024c728c2ae0581c79d4a03",
-    "justfile": "0667b8815dbe33af9f771859765dcd7c",
+    "justfile": "62a37a2632be578cd5f15d1787b56d71",
     ".editorconfig": "dbae6783de0d032a2416d09ec41cc5d8"
   },
   "folder_hashes": {

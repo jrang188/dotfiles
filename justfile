@@ -21,31 +21,46 @@ nixos:
 # not even root can strip with `xattr -d`. The chmod hits EPERM and the whole
 # GC aborts with "0 store paths deleted".
 #
-# Workaround: prune stale .app paths (referrers == 0 or orphan) via direct
-# `rm -rf`. Root can unlink entries from /nix/store without chmod'ing the
-# files, which sidesteps the SACL. Live paths are never touched because their
-# referrer count > 0.
+# Workaround: ask nix which store paths are actually dead (`--print-dead`), and
+# `rm -rf` those that contain an .app bundle before running the GC. Root can
+# unlink entries from /nix/store without chmod'ing the files, which sidesteps
+# the SACL. Liveness comes from nix itself, so live paths are never touched,
+# and whole paths are removed so no half-deleted store path is left behind.
 #
 # Do NOT replace this with `xattr -dr com.apple.macl …` — that was the
 # pre-Tahoe approach and is permanently broken on macOS 26.x.
 
-# Prune stale .app bundles, then collect garbage
+# Prune dead .app-bearing store paths, then collect garbage
 clean:
     #!/usr/bin/env bash
-    for p in $(find /nix/store -maxdepth 4 -name "*.app" -type d 2>/dev/null); do
-        if ! refs=$(nix-store --query --referrers "$p" 2>/dev/null); then
-            echo "pruning orphan app: $p"
-            sudo rm -rf "$p" || echo "warning: failed to prune $p" >&2
+    dead=$(mktemp)
+    trap 'rm -f "$dead"' EXIT
+
+    if ! nix-store --gc --print-dead > "$dead"; then
+        echo "error: could not compute dead store paths; refusing to prune" >&2
+        exit 1
+    fi
+
+    failed=0
+    while IFS= read -r app; do
+        path=${app#/nix/store/}
+        path=/nix/store/${path%%/*}
+        if ! grep -qxF "$path" "$dead"; then
             continue
         fi
-        real=$(printf '%s\n' "$refs" | grep -v -F "$p" | grep -c .)
-        if [ "$real" = "0" ]; then
-            echo "pruning stale app: $p (0 non-self referrers)"
-            sudo rm -rf "$p" || echo "warning: failed to prune $p" >&2
+        if sudo rm -rf "$path"; then
+            echo "pruned dead path: $path"
         else
-            echo "skipping live app: $p ($real referrer(s))"
+            echo "warning: failed to prune $path" >&2
+            failed=1
         fi
-    done
+    done < <(find /nix/store -maxdepth 4 -name "*.app" -type d 2>/dev/null)
+
+    if [ "$failed" != 0 ]; then
+        echo "error: pruning failed; aborting before GC (it would hit com.apple.macl)" >&2
+        exit 1
+    fi
+
     nh clean all
 
 # Update flake inputs

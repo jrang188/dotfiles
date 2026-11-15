@@ -50,7 +50,7 @@ Recipes live in the root `justfile` (`set working-directory := "nix"`), so they 
 just darwin   # Rebuild Sterling-MBP via `nh darwin switch`
 just nixos    # Rebuild kirby via `nh os switch`
 just update   # Update flake inputs (`nix flake update`)
-just clean    # Prune stale .app bundles, then garbage collect (`nh clean all`)
+just clean    # Prune dead .app-bearing store paths, then garbage collect (`nh clean all`)
 just lint     # Lint with statix
 just format   # Format with nixfmt-tree (`nix fmt`)
 just          # List available recipes
@@ -272,9 +272,13 @@ nix-store --gc
 
 **Root cause:** When Ghostty (or any GUI app launched from `/nix/store/...`) runs, macOS stamps the `com.apple.macl` extended attribute on every file inside the `.app` bundle. On macOS 26.x (Tahoe), this xattr is **TCC-protected** — not even root can strip it with `xattr -d` (confirmed: all nested files return `EPERM`). `nix-collect-garbage` calls `chmod -R +w` on stale store paths before deleting them; the chmod hits EPERM on every macl'd file, and the entire GC aborts with "0 store paths deleted".
 
-**The old workaround (`sudo xattr -dr com.apple.macl ...`) is permanently broken on Tahoe.** Do not re-add it. The justfile `clean:` recipe now handles this via a pre-clean step that discovers all `.app` bundles in the nix store, queries `nix-store --query --referrers` for each, and `sudo rm -rf`s any with zero non-self referrers. Root can unlink entries from `/nix/store` without chmod'ing the files (unlink only needs write-perm on the parent dir, not the file), which sidesteps the SACL entirely.
+**The old workaround (`sudo xattr -dr com.apple.macl ...`) is permanently broken on Tahoe.** Do not re-add it. The justfile `clean:` recipe now handles this via a pre-clean step that takes the dead-path list from `nix-store --gc --print-dead`, finds every `.app` bundle in the store, and `sudo rm -rf`s the **whole dead store path** for each one that is on that list. Root can unlink entries from `/nix/store` without chmod'ing the files (unlink only needs write-perm on the parent dir, not the file), which sidesteps the SACL entirely.
+
+**Liveness comes from nix, not from referrer counts.** The previous `nix-store --query --referrers` heuristic was wrong in both directions: a path can have referrers yet still be garbage (its referrer is itself garbage), and referrer data proved unstable between runs. It also removed only the `.app` subdirectory, leaving a **half-deleted store path** behind (seen 2026-11-14: `ghostty-bin-1.3.1` persisted with an empty `Applications/`). Whole-path removal on a `--print-dead` verdict fixes both. If any `rm -rf` fails, the recipe now aborts with a clear error **before** running GC, instead of letting `nix-collect-garbage` fail on the chmod.
 
 **Recurrence:** Every `just darwin` cycle produces a new `ghostty-bin` hash. Once it becomes stale and has been launched, it retains macl and blocks GC. The pre-clean step handles this automatically on every `just clean`.
+
+**If GC still reports `chmod '…': Operation not permitted`:** run `just clean` again — the abort-before-GC guard means a failed prune now stops early and prints the offending path. A store path that is already half-deleted (empty `Applications/`, left by the pre-2026-11-14 heuristic) is dead but carries no `.app`, so the prune skips it and plain GC removes it normally.
 
 **Do NOT:**
 - Replace the `clean:` target with `xattr -dr com.apple.macl` — permanently broken on Tahoe.

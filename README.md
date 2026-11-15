@@ -34,7 +34,7 @@ All recipes are defined in the root `justfile` and can be run from the repo root
 just darwin   # rebuild Sterling-MBP (nh darwin switch)
 just nixos    # rebuild kirby (nh os switch)
 just update   # update flake inputs (nix flake update)
-just clean    # garbage collect (prune stale .app bundles, then nh clean all)
+just clean    # garbage collect (prune dead .app-bearing store paths, then nh clean all)
 just lint     # lint with statix
 just format   # format with nixfmt-tree (nix fmt)
 just          # list available recipes
@@ -87,7 +87,7 @@ Pre-commit hooks are configured (format Nix, lint, hygiene, YAML/JSON validation
 
 ## Notes
 
-- **macOS Tahoe GC workaround**: `just clean` includes a pre-clean step to handle `com.apple.macl` extended attributes on stale `.app` bundles. See the Known Issues section of `AGENTS.md` — do not replace it with `xattr` stripping, which is permanently broken on macOS 26.x.
+- **macOS Tahoe GC workaround**: `just clean` includes a pre-clean step that removes dead store paths carrying `.app` bundles, so GC never has to chmod a `com.apple.macl` file. See the Known Issues section of `AGENTS.md` — do not replace it with `xattr` stripping, which is permanently broken on macOS 26.x.
 - **Hyprland config migration**: `kirby` uses the deprecated hyprlang config format; see `AGENTS.md` for the follow-up Lua migration before the next Hyprland major bump.
 
 ## Documentation

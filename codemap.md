@@ -94,7 +94,7 @@ Recipes live in the root `justfile` and always execute in `nix/`, so they can be
 just darwin    # nh darwin switch . -H Sterling-MBP
 just nixos     # nh os switch . -H kirby
 just update    # nix flake update
-just clean     # prune stale .app bundles (Tahoe macl workaround), then nh clean all
+just clean     # prune dead .app-bearing store paths (Tahoe macl workaround), then nh clean all
 just lint      # statix check .
 just format    # nix fmt (nixfmt-tree)
 just           # list available recipes

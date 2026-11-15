@@ -65,7 +65,6 @@ This repository contains my personal Nix-based system configurations for macOS (
 │   ├── nixos/             # NixOS system modules
 │   └── home/              # Reusable home-manager modules
 │       └── gui.nix        # Base GUI config (ghostty)
-└── Makefile              # Build and maintenance commands
 ```
 
 ### Structure Principles
@@ -79,31 +78,32 @@ This repository contains my personal Nix-based system configurations for macOS (
 
 ### Building Configurations
 
-The project includes a Makefile with several useful commands:
+The project includes a root-level `justfile` with several useful recipes. Run them from the repo root or any subdirectory — they always execute in `nix/`:
 
 ```bash
 # Build macOS configuration
-make darwin
+just darwin
 
 # Build NixOS kirby configuration
-make nixos
-
-# Build NixOS WSL configuration
-make wsl
-
-# Build Ubuntu WSL configuration
-make ubuntu
+just nixos
 
 # Update flake inputs
-make update
+just update
 
 # Clean up old generations and unused packages
-make clean
+just clean
+
+# Lint / format
+just lint
+just format
+
+# List all recipes
+just
 ```
 
 ### Manual Build Commands
 
-If you prefer not to use the Makefile, you can run the following commands directly:
+If you prefer not to use the justfile, you can run the following commands directly:
 
 ```bash
 # macOS
@@ -149,15 +149,15 @@ Packages are organized by category with clear section headers for easy navigatio
 To update your system and all flake inputs:
 
 ```bash
-make update
+just update
 ```
 
 ## 🧹 Maintenance
 
 Regular maintenance tasks:
 
-1. Update flake inputs: `make update`
-2. Clean up old generations: `make clean`
+1. Update flake inputs: `just update`
+2. Clean up old generations: `just clean`
 3. Review and update package versions
 4. Check for security updates
 5. Review and organize new packages by category

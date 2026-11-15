@@ -13,7 +13,7 @@ Namespace directory for nix-darwin (macOS) host configurations. Contains the sin
 1. `nix/flake.nix` calls `mkDarwin { hostname = "Sterling-MBP"; modules = [ ./hosts/darwin/Sterling-MBP ]; ... }`.
 2. `mkDarwin` assembles the final `darwinSystem` by merging: host module → `mac-app-util.darwinModules.default` → `home-manager-darwin.darwinModules.home-manager` + Home Manager config → `nix-homebrew.darwinModules.nix-homebrew` (with Homebrew setup: `enable`, `enableRosetta`, `user`, `autoMigrate`). No Nix daemon module is injected — `nix.package` (Lix) comes from the shared `modules/common/nix-daemon.nix`, and `nix.enable` is not set.
 3. The host module itself imports shared modules and configures hostname, users, dock, and homebrew taps/brews/casks.
-4. `make darwin` or `darwin-rebuild switch --flake .#Sterling-MBP` materializes the final configuration.
+4. `just darwin` or `darwin-rebuild switch --flake .#Sterling-MBP` materializes the final configuration.
 
 ## Integration
 - **Consumer**: `nix/flake.nix` via `mkDarwin` — references `./hosts/darwin/Sterling-MBP` as the host module.

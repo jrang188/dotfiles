@@ -11,6 +11,7 @@
       "**/*.yaml",
       "**/*.yml",
       "Makefile",
+      "justfile",
       ".editorconfig",
       ".stowrc",
       ".pre-commit-config.yaml",
@@ -35,7 +36,6 @@
     "aerospace/aerospace.toml": "f12c38e954f4a1294282a95c535a5b44",
     "nix/.editorconfig": "f4b3a442254ab7bcd75d526fd2f46f4a",
     "nix/.pre-commit-config.yaml": "c4af2c726178fe53ff9e6ef3ffc53b6b",
-    "nix/Makefile": "d2c0902bde24bbfe283b7c02fc223b4c",
     "nix/flake.lock": "e9d47568f2585fa6ba4546bab8c89d31",
     "nix/flake.nix": "4d2fc0fc5bb1128e18403ff9fb5e7afe",
     "nix/home/ai/antigravity.nix": "958386523779451cdbd348f6d88499c7",
@@ -137,7 +137,9 @@
     "sketchybar/items/widgets/volume.lua": "7fcb2bbae1c041177d068de2f9aa934e",
     "sketchybar/items/widgets/wifi.lua": "618cd777f7d7a09c26c39e8b2b03f69e",
     "sketchybar/items/workspaces.lua": "eebf674c93eb1320ff114197dd399430",
-    "sketchybar/settings.lua": "9611b7a6f024c728c2ae0581c79d4a03"
+    "sketchybar/settings.lua": "9611b7a6f024c728c2ae0581c79d4a03",
+    "justfile": "0667b8815dbe33af9f771859765dcd7c",
+    ".editorconfig": "dbae6783de0d032a2416d09ec41cc5d8"
   },
   "folder_hashes": {
     ".": "efc2b8b87374e311169fd7c556868e3c",

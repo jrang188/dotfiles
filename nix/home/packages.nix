@@ -48,7 +48,8 @@
     gh # GitHub CLI
     stripe-cli # Stripe CLI
     _1password-cli # 1Password CLI
-    gnumake # Build automation tool
+    gnumake # Build automation tool (sketchybar helpers)
+    just # Command runner (repo task runner)
     golangci-lint # Go linter
     spring-boot-cli # Spring Boot CLI
     pre-commit # Git hooks framework

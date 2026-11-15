@@ -38,7 +38,7 @@ Host-specific nix-darwin module for the **Sterling-MBP** machine (Apple Silicon 
 - `homebrew.autoMigrate = true`, `enableRosetta = true`
 
 ## Flow
-`make darwin` → `nh darwin switch` → evaluates `darwinConfigurations."Sterling-MBP"` from flake → `mkDarwin` composes host module + shared modules + platform modules + flake-input modules → applies to nix-darwin → updates system.
+`just darwin` → `nh darwin switch` → evaluates `darwinConfigurations."Sterling-MBP"` from flake → `mkDarwin` composes host module + shared modules + platform modules + flake-input modules → applies to nix-darwin → updates system.
 
 ## Integration
 - **Imports**: `../../../modules/common` (nix-core, apps), `../../../modules/darwin` (system defaults, security), `./homebrew.nix`.

@@ -18,11 +18,11 @@ For deep work on a specific folder, also read that folder's `codemap.md`.
 ```
 ├── nix/                    # Main Nix configuration
 │   ├── flake.nix           # Flake entry point (helper fns: mkSpecialArgs, mkStablePkgs, mkHomeManagerConfig, mkSystem, mkDarwin)
-│   ├── Makefile            # Build commands
 │   ├── home/               # Home Manager configs (shared + host-specific)
 │   ├── hosts/              # Host-specific system configs
 │   ├── modules/            # Reusable Nix modules (common/, darwin/, home/, nixos/)
 │   └── pkgs/               # Custom package derivations (callPackage)
+├── justfile                # Task runner recipes (always execute in nix/)
 ├── nvim/                   # Neovim configuration (LazyVim-based)
 │   ├── lua/                # Lua plugins and config
 │   └── stylua.toml         # Lua formatter config
@@ -44,17 +44,16 @@ Only two hosts are wired in `flake.nix` outputs:
 
 ## Build Commands
 
-All `make` targets must be run from the `nix/` directory:
+Recipes live in the root `justfile` (`set working-directory := "nix"`), so they can be run from the repo root or any subdirectory — they always execute in `nix/`:
 
 ```bash
-cd nix
-
-make darwin   # Rebuild Sterling-MBP via `nh darwin switch`
-make nixos    # Rebuild kirby via `nh os switch`
-make update   # Update flake inputs (`nix flake update`)
-make clean    # Garbage collect (`nh clean all`)
-make lint     # Lint with statix
-make format   # Format with nixfmt-tree (`nix fmt`)
+just darwin   # Rebuild Sterling-MBP via `nh darwin switch`
+just nixos    # Rebuild kirby via `nh os switch`
+just update   # Update flake inputs (`nix flake update`)
+just clean    # Prune stale .app bundles, then garbage collect (`nh clean all`)
+just lint     # Lint with statix
+just format   # Format with nixfmt-tree (`nix fmt`)
+just          # List available recipes
 ```
 
 ### Manual rebuilds (when `nh` is unavailable)
@@ -86,7 +85,7 @@ cd nix
 nix fmt
 
 # Lint (statix)
-make lint
+just lint
 statix check .
 
 # Pre-commit hooks (install once)
@@ -260,7 +259,7 @@ nix-store --gc
 
 ## General Principles
 
-1. **Test before committing**: Always run `make lint` and `make format` from `nix/`.
+1. **Test before committing**: Always run `just lint` and `just format` (from the repo root or anywhere under it).
 2. **Modularize**: Create separate files for distinct concerns.
 3. **Document host-specifics**: Add comments for non-obvious configurations.
 4. **Use flakes**: All active configurations use the flake-based setup.
@@ -273,9 +272,9 @@ nix-store --gc
 
 **Root cause:** When Ghostty (or any GUI app launched from `/nix/store/...`) runs, macOS stamps the `com.apple.macl` extended attribute on every file inside the `.app` bundle. On macOS 26.x (Tahoe), this xattr is **TCC-protected** — not even root can strip it with `xattr -d` (confirmed: all nested files return `EPERM`). `nix-collect-garbage` calls `chmod -R +w` on stale store paths before deleting them; the chmod hits EPERM on every macl'd file, and the entire GC aborts with "0 store paths deleted".
 
-**The old workaround (`sudo xattr -dr com.apple.macl ...`) is permanently broken on Tahoe.** Do not re-add it. The Makefile `clean:` target now handles this via a pre-clean step that discovers all `.app` bundles in the nix store, queries `nix-store --query --referrers` for each, and `sudo rm -rf`s any with zero non-self referrers. Root can unlink entries from `/nix/store` without chmod'ing the files (unlink only needs write-perm on the parent dir, not the file), which sidesteps the SACL entirely.
+**The old workaround (`sudo xattr -dr com.apple.macl ...`) is permanently broken on Tahoe.** Do not re-add it. The justfile `clean:` recipe now handles this via a pre-clean step that discovers all `.app` bundles in the nix store, queries `nix-store --query --referrers` for each, and `sudo rm -rf`s any with zero non-self referrers. Root can unlink entries from `/nix/store` without chmod'ing the files (unlink only needs write-perm on the parent dir, not the file), which sidesteps the SACL entirely.
 
-**Recurrence:** Every `make darwin` cycle produces a new `ghostty-bin` hash. Once it becomes stale and has been launched, it retains macl and blocks GC. The pre-clean step handles this automatically on every `make clean`.
+**Recurrence:** Every `just darwin` cycle produces a new `ghostty-bin` hash. Once it becomes stale and has been launched, it retains macl and blocks GC. The pre-clean step handles this automatically on every `just clean`.
 
 **Do NOT:**
 - Replace the `clean:` target with `xattr -dr com.apple.macl` — permanently broken on Tahoe.

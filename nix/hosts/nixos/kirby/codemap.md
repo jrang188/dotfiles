@@ -59,7 +59,7 @@ Host-specific NixOS module for the **kirby** machine (x86_64-linux desktop). Def
 - `system = "x86_64-linux"` — sets `nixpkgs.hostPlatform`
 
 ## Flow
-`make nixos` → `nh os switch` → evaluates `nixosConfigurations."kirby"` from flake → `mkSystem` composes host module + shared modules + flake-input modules → NixOS rebuild with `nixos-rebuild` → updates system.
+`just nixos` → `nh os switch` → evaluates `nixosConfigurations."kirby"` from flake → `mkSystem` composes host module + shared modules + flake-input modules → NixOS rebuild with `nixos-rebuild` → updates system.
 
 ## Integration
 - **Imports**: `../../../modules/common` (nix-core, apps), `../../../modules/nixos` (flatpak, nix-ld, 1password, hyprland, podman, localsend), plus 10 host-specific submodules.

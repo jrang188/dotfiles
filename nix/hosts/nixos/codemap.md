@@ -12,7 +12,7 @@ Namespace directory for NixOS host configurations. Contains a single subdirector
 1. `nix/flake.nix` calls `mkSystem { hostname = "kirby-machine"; system = "x86_64-linux"; modules = [ ./hosts/nixos/kirby ]; ... }`.
 2. `mkSystem` assembles the final `nixosSystem` by merging: host module → `inputs.lanzaboote.nixosModules.lanzaboote` (passed per-host from `flake.nix`, not injected by the helper) → `home-manager.nixosModules.home-manager` + Home Manager config + any extra flake inputs (zen-browser, llm-agents). There is no Determinate Nix module — the daemon binary comes from Lix via the shared `modules/common/nix-daemon.nix`.
 3. The host module imports shared platform modules and its own specialized submodules.
-4. `make nixos` or `nixos-rebuild switch --flake .#kirby` materializes the final configuration.
+4. `just nixos` or `nixos-rebuild switch --flake .#kirby` materializes the final configuration.
 
 ## Integration
 - **Consumer**: `nix/flake.nix` via `mkSystem` — references `./hosts/nixos/kirby` as the host module.

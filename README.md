@@ -23,21 +23,21 @@ Only two hosts are exported from `flake.nix`: **`Sterling-MBP`** (Darwin, aarch6
 
 - [Nix](https://nixos.org/download.html) (flakes enabled)
 - For macOS: [nix-darwin](https://github.com/LnL7/nix-darwin) and [Home Manager](https://github.com/nix-community/home-manager) (both come in as flake inputs)
-- [`nh`](https://github.com/viperML/nh) (used by the Makefile; optional if you use the manual commands)
+- [`nh`](https://github.com/viperML/nh) (used by the justfile; optional if you use the manual commands)
+- [`just`](https://github.com/casey/just) (command runner; installed by this repo's Home Manager config)
 
 ## Building
 
-All `make` targets must be run from `nix/`:
+All recipes are defined in the root `justfile` and can be run from the repo root or any subdirectory — they always execute in `nix/`:
 
 ```bash
-cd nix
-
-make darwin   # rebuild Sterling-MBP (nh darwin switch)
-make nixos    # rebuild kirby (nh os switch)
-make update   # update flake inputs (nix flake update)
-make clean    # garbage collect (nh clean all)
-make lint     # lint with statix
-make format   # format with nixfmt-tree (nix fmt)
+just darwin   # rebuild Sterling-MBP (nh darwin switch)
+just nixos    # rebuild kirby (nh os switch)
+just update   # update flake inputs (nix flake update)
+just clean    # garbage collect (prune stale .app bundles, then nh clean all)
+just lint     # lint with statix
+just format   # format with nixfmt-tree (nix fmt)
+just          # list available recipes
 ```
 
 Manual rebuilds (when `nh` is unavailable):
@@ -79,16 +79,15 @@ The flake uses **separate nixpkgs inputs per platform** so Darwin doesn't pay fo
 ## Code quality
 
 ```bash
-cd nix
-make lint      # statix check .
-make format    # nix fmt
+just lint      # statix check .
+just format    # nix fmt
 ```
 
 Pre-commit hooks are configured (format Nix, lint, hygiene, YAML/JSON validation). Install once with `pre-commit install`.
 
 ## Notes
 
-- **macOS Tahoe GC workaround**: `make clean` includes a pre-clean step to handle `com.apple.macl` extended attributes on stale `.app` bundles. See the Known Issues section of `AGENTS.md` — do not replace it with `xattr` stripping, which is permanently broken on macOS 26.x.
+- **macOS Tahoe GC workaround**: `just clean` includes a pre-clean step to handle `com.apple.macl` extended attributes on stale `.app` bundles. See the Known Issues section of `AGENTS.md` — do not replace it with `xattr` stripping, which is permanently broken on macOS 26.x.
 - **Hyprland config migration**: `kirby` uses the deprecated hyprlang config format; see `AGENTS.md` for the follow-up Lua migration before the next Hyprland major bump.
 
 ## Documentation

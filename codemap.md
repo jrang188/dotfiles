@@ -9,7 +9,7 @@ Declarative, reproducible system configuration for two personal machines — **`
 | Entry Point | Role |
 |-------------|------|
 | `nix/flake.nix` | Flake orchestrator. Declares the two active host outputs and the helper-function layer (`getStableNixpkgs`, `mkStablePkgs`, `mkSpecialArgs`, `mkHomeManagerConfig`, `mkSystem`, `mkDarwin`). |
-| `nix/Makefile` | Build automation: `make darwin`, `make nixos`, `make update`, `make clean` (Tahoe `com.apple.macl` pre-prune + `nh clean all`), `make lint`, `make format`. Run from `nix/`. |
+| `justfile` | Task runner (`set working-directory := "nix"`): `just darwin`, `just nixos`, `just update`, `just clean` (Tahoe `com.apple.macl` pre-prune + `nh clean all`), `just lint`, `just format`. Runnable from the repo root or any subdirectory. |
 | `nix/flake.lock` | Pinned input manifest. |
 | `.stowrc` | GNU Stow target (`~/.config`). Ignores `DS_Store`, `nix/`, `archive/`, `.stowrc`, and the two Nix-managed OpenCode files (`opencode/opencode.json`, `opencode/cli.json`) so the rest of `opencode/` stows cleanly. |
 | `AGENTS.md` | Agent guidelines and architecture reference (authoritative for host/flake facts). |
@@ -88,16 +88,16 @@ These root directories exist but are excluded from codemap tracking (docs, archi
 
 ## Build & Validation Commands
 
-All `make` targets run from `nix/`:
+Recipes live in the root `justfile` and always execute in `nix/`, so they can be invoked from the repo root or any subdirectory:
 
 ```bash
-cd nix
-make darwin    # nh darwin switch . -H Sterling-MBP
-make nixos     # nh os switch . -H kirby
-make update    # nix flake update
-make clean     # prune stale .app bundles (Tahoe macl workaround), then nh clean all
-make lint      # statix check .
-make format    # nix fmt (nixfmt-tree)
+just darwin    # nh darwin switch . -H Sterling-MBP
+just nixos     # nh os switch . -H kirby
+just update    # nix flake update
+just clean     # prune stale .app bundles (Tahoe macl workaround), then nh clean all
+just lint      # statix check .
+just format    # nix fmt (nixfmt-tree)
+just           # list available recipes
 ```
 
 Dry-run validation:

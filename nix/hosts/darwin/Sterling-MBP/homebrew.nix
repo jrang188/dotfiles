@@ -26,6 +26,10 @@ _: {
       }
       "kafka"
       "mole"
+      # MediaRemote client for the sketchybar media widget. `nowplaying-cli`
+      # returns null for every key on macOS 26 while this one works, and it is
+      # not in nixpkgs. Reaches the bar via the wrapper's /opt/homebrew/bin.
+      "media-control"
       "scrcpy"
       "nss"
     ];

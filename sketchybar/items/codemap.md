@@ -11,7 +11,7 @@ Bar item definition and registration. Each Lua module in this directory declares
 - **Bracket Wrapping for Borders**: Several items (`apple.lua`, `calendar.lua`) use a bracket containing a single item to achieve a **double-border** visual effect — the bracket provides an outer border, the item provides an inner border.
 - **Padding Items for Layout**: Spacer items (zero-width or fixed-width) are inserted before/after bracketed groups to maintain consistent spacing. This is a consequence of brackets consuming their children's outer margins.
 - **Orchestrated Registration**: `items/init.lua` requires modules in order: `apple` → `workspaces` → `front_app` → `calendar` → `widgets` → `media` → `service_mode`. This determines left-to-right bar layout order.
-- **Polling over deprecated events**: `media.lua` polls `nowplaying-cli` every 2s instead of subscribing to `media_change`, which macOS 26 no longer delivers (it also fed the built-in `media.artwork` provider). Artwork is fetched only when the track changes, base64-decoded to `$TMPDIR/sketchybar-artwork-<hash>.png`, and set as `background.image`.
+- **Polling over deprecated events**: `media.lua` polls `media-control` every 2s instead of subscribing to `media_change`, which macOS 26 no longer delivers (it also fed the built-in `media.artwork` provider). `nowplaying-cli` is NOT usable here — it returns `null` for every key on macOS 26. The poll strips the 100 KB `artworkData` field in the shell (470 bytes remain); artwork is re-fetched only when `contentItemIdentifier` changes, normalised to 56px with `sips`, and drawn at `scale = 0.5`. `scale` multiplies the image's natural size, so an un-normalised 600px cover draws ~510px wide across the bar.
 - **Global-state indicator**: `service_mode.lua` tints `/workspace\..*/` via `sbar.set` on AeroSpace's enter/leave events, subscribed through `root` — sketchybar does not dispatch events to items with `drawing = false`, so a dedicated hidden subscriber receives nothing.
 
 ## Flow
@@ -30,7 +30,7 @@ Bar startup (init.lua → sbar.begin_config() block):
     │                      ← subscribe(forced|routine|system_woke) → os.date update
     ├─ items.widgets     → items/widgets/init.lua (battery, volume, wifi, cpu)
     ├─ items.media       → now-playing: cover art, artist, title + popup controls
-    │                      ← polls nowplaying-cli every 2s; subscribe(mouse.entered/exited/clicked)
+    │                      ← polls media-control every 2s; subscribe(mouse.entered/exited/clicked)
     └─ items.service_mode → tints the workspace items while AeroSpace service mode is active
                            ← subscribe(aerospace_enter/leave_service_mode) on `root`
 ```
@@ -53,5 +53,5 @@ Bar startup (init.lua → sbar.begin_config() block):
 
 - **Depends on**: `colors.lua`, `icons.lua`, `settings.lua` (shared config), `helpers.app_icons.lua` (icon lookup for workspaces).
 - **Consumed by**: sketchybar daemon — items are registered as sketchybar domain objects. The `init.lua` registration is part of the `sbar.begin_config()` / `sbar.end_config()` batch.
-- **External triggers**: `aerospace` CLI (workspace queries, window lists), `nowplaying-cli` (media controls), `osascript` (AppleScript exec), `$CONFIG_DIR/helpers/menus/bin/menus` (Apple menu interaction). All external CLIs are invoked by bare name, which works because `programs.sketchybar.extraPackages` puts them on the bar's wrapper-generated `PATH`; a new shell-out needs an `extraPackages` entry.
+- **External triggers**: `aerospace` CLI (workspace queries, window lists), `media-control` (media metadata + transport, a Homebrew formula reached via the wrapper's `/opt/homebrew/bin`), `osascript` (AppleScript exec), `$CONFIG_DIR/helpers/menus/bin/menus` (Apple menu interaction). All external CLIs are invoked by bare name, which works because `programs.sketchybar.extraPackages` puts them on the bar's wrapper-generated `PATH`; a new shell-out needs an `extraPackages` entry.
 - **Environment variables**: `$INFO` (set by front_app_switched and volume_change events), `$FOCUSED_WORKSPACE` (set by aerospace_workspace_change event), `$BUTTON` (mouse button), `$NAME` (item name in click_scripts).

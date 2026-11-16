@@ -2,7 +2,7 @@
 
 ## Project Responsibility
 
-Declarative, reproducible system configuration for two personal machines — **`Sterling-MBP`** (macOS / Darwin, `aarch64-darwin`) and **`kirby`** (NixOS, `x86_64-linux`) — built on Nix flakes with Home Manager. The repository also carries stow-able user configs for Neovim (LazyVim), the macOS status bar (sketchybar), a tiling window manager (AeroSpace), and the OpenCode agent/MCP runtime.
+Declarative, reproducible system configuration for two personal machines — **`Sterling-MBP`** (macOS / Darwin, `aarch64-darwin`) and **`kirby`** (NixOS, `x86_64-linux`) — built on Nix flakes with Home Manager. The repository also carries the stow-able Neovim (LazyVim) config, plus three Home Manager-managed sub-projects living in the tree: the macOS status bar (sketchybar), the AeroSpace tiling window manager, and the OpenCode agent/MCP runtime.
 
 ## System Entry Points
 
@@ -13,7 +13,7 @@ Declarative, reproducible system configuration for two personal machines — **`
 | `nix/flake.lock` | Pinned input manifest. |
 | `.stowrc` | GNU Stow target (`~/.config`). Ignores `DS_Store`, `nix/`, `archive/`, `.stowrc`, and the two Nix-managed OpenCode files (`opencode/opencode.json`, `opencode/cli.json`) so the rest of `opencode/` stows cleanly. |
 | `AGENTS.md` | Agent guidelines and architecture reference (authoritative for host/flake facts). |
-| `sketchybar/sketchybarrc` | sketchybar bootstrap script (loads `helpers/` + `init.lua`). |
+| `sketchybar/sketchybarrc` | sketchybar bootstrap script (loads `helpers/` + `init.lua`); the binary, Lua interpreter, SbarLua module and launchd agent come from Home Manager (`programs.sketchybar`). |
 | `nix/home/darwin/aerospace.nix` | AeroSpace tiling WM config (Nix-managed via `programs.aerospace`; relaunches `borders` — `pkgs.jankyborders` — at startup; sketchybar is started by its own launchd agent). |
 | `nvim/init.lua` | LazyVim entry; loads `lua/config/` and `lua/plugins/`. |
 | `nix/home/ai/opencode.nix` | Source of truth for OpenCode v2 config. Generates `~/.config/opencode/opencode.json` and `~/.config/opencode/cli.json` at build time (both gitignored — not present in the repo). |
@@ -42,8 +42,8 @@ Only two hosts are exported from `flake.nix`:
   - `nixpkgs` is **unpinned** and tracks `nixos-unstable` (the brief `e2587ca` pin was dropped 2026-08-29 once the ex-hy3 constraint was gone).
   - `darwin`, `mac-app-util`, and `home-manager-darwin` follow `nixpkgs-darwin`; `home-manager` and `lanzaboote` follow `nixpkgs`.
   - `lanzaboote` is pinned to tag `v1.1.0`.
-  - **`typescript-language-server` overlay (kirby):** `hosts/nixos/kirby/default.nix` overrides `pnpmDeps` with the corrected hash from [nixpkgs#572951](https://github.com/NixOS/nixpkgs/pull/572951). Remove once `nixpkgs` advances past `eabfbbcf`.
-  - **`debugpy` test-skip override (Darwin):** `home/neovim.nix` wraps `pkgs.python314Packages.debugpy` to append `test_add_code_to_python_process.py::test_lldb_command` to `disabledTestPaths` on Darwin — debugpy 1.8.22's bare-`lldb` assertion fails against nixpkgs' `hardcode-lldb.patch` store-path rewrite. Fixed upstream in [nixpkgs#572564](https://github.com/NixOS/nixpkgs/pull/572564) (merged 2026-10-11); remove once `nixpkgs-darwin` (`nixpkgs-unstable`) contains it.
+  - **`typescript-language-server` overlay is gone:** the temporary `pnpmDeps` hash override in `hosts/nixos/kirby/default.nix` was **removed 2026-11-11** once `nixpkgs` moved past merge `eabfbbcf`. Keep it out — the hash is version-pinned and re-breaking the build.
+  - **`debugpy` test-skip override (Darwin):** `nix/home/neovim.nix` wraps `pkgs.python314Packages.debugpy` to append `test_add_code_to_python_process.py::test_lldb_command` to `disabledTestPaths` on Darwin — debugpy 1.8.22's bare-`lldb` assertion fails against nixpkgs' `hardcode-lldb.patch` store-path rewrite. Fixed upstream in [nixpkgs#572564](https://github.com/NixOS/nixpkgs/pull/572564) (merged 2026-10-11); remove once `nixpkgs-darwin` (`nixpkgs-unstable`) contains it.
   - **hy3 is gone.** The Hyprland plugin was removed 2026-08-29 in favour of Hyprland's built-in `dwindle` layout; the `hy3` flake input and extraArg no longer exist.
 - **Lix on Darwin:** `nix.package = pkgs.lixPackageSets.stable.lix` in the shared `modules/common/nix-daemon.nix`; `nix.enable` is intentionally not set (the nix-darwin module does not manage the daemon). Determinate Nix is no longer used anywhere.
 
@@ -54,18 +54,18 @@ Only two hosts are exported from `flake.nix`:
 | `nix/` | Flake entry point, build automation, lint/format config; orchestrates both hosts via the helper-function layer. | [View Map](nix/codemap.md) |
 | `nix/pkgs/` | Custom package derivations via `callPackage`. Currently only `unocss-language-server.nix` (the vendored `1password-cli` pin was removed). | [View Map](nix/pkgs/codemap.md) |
 | `nix/home/` | Shared Home Manager profile root: zsh, neovim, yazi, git, oh-my-posh, tmux, packages, ai. Platform-conditional `homeDirectory`. | [View Map](nix/home/codemap.md) |
-| `nix/home/ai/` | AI/agent Home Manager modules: `claude-code`, `opencode`, `antigravity-cli`, plus the MCP server registry. | [View Map](nix/home/ai/codemap.md) |
-| `nix/home/darwin/` | Darwin Home Manager overlay: `ghostty-bin` override, `macos` oh-my-zsh plugin, audio tools, GUI apps, shared `modules/home/gui.nix`. | [View Map](nix/home/darwin/codemap.md) |
+| `nix/home/ai/` | AI/agent Home Manager modules: `claude-code`, `opencode`, `codex` (CLI + ChatGPT desktop), `antigravity-cli`, plus the MCP server registry. | [View Map](nix/home/ai/codemap.md) |
+| `nix/home/darwin/` | Darwin Home Manager overlay: `ghostty-bin` override, `macos` oh-my-zsh plugin, audio tools, GUI apps, the `aerospace.nix` / `sketchybar.nix` program modules, shared `modules/home/gui.nix`. | [View Map](nix/home/darwin/codemap.md) |
 | `nix/home/nixos/` | NixOS Home Manager namespace (no `default.nix`); contains only `kirby/`. | [View Map](nix/home/nixos/codemap.md) |
 | `nix/home/nixos/kirby/` | Kirby Home Manager config: Hyprland (lua, `dwindle`), ashell, rofi, swaync, theme, apps, packages, zen-browser, kde. | [View Map](nix/home/nixos/kirby/codemap.md) |
 | `nix/hosts/` | Host system config namespace; dispatch happens in `flake.nix` via `mkDarwin`/`mkSystem`. | [View Map](nix/hosts/codemap.md) |
 | `nix/hosts/darwin/` | Darwin host namespace; single active host `Sterling-MBP`. | [View Map](nix/hosts/darwin/codemap.md) |
-| `nix/hosts/darwin/Sterling-MBP/` | Sterling-MBP macOS host: Lix, `mac-app-util`, homebrew taps/brews/casks, dock apps, user config. | [View Map](nix/hosts/darwin/Sterling-MBP/codemap.md) |
+| `nix/hosts/darwin/Sterling-MBP/` | Sterling-MBP macOS host: host identity/user, `mac-app-util` app trampolining, homebrew taps/brews/casks, dock apps. (Lix itself comes from the shared `modules/common/nix-daemon.nix`.) | [View Map](nix/hosts/darwin/Sterling-MBP/codemap.md) |
 | `nix/hosts/nixos/` | NixOS host namespace; single host `kirby`. | [View Map](nix/hosts/nixos/codemap.md) |
 | `nix/hosts/nixos/kirby/` | Kirby NixOS host: secure boot (lanzaboote), Hyprland, KDE Plasma 6, dnscrypt-proxy2, Tailscale, OpenRGB, Howdy, 10 submodules. | [View Map](nix/hosts/nixos/kirby/codemap.md) |
 | `nix/modules/` | Reusable Nix modules root (no `default.nix`); platform-split: `common/`, `darwin/`, `home/`, `nixos/`. | [View Map](nix/modules/codemap.md) |
 | `nix/modules/common/` | Cross-platform leaf modules: `apps.nix`, `nix-core.nix` (caches, fonts, zsh, CLI essentials), `nix-daemon.nix` (shared Lix/GC config). | [View Map](nix/modules/common/codemap.md) |
-| `nix/modules/darwin/` | Darwin modules: pre-commit overlay from `pkgs-stable`, `nodejs-slim_24` libcxxStdenv rebuild, system defaults, dock, Touch ID (PAM), `insecure-packages.nix`; Darwin timer overlay on shared `nix-daemon.nix`. | [View Map](nix/modules/darwin/codemap.md) |
+| `nix/modules/darwin/` | Darwin modules: system defaults, dock preferences, Touch ID (PAM), `insecure-packages.nix`, plus the Darwin timer overlay on the shared `nix-daemon.nix`. | [View Map](nix/modules/darwin/codemap.md) |
 | `nix/modules/home/` | Shared Home Manager modules: `gui.nix` (Ghostty base config, TokyoNight theme) with host-override pattern. (No `default.nix` — dead aggregator removed.) | [View Map](nix/modules/home/codemap.md) |
 | `nix/modules/nixos/` | NixOS leaf modules: podman, hyprland (nixpkgs), nix-ld, 1password, flatpak, localsend, `user-shell.nix`; NixOS timer overlay on shared `nix-daemon.nix`. | [View Map](nix/modules/nixos/codemap.md) |
 | `nvim/` | LazyVim Neovim config root: `init.lua`, `stylua.toml`, `lazyvim.json` (36 extras), `lazy-lock.json` pinning. | [View Map](nvim/codemap.md) |
@@ -76,14 +76,18 @@ Only two hosts are exported from `flake.nix`:
 | `sketchybar/helpers/` | Bootstrap builder, external event-provider daemons (Mach IPC), menus.c, app_icons.lua lookup. | [View Map](sketchybar/helpers/codemap.md) |
 | `sketchybar/items/` | Declarative bar items: apple, workspaces, front_app, calendar, media, widgets. Observer pattern via `item:subscribe()`. | [View Map](sketchybar/items/codemap.md) |
 | `sketchybar/items/widgets/` | Provider-consumer widgets (battery, volume, wifi, cpu) with popup-details and mouse event wiring. | [View Map](sketchybar/items/widgets/codemap.md) |
-| `opencode/` | OpenCode v2 agent runtime: `oh-my-opencode-slim.json` (presets + sub-agent roles), `settings.json` (empty placeholder), `skills/`, `.oh-my-opencode-slim/` bookkeeping. `opencode.json`/`cli.json` are Nix-generated and gitignored; there is **no local lockfile or install tree** — v2 installs plugin deps under `~/.cache/opencode/npm/<pkg>@latest/<ts>/node_modules`. | [View Map](opencode/codemap.md) |
+| `opencode/` | OpenCode v2 agent runtime: `oh-my-opencode-slim.json` (presets + sub-agent roles), `settings.json` (empty `{}` placeholder), `skills/` (4 bundled skill packages), `.gitignore`. `opencode.json`/`cli.json` are Nix-generated and gitignored, as are the tool-installed runtime trees (`agents/`, `command/`, `hooks/`, `plugins/`, `package.json`, `package-lock.json`, `node_modules/`, `service.json`); v2 loads plugin deps from `~/.cache/opencode/npm/<pkg>@latest/<ts>/node_modules`. | [View Map](opencode/codemap.md) |
+| `opencode/skills/clonedeps/` | Dependency-source mirroring skill: `SKILL.md` workflow contract (orchestrator + librarian), state in `.slim/clonedeps.json`, clones under `.slim/clonedeps/repos/`. | [View Map](opencode/skills/clonedeps/codemap.md) |
+| `opencode/skills/codemap/` | Codemap generation/maintenance skill: `SKILL.md` contract plus `scripts/codemap.mjs` (`init`/`changes`/`update`), state in `.slim/codemap.json`, tests in `scripts/codemap.test.ts`. | [View Map](opencode/skills/codemap/codemap.md) |
+| `opencode/skills/simplify/` | Behaviour-preserving refactoring skill: `SKILL.md` quality gates (understand-before-edit, behaviour parity, incremental rollback-friendly diffs); metadata only, no helper scripts. | [View Map](opencode/skills/simplify/codemap.md) |
 
 ### Untracked / Excluded Root Assets
 
-These root directories exist but are excluded from codemap tracking (docs, archives, vendored caches) or are not code:
+These root directories exist but are excluded from codemap tracking (docs, archives, tool state, vendored caches) or are not code:
 
-- `docs/` — issue-tracker, triage-label, and domain-doc agent references (`docs/agents/*`).
-- `archive/`, `wallpapers/`, `claude/`, `.claude/`, `.github/`, `.idea/` — excluded via `exclude_patterns` or unsupported file types.
+- `docs/` — `docs/agents/*` (issue-tracker, triage-label, domain-doc agent references) and `docs/handoffs/*` (dated session handoff notes).
+- `.slim/` — codemap/clonedeps skill state (`.slim/codemap.json` file/folder hashes; `.slim/clonedeps*` source mirrors). Tool-managed, never edited by hand.
+- `archive/`, `wallpapers/`, `claude/`, `.claude/`, `.github/`, `.idea/`, `.vscode/` — excluded via `exclude_patterns` or unsupported file types.
 
 ## Build & Validation Commands
 

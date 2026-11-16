@@ -4,7 +4,7 @@
 macOS-specific nix-darwin system modules that configure system preferences, security (Touch ID), permitted insecure packages, and the Darwin timer overlay on the shared Nix daemon config. These modules only activate on Sterling-MBP (Darwin).
 
 ## Design
-- **Aggregation entry point**: `default.nix` is a **pure import list** (`system.nix`, `security.nix`, `insecure-packages.nix`) plus a small platform timer overlay for the shared `nix-daemon.nix`. The old inline `nixpkgs.config` and Lix/GC blocks were extracted into `insecure-packages.nix` and the common `nix-daemon.nix`.
+- **Aggregation entry point**: `default.nix` is an **import list** (`system.nix`, `security.nix`, `insecure-packages.nix`) plus a small platform timer overlay for the shared `nix-daemon.nix`. The old inline `nixpkgs.config` and Lix/GC blocks were extracted into `insecure-packages.nix` and the common `nix-daemon.nix`.
 - **Lix on Darwin**: `nix.package = pkgs.lixPackageSets.stable.lix` lives in the **shared** `modules/common/nix-daemon.nix`, not here. The host config no longer relies on the Determinate Nix installer; `nix.enable` is intentionally not set here.
 - **No module option declarations**: The files assign nix-darwin option values directly without defining custom options. The module interface is purely the nix-darwin options namespace.
 
@@ -15,7 +15,7 @@ macOS-specific nix-darwin system modules that configure system preferences, secu
    - `nix.optimise.interval` — weekly full store optimization on Monday at 02:00.
    - `nix.gc.interval` — weekly automatic GC on Sunday at 03:00.
 4. `insecure-packages.nix` sets `nixpkgs.config.permittedInsecurePackages` — allows `pnpm-9.15.9`.
-5. `system.nix` sets `system.stateVersion = 5`, `system.primaryUser`, dock preferences (autohide off, tilsize 24, no recents, disable bottom-right hot corner), key repeat rate, and installs `sketchybar-app-font`.
+5. `system.nix` sets `system.stateVersion = 5`, `system.primaryUser`, dock preferences (autohide off, tilsize 24, no recents, disable bottom-right hot corner), key repeat rate, installs `sketchybar-app-font`, and writes `/etc/newsyslog.d/sketchybar.conf` to rotate the launchd-captured sketchybar stdout/stderr logs.
 6. `security.nix` enables Touch ID for sudo via `security.pam.services.sudo_local` with `enable`, `touchIdAuth`, and `reattach` all set to `true`.
 
 ## Integration
@@ -42,7 +42,7 @@ macOS-specific nix-darwin system modules that configure system preferences, secu
 
 ### Module: `system.nix`
 - **File**: `modules/darwin/system.nix`
-- **Purpose**: macOS system state, primary user, dock configuration, keyboard repeat, activation scripts, fonts.
+- **Purpose**: macOS system state, primary user, dock configuration, keyboard repeat, activation scripts, fonts, sketchybar log rotation.
 - **Key assignments**:
   - `system.stateVersion = 5`.
   - `system.primaryUser = username`.
@@ -50,6 +50,7 @@ macOS-specific nix-darwin system modules that configure system preferences, secu
   - `system.defaults.dock.*`: autohide off, tilsize 24, no recents, br-corner disabled.
   - `system.defaults.NSGlobalDomain.KeyRepeat = 2`.
   - `fonts.packages = [ sketchybar-app-font ]`.
+  - `environment.etc."newsyslog.d/sketchybar.conf".text`: size-based rotation (`644  3  1024 *  JN`) for `~/Library/Logs/sketchybar/sketchybar.{out,err}.log` — launchd appends to them forever and nothing else rotated them. `N` stops newsyslog from signalling the writer, which holds the file open in append mode.
 
 ### Module: `security.nix`
 - **File**: `modules/darwin/security.nix`

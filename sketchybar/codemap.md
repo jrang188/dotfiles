@@ -6,7 +6,8 @@ Top-level configuration root for the sketchybar macOS status bar. Contains the e
 
 ## Design
 
-- **Chained Bootstrap Pipeline**: `sketchybarrc` (establishes `package.path`, then loads) → `helpers/init.lua` (C build) → `init.lua` (SbarLua init, config batching, event loop). Each step sets up infrastructure for the next.
+- **Self-locating entry point**: `sketchybarrc` derives its own directory from `arg[0]` (falling back to `$CONFIG_DIR`, then `.`) and prepends `<dir>/?.lua`, `<dir>/?/init.lua`, `<dir>/?/?.lua` to `package.path` before requiring anything. It can rely on neither Lua's cwd-relative `./?.lua` (the Home Manager wrapper sets `LUA_PATH`, whose `--prefix` replaces the default path) nor `$CONFIG_DIR` (absent when the script is run by hand).
+- **Chained Bootstrap Pipeline**: `sketchybarrc` → `helpers/init.lua` (C build) → `init.lua` (SbarLua init, config batching, event loop). Each step sets up infrastructure for the next.
 - **Batch Configuration** (`sbar.begin_config()` / `sbar.end_config()`): All domain definitions (bar, defaults, items) are queued into a single Mach IPC message, reducing startup IPC round-trips. This is a **deferred execution** / **command-batching** pattern.
 - **SbarLua Integration**: The `sketchybar` Lua module (SbarLua via `require("sketchybar")`) provides the Lua-to-Mach-IPC bridge. The global `sbar` handle is the sole API surface for all bar/item/event interactions.
 - **Singleton Color & Icon Stores**: `colors.lua` and `icons.lua` are pure data modules returning shared tables. `icons.lua` selects between `sf_symbols` and `nerdfont` icon sets based on `settings.icons`, implementing a **strategy pattern** at module resolution time.
@@ -17,8 +18,10 @@ Top-level configuration root for the sketchybar macOS status bar. Contains the e
 
 ```
 sketchybarrc
-  └─ require("helpers")        → runs `make` to compile the C binaries (the SbarLua
-                                 .so arrives via the wrapper's LUA_CPATH)
+  └─ package.path ← <config_dir>/?.lua, <config_dir>/?/init.lua, <config_dir>/?/?.lua
+  └─ require("helpers")        → runs `make -s` to compile the C binaries (the
+                                 SbarLua .so arrives via the wrapper's LUA_CPATH);
+                                 a failed build warns on stderr instead of aborting
   └─ require("init")
        └─ sbar = require("sketchybar")   → SbarLua loads native .so
        └─ sbar.begin_config()            → open batch message
@@ -33,8 +36,8 @@ sketchybarrc
 
 ## Integration
 
-- **Consumed by**: Items under `items/` and `items/widgets/` via `require("colors")`, `require("icons")`, `require("settings")`.
+- **Consumed by**: `sketchybarrc` (entry point) and items under `items/` / `items/widgets/` via `require("colors")`, `require("icons")`, `require("settings")`.
 - **Depends on**: `helpers/init.lua` (C build), SbarLua (`sketchybar.so`, resolved through the Home Manager wrapper's `LUA_CPATH`), sketchybar daemon (Mach IPC bootstrap service).
-- **Managed by**: Home Manager `programs.sketchybar` (`nix/home/darwin/sketchybar.nix`). It supplies the binary, the `lua` interpreter, the SbarLua module (via `LUA_CPATH`) and the launchd agent, and links this directory to `~/.config/sketchybar` out-of-store so the runtime `make` can still write `helpers/**/bin`. The generated wrapper also owns the bar's `PATH` — see `helpers/codemap.md`.
+- **Managed by**: Home Manager `programs.sketchybar` with `configType = "lua"` (`nix/home/darwin/sketchybar.nix`). It supplies the binary, the `lua` interpreter, the SbarLua module (via `LUA_CPATH`) and the launchd agent, and links this directory to `~/.config/sketchybar` out-of-store. The config must **not** live in the store: `helpers/init.lua` runs `make` into `helpers/**/bin`, and `items/apple.lua` / the CPU and Wi-Fi widgets exec those binaries directly, so a read-only copy breaks all three silently. `programs.sketchybar.config` is deliberately unused — its `source` routes through `lib.pathIsDirectory`, which cannot see through the store symlink. The generated wrapper also owns the bar's `PATH` — see `helpers/codemap.md`.
 - **API surface**: Global `sbar` object with methods `bar()`, `default()`, `add()`, `begin_config()`, `end_config()`, `event_loop()`, `exec()`, `animate()`, `delay()`, `trigger()`, `remove()`, `set()`, `query()`.
 - **Environment variables**: `$CONFIG_DIR` (set by sketchybar to this directory), `$NAME` (set per-item during click_scripts).

@@ -14,7 +14,7 @@ Host-specific nix-darwin module for the **Sterling-MBP** machine (Apple Silicon 
 | File | Role |
 |------|------|
 | `default.nix` | Host module entry point. Imports shared/Darwin modules, sets `networking.hostName`, `networking.computerName`, `users.users.sirwayne`, `nix.settings.trusted-users`, and `system.defaults.dock.persistent-apps`. |
-| `homebrew.nix` | Homebrew configuration: enables Homebrew, sets `onActivation.upgrade = true` and `onActivation.cleanup = "none"`; defines `taps`, `brews`, and `casks`. Non-official tap formulae/casks are listed fully-qualified with `trusted = true` (Homebrew 6.x tap trust, handled by nix-darwin's `trusted` option). |
+| `homebrew.nix` | Homebrew configuration: enables Homebrew, sets `onActivation.upgrade = true` and `onActivation.cleanup = "none"`; defines `taps` (empty), `brews`, and `casks`. Every remaining install comes from homebrew-core, so no tap-qualified names and no `trusted = true` entries are needed. |
 
 ## Key Configuration Options
 | Option | Value / Effect |
@@ -23,7 +23,7 @@ Host-specific nix-darwin module for the **Sterling-MBP** machine (Apple Silicon 
 | `networking.computerName` | `"Sterling-MBP"` |
 | `users.users.sirwayne.home` | `"/Users/sirwayne"` |
 | `nix.settings.trusted-users` | `[ "sirwayne" ]` |
-| `system.defaults.dock.persistent-apps` | Ordered list of 14 apps (Apps, Zen Browser, Ghostty, Zed, VS Code, IntelliJ IDEA, OpenCode, Claude, Antigravity, Antigravity IDE, Obsidian, Discord, Spotify, System Settings) |
+| `system.defaults.dock.persistent-apps` | Ordered list of 15 apps (Apps, Zen Browser, Ghostty, Zed, VS Code, IntelliJ IDEA, OpenCode 2, Claude, ChatGPT, Antigravity, Antigravity IDE, Obsidian, Discord, Spotify, System Settings). Ghostty, `OpenCode 2.app` and `ChatGPT.app` are referenced from their nix store paths (`pkgs.ghostty-bin`, `llm.opencode2-desktop`, `llm.chatgpt`). |
 | `homebrew.enable` | `true` |
 | `homebrew.onActivation.cleanup` | `"none"` — bundle cleanup is disabled; uninstall unwanted formulae/casks manually |
 | `homebrew.onActivation.extraEnv` | not set — the deprecated `HOMEBREW_NO_REQUIRE_TAP_TRUST` escape hatch was replaced by nix-darwin's first-class `trusted` option |
@@ -44,4 +44,4 @@ Host-specific nix-darwin module for the **Sterling-MBP** machine (Apple Silicon 
 - **Imports**: `../../../modules/common` (nix-core, apps), `../../../modules/darwin` (system defaults, security), `./homebrew.nix`.
 - **Consumer**: `nix/flake.nix`'s `mkDarwin` call with `hostname = "Sterling-MBP"`.
 - **Home Manager**: Home Manager for Darwin runs via `home-manager-darwin` flake input, with configs from `nix/home/` and `nix/home/darwin/`.
-- **Sketchybar**: a GUI app managed via a Homebrew formula; its config lives outside Nix in the repo root (`sketchybar/`). **AeroSpace is no longer a cask** — it is installed and configured by Home Manager (`nix/home/darwin/aerospace.nix`, `programs.aerospace`).
+- **Sketchybar**: installed and configured entirely by Home Manager — `programs.sketchybar` in `nix/home/darwin/sketchybar.nix` owns the binary, the Lua runtime, the SbarLua module and the launchd agent, with the Lua tree at the repo-root `sketchybar/` linked out-of-store to `~/.config/sketchybar`. Log files live in `~/Library/Logs/sketchybar/` and are rotated by `/etc/newsyslog.d/sketchybar.conf` (from `nix/modules/darwin/system.nix`). **AeroSpace is likewise no longer a cask** — it is installed and configured by Home Manager (`nix/home/darwin/aerospace.nix`, `programs.aerospace`), and its `borders` helper is `pkgs.jankyborders` from `nix/home/darwin/packages.nix`.

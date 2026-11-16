@@ -46,7 +46,7 @@ Startup (items/init.lua → require("items.widgets")):
     │   ├─ sbar.add("bracket", { wifi, wifi_up, wifi_down }, popup config)
     │   ├─ subscribe(network_update on wifi_up/wifi_down)
     │   │   └─ set upload/download label + color (grey if idle)
-    │   ├─ subscribe(wifi_change|system_woke on wifi)
+    │   ├─ subscribe(system_woke on wifi)
     │   │   └─ ipconfig → connected/disconnected icon
     │   ├─ mouse.clicked on wifi* → toggle popup →
     │   │   └─ sbar.exec → populate SSID, hostname, IP, subnet, router labels
@@ -69,5 +69,5 @@ Startup (items/init.lua → require("items.widgets")):
 - **Depends on**: `colors.lua` (threshold-based color selection: green→orange→red for battery, blue→yellow→orange→red for CPU), `icons.lua` (battery, volume, Wi-Fi SF Symbols/NerdFont), `settings.lua` (font families, paddings).
 - **External binaries**: `pmset` (battery info), `SwitchAudioSource` (audio device listing), `nowplaying-cli` (used by media.lua, not widgets directly), `ipconfig`/`networksetup` (network info), `osascript` (volume control), `pbcopy` (clipboard).
 - **Event providers** (launched as sidecar processes): `helpers/event_providers/cpu_load/bin/cpu_load` (publishes `cpu_update`), `helpers/event_providers/network_load/bin/network_load en0` (publishes `network_update`).
-- **Built-in events subscribed**: `routine`, `power_source_change`, `system_woke`, `wifi_change`, `volume_change`, `mouse.clicked`, `mouse.scrolled`, `mouse.entered`, `mouse.exited`, `mouse.exited.global`.
+- **Built-in events subscribed**: `routine`, `power_source_change`, `system_woke`, `volume_change`, `mouse.clicked`, `mouse.scrolled`, `mouse.entered`, `mouse.exited`, `mouse.exited.global`.
 - **Item naming convention**: every `sbar.add` passes an explicit name, so nothing falls back to sketchybar's auto-generated `item_%d`. Widgets use `widgets.<name>` for the main item, `widgets.<name>.bracket` / `widgets.<name>.padding[_left|_right]` for their frame, and `widgets.<name>.popup.<role>` for popup children (e.g. `widgets.wifi.popup.ssid`, `widgets.volume.popup.slider`). Explicit names keep `sbar.remove()`/`sbar.set()` targeting and `--reorder` reliable — the bar is reordered by name (`--reorder apple <workspaces> front_app`).

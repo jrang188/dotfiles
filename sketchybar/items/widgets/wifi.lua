@@ -1,6 +1,7 @@
 local icons = require("icons")
 local colors = require("colors")
 local settings = require("settings")
+local shell = require("helpers.shell")
 
 -- Execute the event provider binary which provides the event "network_update"
 -- for the network interface "en0", which is fired every 2.0 seconds.
@@ -173,7 +174,7 @@ wifi_up:subscribe("network_update", function(env)
   })
 end)
 
-wifi:subscribe({"wifi_change", "system_woke"}, function(env)
+wifi:subscribe({"system_woke"}, function(env)
   sbar.exec("ipconfig getifaddr en0", function(ip)
     local connected = not (ip == "")
     wifi:set({
@@ -218,16 +219,9 @@ wifi_down:subscribe("mouse.clicked", toggle_details)
 wifi:subscribe("mouse.clicked", toggle_details)
 wifi:subscribe("mouse.exited.global", hide_details)
 
--- Quote a string for /bin/sh as a single argument. A WiFi SSID may contain
--- quotes, `$` or backticks; interpolating it into double quotes would let the
--- shell expand it.
-local function shell_quote(value)
-  return "'" .. value:gsub("'", "'\\''") .. "'"
-end
-
 local function copy_label_to_clipboard(env)
   local label = sbar.query(env.NAME).label.value or ""
-  sbar.exec("printf '%s' " .. shell_quote(label) .. " | pbcopy")
+  sbar.exec("printf '%s' " .. shell.quote(label) .. " | pbcopy")
   sbar.set(env.NAME, { label = { string = icons.clipboard, align="center" } })
   sbar.delay(1, function()
     sbar.set(env.NAME, { label = { string = label, align = "right" } })

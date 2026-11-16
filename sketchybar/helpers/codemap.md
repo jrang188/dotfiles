@@ -2,11 +2,11 @@
 
 ## Responsibility
 
-Shared infrastructure layer providing: (1) Lua package path initialization and C binary compilation (`init.lua`, `makefile`), (2) macOS font configuration data (`default_font.lua`), (3) application-icon mapping table (`app_icons.lua`), (4) external event provider daemons written in C (`event_providers/`), and (5) a macOS accessibility-based menu bar helper C binary (`menus/`).
+Shared infrastructure layer providing: (1) C binary compilation at startup (`init.lua`, `makefile`), (2) macOS font configuration data (`default_font.lua`), (3) application-icon mapping table (`app_icons.lua`), (4) external event provider daemons written in C (`event_providers/`), and (5) a macOS accessibility-based menu bar helper C binary (`menus/`).
 
 ## Design
 
-- **Bootstrap Builder Pattern**: `init.lua` sets the Lua module search path (`package.cpath`) to point at `~/.local/share/sketchybar_lua/` for the SbarLua native `.so`, then synchronously invokes `make` to compile all C binaries under `event_providers/` and `menus/`. This runs exactly once at bar startup.
+- **Bootstrap Builder Pattern**: `init.lua` synchronously invokes `make` to compile all C binaries under `event_providers/` and `menus/`. This runs exactly once at bar startup. The SbarLua native `.so` is **not** resolved here — the Home Manager wrapper (`programs.sketchybar`) exports `LUA_CPATH` pointing at the Nix-built module, so `init.lua` only builds the C helpers.
 - **External Event Provider Architecture** (`event_providers/`): Long-running C processes that act as **custom event sources** for the sketchybar event system. Each binary:
   1. Registers a named event with sketchybar via `--add event '<name>'`
   2. Enters a polling loop: reads system metrics → formats a `--trigger` message → sends it to the sketchybar daemon via Mach IPC → sleeps for a configurable interval.
@@ -20,8 +20,7 @@ Shared infrastructure layer providing: (1) Lua package path initialization and C
 
 ```
 init.lua (at bar startup):
-  1. Set package.cpath for SbarLua .so
-  2. os.execute("(cd helpers && make)")
+  1. os.execute("(cd helpers && make)")   [SbarLua .so comes from the wrapper's LUA_CPATH, not init.lua]
        ├─ event_providers/ → make → builds cpu_load/bin/cpu_load + network_load/bin/network_load
        └─ menus/           → make → builds menus/bin/menus
 

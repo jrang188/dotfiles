@@ -134,3 +134,75 @@ Restart with `killall sketchybar` — do not `brew services restart`, and do not
 - `sketchybar/helpers/cli.lua`, `sketchybar/items/workspaces.lua`, `sketchybar/items/apple.lua`, `sketchybar/items/media.lua`, `sketchybar/items/widgets/volume.lua`, `sketchybar/items/front_app.lua`, `sketchybar/helpers/app_icons.lua`
 - `sketchybar/codemap.md`, `sketchybar/helpers/codemap.md`, `sketchybar/items/codemap.md` — read these first; `~/.config/sketchybar` is a stow symlink to `sketchybar/`
 - `/opt/homebrew/var/log/sketchybar/sketchybar.{out,err}.log`, `/tmp/aerospace.{log,err}.log`
+
+---
+
+## Resolution (same day, later session)
+
+Everything in the backlog above was closed. The bar now runs under Home Manager
+instead of `brew services`, so the PATH class — the actual cause of the incident —
+is gone rather than patched.
+
+| # | Status | How |
+|---|---|---|
+| 1 | **Done** | `f4cd094` moved the bar to `programs.sketchybar` (binary, `lua5_5`, `pkgs.sbarlua` and a `gui/$UID` launchd agent from Nix); `exec.env-vars.PATH` added for AeroSpace; `bcc5c36` retired `helpers/cli.lua` |
+| 2 | **Done** | `3852aad`/`74dfc4` dropped `media_change` for a `media-control` poll; the `wifi_change` half of the subscription was removed as dead |
+| 3 | **Done** | `897369d` deleted `helpers/install` and `install.sh` |
+| 4 | **Mitigated** | `pkgs.sbarlua` pins the interpreter and module together (`passthru.luaModule`), so the 5.5.0-vs-5.5.1 drift cannot happen; upstream remains unmaintained |
+| 5 | **Done** | `897369d` removed the `brew()` wrapper and its `brew_update` trigger |
+| 6 | **Done** | `bcc5c36`: `devices_drawn` guard, `2>&1` on both `killall`s, `make -s`, `$HOME`-based cpath, plus `/etc/newsyslog.d/sketchybar.conf` |
+| 7 | **Done** | `8907057` named all 21 anonymous items; `display = …` was verified as correct-by-design, not a bug |
+
+Net measurable effect: startup appends **0** log lines (was ~84), a popup
+open/close cycle appends 0 (was one regex miss each), and the media poll sends
+470 bytes instead of 120 KB.
+
+### Corrections this follow-up established
+
+- **`programs.sketchybar.config` cannot be used with an out-of-store symlink.**
+  Its source type resolves `lib.pathIsDirectory` at eval time, which cannot see
+  through `mkOutOfStoreSymlink`, so it targets `<config>/sketchybarrc` instead of
+  the directory and produces an empty config dir. Use
+  `xdg.configFile."sketchybar"` instead.
+- **`sketchybarrc` must establish `package.path` itself.** `require("helpers")`
+  only ever worked through Lua's implicit cwd-relative `./?.lua`; the generated
+  wrapper exports `LUA_PATH` and `makeWrapper --prefix` *replaces* the default
+  search path. The module only adds the config dir when
+  `programs.sketchybar.config` is set. `sketchybarrc` now derives its directory
+  from `arg[0]` (fallback `$CONFIG_DIR`, then `.`).
+- **sketchybar does not dispatch events to items with `drawing = false`.** A
+  dedicated hidden subscriber item receives nothing, silently. Subscriptions need
+  a drawn item — `service_mode.lua` anchors on `root`.
+- **`nowplaying-cli` is unusable for reads on this macOS.** Every `get <key>`
+  returns `null` (nixpkgs ships 1.2.1 from 2023; upstream 2.1.0 also fails here
+  with `Failed to load MediaRemote framework`). `media-control` works
+  (`media-control test` exits 0) and is the poller. It is a Homebrew formula, not
+  in nixpkgs, so it is a deliberate brew dependency.
+- **`background.image.scale` multiplies the image's natural size**, not the bar
+  height. The inherited `0.85` drew a 600 px cover ~510 px wide. Artwork is
+  normalised to 56 px with `sips` and drawn at `0.5` (28 pt).
+- **AeroSpace's exec environment** is its launchd-inherited PATH plus a hardcoded
+  `/opt/homebrew/bin:/opt/homebrew/sbin` prefix (`defaultOverriddenEnvVars`);
+  `exec.env-vars` overrides it, which is why the Nix profile must be listed there
+  explicitly.
+- **brew 5.x labels the agent `sh.brew.sketchybar`**, not
+  `homebrew.mxcl.sketchybar`. Match on `*sketchybar*.plist` when cleaning up a
+  double-start rather than hardcoding the old name.
+- **`FOCUSED_DISPLAY` was broken twice** — the PATH issue above *and*
+  `awk "{print $1}"` inside `bash -c`, where bash expands `$1` before awk sees it
+  (so awk printed the whole line). Nothing read the value, so it was removed
+  outright along with its subshell.
+
+### Files that changed their role
+
+- `sketchybar/helpers/cli.lua` — **deleted** (was the PATH workaround).
+- `sketchybar/helpers/install`, `install.sh` — **deleted**.
+- `sketchybar/items/service_mode.lua` — **new**; tints the workspace items while
+  AeroSpace service mode is active (the enter/leave events finally have a
+  subscriber).
+- `nix/home/darwin/sketchybar.nix` — **new**; the Home Manager module.
+- `~/.config/sketchybar` is no longer a stow symlink: Home Manager links it
+  (`xdg.configFile."sketchybar"`, out-of-store, so the runtime `make` can write
+  `helpers/**/bin`).
+- Logs moved from `/opt/homebrew/var/log/sketchybar/` to
+  `~/Library/Logs/sketchybar/`, now rotated by newsyslog.

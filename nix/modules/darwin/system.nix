@@ -32,4 +32,16 @@
   };
 
   fonts.packages = with pkgs; [ sketchybar-app-font ];
+
+  # launchd appends sketchybar's stdout/stderr forever and nothing rotates them by
+  # default, so the files grew to 8 MB / 1 MB within months. macOS reads
+  # /etc/newsyslog.d/*.conf (newsyslog.conf(5)) and the periodic
+  # com.apple.newsyslog job runs it. Rotate on size only, keep 3 compressed
+  # generations, and pass `N` because the writing process (launchd) must not be
+  # signalled — it holds the file open in append mode.
+  environment.etc."newsyslog.d/sketchybar.conf".text = ''
+    # logfilename                                                    mode count size when flags
+    /Users/${username}/Library/Logs/sketchybar/sketchybar.out.log     644  3     1024 *    JN
+    /Users/${username}/Library/Logs/sketchybar/sketchybar.err.log     644  3     1024 *    JN
+  '';
 }

@@ -1,8 +1,5 @@
 local icons = require("icons")
 local colors = require("colors")
-local cli = require("helpers.cli")
-
-local nowplaying = cli.resolve("nowplaying-cli")
 
 local whitelist = { ["Spotify"] = true, ["Music"] = true }
 
@@ -59,19 +56,19 @@ sbar.add("item", {
 	position = "popup." .. media_cover.name,
 	icon = { string = icons.media.back },
 	label = { drawing = false },
-	click_script = nowplaying .. " previous",
+	click_script = "nowplaying-cli previous",
 })
 sbar.add("item", {
 	position = "popup." .. media_cover.name,
 	icon = { string = icons.media.play_pause },
 	label = { drawing = false },
-	click_script = nowplaying .. " togglePlayPause",
+	click_script = "nowplaying-cli togglePlayPause",
 })
 sbar.add("item", {
 	position = "popup." .. media_cover.name,
 	icon = { string = icons.media.forward },
 	label = { drawing = false },
-	click_script = nowplaying .. " next",
+	click_script = "nowplaying-cli next",
 })
 
 local interrupt = 0

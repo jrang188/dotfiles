@@ -1,12 +1,6 @@
 local colors = require("colors")
 local icons = require("icons")
 local settings = require("settings")
-local cli = require("helpers.cli")
-
--- These live in the Nix profile, which is not on the PATH sketchybar inherits
--- from `brew services`; resolving them up front keeps the popup clickable.
-local switch_audio = cli.resolve("SwitchAudioSource")
-local sbar_bin = cli.resolve("sketchybar")
 
 local popup_width = 250
 
@@ -97,11 +91,29 @@ volume_percent:subscribe("volume_change", function(env)
   volume_slider:set({ slider = { percentage = volume } })
 end)
 
+-- Tracks whether volume.device.* popup items are currently on screen, so that
+-- volume_collapse_details() does not call sbar.remove() on a pattern that matches
+-- nothing (sketchybar logs `[?] Regex: No match found` for every miss).
+-- Must be declared before volume_collapse_details(), otherwise that function
+-- would close over the global instead of this local.
+local devices_drawn = false
+
 local function volume_collapse_details()
   local drawing = volume_bracket:query().popup.drawing == "on"
-  if not drawing then return end
-  volume_bracket:set({ popup = { drawing = false } })
-  sbar.remove('/volume.device\\.*/')
+  -- Clean up even when the popup is already closed: the device items are added
+  -- asynchronously by volume_toggle_details(), so a close that lands before the
+  -- SwitchAudioSource callback returns would otherwise leave them orphaned with
+  -- devices_drawn still true and nothing left to reset it.
+  if not drawing and not devices_drawn then
+    return
+  end
+  if drawing then
+    volume_bracket:set({ popup = { drawing = false } })
+  end
+  if devices_drawn then
+    sbar.remove('/volume.device\\.*/')
+    devices_drawn = false
+  end
 end
 
 local current_audio_device = "None"
@@ -114,9 +126,9 @@ local function volume_toggle_details(env)
   local should_draw = volume_bracket:query().popup.drawing == "off"
   if should_draw then
     volume_bracket:set({ popup = { drawing = true } })
-    sbar.exec(switch_audio .. " -t output -c", function(result)
+    sbar.exec("SwitchAudioSource -t output -c", function(result)
       current_audio_device = result:sub(1, -2)
-      sbar.exec(switch_audio .. " -a -t output", function(available)
+      sbar.exec("SwitchAudioSource -a -t output", function(available)
         local current = current_audio_device
         local counter = 0
 
@@ -130,11 +142,12 @@ local function volume_toggle_details(env)
             width = popup_width,
             align = "center",
             label = { string = device, color = color },
-            click_script = switch_audio .. ' -s "' .. device .. '" && ' .. sbar_bin .. ' --set /volume.device\\.*/ label.color=' .. colors.grey .. ' --set $NAME label.color=' .. colors.white
+            click_script = 'SwitchAudioSource -s "' .. device .. '" && sketchybar --set /volume.device\\.*/ label.color=' .. colors.grey .. ' --set $NAME label.color=' .. colors.white
 
           })
           counter = counter + 1
         end
+        devices_drawn = counter > 0
       end)
     end)
   else

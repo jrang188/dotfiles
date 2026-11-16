@@ -18,7 +18,7 @@ Bar item definition and registration. Each Lua module in this directory declares
 Bar startup (init.lua → sbar.begin_config() block):
   require("items") → items/init.lua
     ├─ items.apple       → sbar.add("item", "apple", …) + bracket + spacer
-    ├─ items.workspaces  → sbar.exec(cli.resolve("aerospace") .. " list-workspaces …") →
+    ├─ items.workspaces  → sbar.exec("aerospace list-workspaces …") →
     │                      for each workspace: sbar.add("item", "workspace.<name>") + subscribe(aerospace_workspace_change)
     │                      → async callback: updateWindows(), updateWorkspaceMonitor()
     │                      → reorder bar via sbar.exec("sketchybar --reorder apple ... front_app")
@@ -47,7 +47,7 @@ Bar startup (init.lua → sbar.begin_config() block):
 
 ## Integration
 
-- **Depends on**: `colors.lua`, `icons.lua`, `settings.lua` (shared config), `helpers.app_icons.lua` (icon lookup for workspaces), `helpers.cli.lua` (absolute-path resolution of external CLIs).
+- **Depends on**: `colors.lua`, `icons.lua`, `settings.lua` (shared config), `helpers.app_icons.lua` (icon lookup for workspaces).
 - **Consumed by**: sketchybar daemon — items are registered as sketchybar domain objects. The `init.lua` registration is part of the `sbar.begin_config()` / `sbar.end_config()` batch.
-- **External triggers**: `aerospace` CLI (workspace queries, window lists), `nowplaying-cli` (media controls), `osascript` (AppleScript exec), `$CONFIG_DIR/helpers/menus/bin/menus` (Apple menu interaction). Every external CLI must go through `helpers.cli.resolve()` — a bare name fails under the launchd `PATH` sketchybar inherits from `brew services`.
+- **External triggers**: `aerospace` CLI (workspace queries, window lists), `nowplaying-cli` (media controls), `osascript` (AppleScript exec), `$CONFIG_DIR/helpers/menus/bin/menus` (Apple menu interaction). All external CLIs are invoked by bare name, which works because `programs.sketchybar.extraPackages` puts them on the bar's wrapper-generated `PATH`; a new shell-out needs an `extraPackages` entry.
 - **Environment variables**: `$INFO` (set by front_app_switched and volume_change events), `$FOCUSED_WORKSPACE` (set by aerospace_workspace_change event), `$BUTTON` (mouse button), `$NAME` (item name in click_scripts).

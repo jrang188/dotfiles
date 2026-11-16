@@ -2,13 +2,7 @@ local colors = require("colors")
 local settings = require("settings")
 local app_icons = require("helpers.app_icons")
 
--- Absolute path to the AeroSpace CLI: the bar runs under `brew services`, whose
--- PATH does not include the Nix profile where `aerospace` now lives.
-local cli = require("helpers.cli")
-local aerospace = cli.resolve("aerospace")
-
-local query_workspaces = aerospace
-	.. " list-workspaces --all --format '%{workspace}%{monitor-appkit-nsscreen-screens-id}' --json"
+local query_workspaces = "aerospace list-workspaces --all --format '%{workspace}%{monitor-appkit-nsscreen-screens-id}' --json"
 
 -- Add padding to the left
 local root = sbar.add("item", "root", {
@@ -39,10 +33,9 @@ local ws_order = ""
 
 local function withWindows(f)
 	local open_windows = {}
-	local get_windows = aerospace .. " list-windows --monitor all --format '%{workspace}%{app-name}' --json"
-	local query_visible_workspaces = aerospace
-		.. " list-workspaces --visible --monitor all --format '%{workspace}%{monitor-appkit-nsscreen-screens-id}' --json"
-	local get_focus_workspaces = aerospace .. " list-workspaces --focused"
+	local get_windows = "aerospace list-windows --monitor all --format '%{workspace}%{app-name}' --json"
+	local query_visible_workspaces = "aerospace list-workspaces --visible --monitor all --format '%{workspace}%{monitor-appkit-nsscreen-screens-id}' --json"
+	local get_focus_workspaces = "aerospace list-workspaces --focused"
 	sbar.exec(get_windows, function(workspace_and_windows)
 		for _, entry in ipairs(workspace_and_windows) do
 			local workspace_index = entry.workspace
@@ -201,7 +194,7 @@ sbar.exec(query_workspaces, function(workspaces_and_monitors)
 				height = 28,
 				border_color = colors.bg2,
 			},
-			click_script = aerospace .. " workspace " .. workspace_index,
+			click_script = "aerospace workspace " .. workspace_index,
 		})
 
 		workspaces[workspace_index] = workspace
@@ -238,7 +231,7 @@ sbar.exec(query_workspaces, function(workspaces_and_monitors)
 		updateWindows()
 	end)
 
-	sbar.exec(aerospace .. " list-workspaces --focused", function(focused_workspace)
+	sbar.exec("aerospace list-workspaces --focused", function(focused_workspace)
 		focused_workspace = focused_workspace:match("^%s*(.-)%s*$")
 		local focused = workspaces[focused_workspace]
 		if focused == nil then

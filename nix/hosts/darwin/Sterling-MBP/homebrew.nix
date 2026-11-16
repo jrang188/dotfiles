@@ -26,7 +26,6 @@ _: {
       }
       "kafka"
       "mole"
-      "media-control"
       "scrcpy"
       "nss"
     ];

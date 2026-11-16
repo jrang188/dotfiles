@@ -165,13 +165,15 @@ in
         "exec-and-forget borders active_color=0xffc0caf5 inactive_color=0xff414868 style=round width=7.0"
       ];
 
+      # /bin/bash -c is required so the shell expands $AEROSPACE_FOCUSED_WORKSPACE;
+      # AeroSpace passes non-shell commands through without interpolation.
+      # FOCUSED_DISPLAY was dropped: nothing in sketchybar/ ever read it, and the
+      # `$(aerospace list-monitors | awk …)` subshell it needed was itself buggy
+      # (bash expanded `$1` before awk saw it).
       exec-on-workspace-change = [
         "/bin/bash"
         "-c"
-        # `awk '{print $1}'` must be single-quoted: the whole string is one argv
-        # element handed to `bash -c`, so double quotes would let bash expand $1
-        # (empty) and awk would print the full line instead of the monitor id.
-        "sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE FOCUSED_DISPLAY=$(aerospace list-monitors --focused | awk '{print $1}')"
+        "sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"
       ];
 
       on-focus-changed = [

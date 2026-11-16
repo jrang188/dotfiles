@@ -1,6 +1,12 @@
 local colors = require("colors")
 local icons = require("icons")
 local settings = require("settings")
+local cli = require("helpers.cli")
+
+-- These live in the Nix profile, which is not on the PATH sketchybar inherits
+-- from `brew services`; resolving them up front keeps the popup clickable.
+local switch_audio = cli.resolve("SwitchAudioSource")
+local sbar_bin = cli.resolve("sketchybar")
 
 local popup_width = 250
 
@@ -108,11 +114,10 @@ local function volume_toggle_details(env)
   local should_draw = volume_bracket:query().popup.drawing == "off"
   if should_draw then
     volume_bracket:set({ popup = { drawing = true } })
-    sbar.exec("SwitchAudioSource -t output -c", function(result)
+    sbar.exec(switch_audio .. " -t output -c", function(result)
       current_audio_device = result:sub(1, -2)
-      sbar.exec("SwitchAudioSource -a -t output", function(available)
-        current = current_audio_device
-        local color = colors.grey
+      sbar.exec(switch_audio .. " -a -t output", function(available)
+        local current = current_audio_device
         local counter = 0
 
         for device in string.gmatch(available, '[^\r\n]+') do
@@ -125,7 +130,7 @@ local function volume_toggle_details(env)
             width = popup_width,
             align = "center",
             label = { string = device, color = color },
-            click_script = 'SwitchAudioSource -s "' .. device .. '" && sketchybar --set /volume.device\\.*/ label.color=' .. colors.grey .. ' --set $NAME label.color=' .. colors.white
+            click_script = switch_audio .. ' -s "' .. device .. '" && ' .. sbar_bin .. ' --set /volume.device\\.*/ label.color=' .. colors.grey .. ' --set $NAME label.color=' .. colors.white
 
           })
           counter = counter + 1

@@ -2,7 +2,7 @@
 
 ## Responsibility
 
-Shared infrastructure layer providing: (1) Lua package path initialization and C binary compilation (`init.lua`, `makefile`), (2) macOS font configuration data (`default_font.lua`), (3) application-icon mapping table (`app_icons.lua`), (4) external event provider daemons written in C (`event_providers/`), and (5) a macOS accessibility-based menu bar helper C binary (`menus/`).
+Shared infrastructure layer providing: (1) Lua package path initialization and C binary compilation (`init.lua`, `makefile`), (2) macOS font configuration data (`default_font.lua`), (3) application-icon mapping table (`app_icons.lua`), (4) external event provider daemons written in C (`event_providers/`), (5) a macOS accessibility-based menu bar helper C binary (`menus/`), and (6) absolute-path resolution of the external CLIs this config shells out to (`cli.lua`).
 
 ## Design
 
@@ -14,6 +14,7 @@ Shared infrastructure layer providing: (1) Lua package path initialization and C
 - **Shared Messaging Protocol** (`sketchybar.h`): Provides `sketchybar(char* message)` which tokenizes the string into null-separated arguments (respecting quotes) and sends it as a Mach OOL message — functionally equivalent to calling `sketchybar` CLI from shell but without fork/exec overhead.
 - **Menu Bar Interaction** (`menus/menus.c`): A standalone C binary using the macOS Accessibility (Carbon) and SkyLight private frameworks to list and select menu bar items of the frontmost application. Used by `items/apple.lua` to trigger the Apple menu.
 - **Application Icon Registry** (`app_icons.lua`): A ~300-entry lookup table mapping macOS application names to `sketchybar-app-font` icon glyph identifiers (e.g., `"Live" → ":ableton:"`). Used by `items/workspaces.lua` for window indicators.
+- **PATH-Independent CLI Resolution** (`cli.lua`): `resolve(name)` returns an absolute path for an external command, probing the Nix profiles (`/etc/profiles/per-user/$USER/bin`, `~/.nix-profile/bin`, `.../sw/bin`) before Homebrew (`/opt/homebrew/bin`, `/usr/local/bin`), and falling back to the bare name. Required because sketchybar runs as a `brew services` launchd agent whose `PATH` contains **neither** the Nix profile **nor** binaries that moved off Homebrew (this silently broke `aerospace`, `nowplaying-cli` and `SwitchAudioSource`).
 
 ## Flow
 
@@ -38,7 +39,7 @@ On Apple menu click (items/apple.lua):
 
 ## Integration
 
-- **Depended on by**: `items/apple.lua` (menus binary), `items/widgets/cpu.lua` (cpu_load binary), `items/widgets/wifi.lua` (network_load binary), `items/workspaces.lua` (app_icons table), `settings.lua` (default_font table).
-- **Depends on**: sketchybar daemon (Mach IPC bootstrap port `git.felix.<bar_name>`), macOS system frameworks (Carbon, SkyLight, `mach/mach.h`, `sys/sysctl.h`), Homebrew packages (`lua`, `switchaudio-osx`, `nowplaying-cli`).
+- **Depended on by**: `items/apple.lua` (menus binary), `items/widgets/cpu.lua` (cpu_load binary), `items/widgets/wifi.lua` (network_load binary), `items/workspaces.lua` (app_icons table + `cli.resolve("aerospace")`), `items/media.lua` (`cli.resolve("nowplaying-cli")`), `items/widgets/volume.lua` (`cli.resolve("SwitchAudioSource")`), `settings.lua` (default_font table).
+- **Depends on**: sketchybar daemon (Mach IPC bootstrap port `git.felix.<bar_name>`), macOS system frameworks (Carbon, SkyLight, `mach/mach.h`, `sys/sysctl.h`), Homebrew packages (`lua`), Nix-provided CLIs resolved through `cli.lua` (`aerospace`, `nowplaying-cli`, `SwitchAudioSource`), and `switchaudio-osx`/`nowplaying-cli` from `nix/home/darwin/packages.nix`.
 - **Build output**: binaries in `event_providers/cpu_load/bin/`, `event_providers/network_load/bin/`, `menus/bin/` — all gitignored via `.gitignore` (`bin/`).
 - **Environment variables**: `$BAR_NAME` (used by `sketchybar.h` to look up correct Mach port, defaults to `"sketchybar"`), `$CONFIG_DIR` (used by item scripts to locate binary paths).

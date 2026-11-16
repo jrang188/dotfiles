@@ -17,9 +17,9 @@ Bar item definition and registration. Each Lua module in this directory declares
 ```
 Bar startup (init.lua → sbar.begin_config() block):
   require("items") → items/init.lua
-    ├─ items.apple       → sbar.add("item"), apple icon + bracket + spacer
-    ├─ items.workspaces  → sbar.exec to query aerospace workspaces →
-    │                      for each workspace: sbar.add("item") + subscribe(aerospace_workspace_change)
+    ├─ items.apple       → sbar.add("item", "apple", …) + bracket + spacer
+    ├─ items.workspaces  → sbar.exec(cli.resolve("aerospace") .. " list-workspaces …") →
+    │                      for each workspace: sbar.add("item", "workspace.<name>") + subscribe(aerospace_workspace_change)
     │                      → async callback: updateWindows(), updateWorkspaceMonitor()
     │                      → reorder bar via sbar.exec("sketchybar --reorder apple ... front_app")
     ├─ items.front_app   → sbar.add("item", "front_app", { display="active" })
@@ -41,13 +41,13 @@ Bar startup (init.lua → sbar.begin_config() block):
 | `aerospace_focus_change` (aerospace) | `root` item | Refresh all window icons |
 | `display_change` (built-in) | `root` item | Update workspace→monitor mapping |
 | `media_change` (built-in) | `media_cover` | Show/hide media artwork, artist, title |
-| `mouse.clicked` | `front_app`, `media_cover` | Swap menus & spaces / toggle popup |
+| `mouse.clicked` | `media_cover` | Toggle popup |
 | `mouse.entered` / `mouse.exited` | `media_cover` | Animate detail expand/collapse |
 | `mouse.exited.global` | `media_title` | Close media popup |
 
 ## Integration
 
-- **Depends on**: `colors.lua`, `icons.lua`, `settings.lua` (shared config), `helpers.app_icons.lua` (icon lookup for workspaces).
+- **Depends on**: `colors.lua`, `icons.lua`, `settings.lua` (shared config), `helpers.app_icons.lua` (icon lookup for workspaces), `helpers.cli.lua` (absolute-path resolution of external CLIs).
 - **Consumed by**: sketchybar daemon — items are registered as sketchybar domain objects. The `init.lua` registration is part of the `sbar.begin_config()` / `sbar.end_config()` batch.
-- **External triggers**: `aerospace` CLI (workspace queries, window lists), `nowplaying-cli` (media controls), `osascript` (AppleScript exec), `$CONFIG_DIR/helpers/menus/bin/menus` (Apple menu interaction).
+- **External triggers**: `aerospace` CLI (workspace queries, window lists), `nowplaying-cli` (media controls), `osascript` (AppleScript exec), `$CONFIG_DIR/helpers/menus/bin/menus` (Apple menu interaction). Every external CLI must go through `helpers.cli.resolve()` — a bare name fails under the launchd `PATH` sketchybar inherits from `brew services`.
 - **Environment variables**: `$INFO` (set by front_app_switched and volume_change events), `$FOCUSED_WORKSPACE` (set by aerospace_workspace_change event), `$BUTTON` (mouse button), `$NAME` (item name in click_scripts).

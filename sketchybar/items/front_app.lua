@@ -17,6 +17,6 @@ front_app:subscribe("front_app_switched", function(env)
 	front_app:set({ label = { string = env.INFO } })
 end)
 
-front_app:subscribe("mouse.clicked", function(env)
-	sbar.trigger("swap_menus_and_spaces")
-end)
+-- Note: upstream also swaps in its menu-bar inspector here
+-- (`sbar.trigger("swap_menus_and_spaces")`), but this config never loads
+-- `items/menus.lua`, so that event is unregistered and the trigger is a no-op.

@@ -14,7 +14,7 @@ Declarative, reproducible system configuration for two personal machines — **`
 | `.stowrc` | GNU Stow target (`~/.config`). Ignores `DS_Store`, `nix/`, `archive/`, `.stowrc`, and the two Nix-managed OpenCode files (`opencode/opencode.json`, `opencode/cli.json`) so the rest of `opencode/` stows cleanly. |
 | `AGENTS.md` | Agent guidelines and architecture reference (authoritative for host/flake facts). |
 | `sketchybar/sketchybarrc` | sketchybar bootstrap script (loads `helpers/` + `init.lua`). |
-| `nix/home/darwin/aerospace.nix` | AeroSpace tiling WM config (Nix-managed via `programs.aerospace`; launches sketchybar + borders on login). |
+| `nix/home/darwin/aerospace.nix` | AeroSpace tiling WM config (Nix-managed via `programs.aerospace`; relaunches `borders` — `pkgs.jankyborders` — at startup; sketchybar is started by its own launchd agent). |
 | `nvim/init.lua` | LazyVim entry; loads `lua/config/` and `lua/plugins/`. |
 | `nix/home/ai/opencode.nix` | Source of truth for OpenCode v2 config. Generates `~/.config/opencode/opencode.json` and `~/.config/opencode/cli.json` at build time (both gitignored — not present in the repo). |
 | `opencode/oh-my-opencode-slim.json` | Tracked OpenCode plugin config: presets and per-role sub-agent model assignments. |

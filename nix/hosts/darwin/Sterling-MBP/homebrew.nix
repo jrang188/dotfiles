@@ -11,19 +11,12 @@ _: {
       cleanup = "none";
     };
 
-    taps = [
-      "felixkratz/formulae"
-    ];
+    # Every remaining install is from homebrew-core, so no taps are needed:
+    # `felixkratz/formulae` was dropped 2026-11 when `sketchybar` moved to
+    # `programs.sketchybar` and `borders` became `pkgs.jankyborders`.
+    taps = [ ];
 
-    # `brew install`
-    # Non-official taps require tap trust (Homebrew 6+). Fully-qualified
-    # names let nix-darwin emit `trusted: true` in the generated Brewfile,
-    # which records the trust during activation before anything is loaded.
     brews = [
-      {
-        name = "felixkratz/formulae/borders";
-        trusted = true;
-      }
       "kafka"
       "mole"
       # MediaRemote client for the sketchybar media widget. `nowplaying-cli`

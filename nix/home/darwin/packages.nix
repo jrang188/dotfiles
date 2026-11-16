@@ -14,6 +14,16 @@
     nowplaying-cli # Now playing CLI
 
     # ============================================
+    # macOS Window Management
+    # ============================================
+    # JankyBorders: the window border AeroSpace launches at startup via
+    # `exec-and-forget borders …`. Version 1.9.0 matches the Homebrew formula it
+    # replaced, so the CLI is identical. AeroSpace's exec PATH puts
+    # /etc/profiles/per-user/$USER/bin first, so the bare `borders` in
+    # `after-startup-command` resolves to this one.
+    jankyborders
+
+    # ============================================
     # Mobile App Development
     # ============================================
     # flutter # Flutter SDK

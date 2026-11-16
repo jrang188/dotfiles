@@ -1,5 +1,22 @@
 #!/usr/bin/env lua
 
+-- Resolve this config's directory before anything is required.
+--
+-- `require("helpers")` used to work only via Lua's built-in cwd-relative
+-- `./?.lua`, which is fragile: sketchybar chdirs into $CONFIG_DIR, and any
+-- launcher that sets LUA_PATH (Home Manager's wrapper does, and it replaces the
+-- default path) silently drops it. `$CONFIG_DIR` is set by sketchybar for the
+-- scripts it spawns, but is absent when the file is run by hand, so the script
+-- path itself is the most reliable source.
+local config_dir = (arg and arg[0] or ""):match("^(.*)/[^/]*$")
+  or os.getenv("CONFIG_DIR")
+  or "."
+
+package.path = config_dir .. "/?.lua;"
+  .. config_dir .. "/?/init.lua;"
+  .. config_dir .. "/?/?.lua;"
+  .. package.path
+
 -- Load the sketchybar-package and prepare the helper binaries
 require("helpers")
 require("init")

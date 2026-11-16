@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, username, ... }:
 let
   inherit (lib)
     concatLists
@@ -141,16 +141,37 @@ in
     settings = {
       config-version = 2;
 
+      # AeroSpace builds the exec/callback environment from its launchd-inherited
+      # PATH plus a hardcoded `/opt/homebrew/bin:/opt/homebrew/sbin` prefix
+      # (upstream `defaultOverriddenEnvVars`), so the Nix profile is never in it.
+      # Without this, `sketchybar --trigger` and the `$(aerospace list-monitors …)`
+      # subshell in exec-on-workspace-change both die with "command not found".
+      exec.env-vars.PATH = lib.concatStringsSep ":" [
+        "/etc/profiles/per-user/${username}/bin"
+        "/Users/${username}/.nix-profile/bin"
+        "/opt/homebrew/bin"
+        "/opt/homebrew/sbin"
+        "/usr/bin"
+        "/bin"
+        "/usr/sbin"
+        "/sbin"
+      ];
+
       # Borders detects an already-running process, so a restart won't double it.
+      # sketchybar is deliberately absent: it is started by its Home Manager
+      # launchd agent (`programs.sketchybar`), and starting it here as well would
+      # race the brew/HM agents for /tmp/sketchybar_$USER.lock.
       after-startup-command = [
         "exec-and-forget borders active_color=0xffc0caf5 inactive_color=0xff414868 style=round width=7.0"
-        "exec-and-forget sketchybar"
       ];
 
       exec-on-workspace-change = [
         "/bin/bash"
         "-c"
-        ''sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE FOCUSED_DISPLAY=$(aerospace list-monitors --focused | awk "{print $1}")''
+        # `awk '{print $1}'` must be single-quoted: the whole string is one argv
+        # element handed to `bash -c`, so double quotes would let bash expand $1
+        # (empty) and awk would print the full line instead of the monitor id.
+        "sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE FOCUSED_DISPLAY=$(aerospace list-monitors --focused | awk '{print $1}')"
       ];
 
       on-focus-changed = [

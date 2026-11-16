@@ -21,14 +21,9 @@ _: {
     # which records the trust during activation before anything is loaded.
     brews = [
       {
-        name = "felixkratz/formulae/sketchybar";
-        trusted = true;
-      }
-      {
         name = "felixkratz/formulae/borders";
         trusted = true;
       }
-      "lua"
       "kafka"
       "mole"
       "media-control"

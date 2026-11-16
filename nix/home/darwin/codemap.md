@@ -2,7 +2,7 @@
 
 ## Responsibility
 
-Darwin-specific Home Manager overlay for macOS host `Sterling-MBP`. Sets platform-specific packages (GUI apps, audio tools), overrides the Ghostty terminal package to use the binary distribution, manages the AeroSpace tiling window manager through the `programs.aerospace` module, appends the `macos` Oh My Zsh plugin, and imports the shared `modules/home/gui.nix` for base Ghostty config.
+Darwin-specific Home Manager overlay for macOS host `Sterling-MBP`. Sets platform-specific packages (GUI apps, audio tools), overrides the Ghostty terminal package to use the binary distribution, manages the AeroSpace tiling window manager through the `programs.aerospace` module, manages the sketchybar status bar through the `programs.sketchybar` module, appends the `macos` Oh My Zsh plugin, and imports the shared `modules/home/gui.nix` for base Ghostty config.
 
 ## Design
 
@@ -13,17 +13,19 @@ Darwin-specific Home Manager overlay for macOS host `Sterling-MBP`. Sets platfor
   - `home.packages` includes `ghostty-bin`, `syncthing-macos` (Syncthing GUI), `switchaudio-osx`, `nowplaying-cli` (audio device switching and media info). Mobile-dev deps (`flutter`, `cocoapods`, `android-tools`) and `scrcpy` are present but commented out.
   - `programs.neovim.extraPackages` adds `pngpaste` (paste images from clipboard into Neovim).
 - **External module import**: `../../modules/home/gui.nix` provides the shared Ghostty base config (`JetBrainsMono Nerd Font Mono`, `TokyoNight` theme, 88% opacity, blur, Zsh integration).
-- **AeroSpace is fully Nix-managed** (`./aerospace.nix`, HM `programs.aerospace`): a single `workspaces` list derives `persistent-workspaces`, the `alt-<key>` focus bindings, the `alt-shift-<key>` move bindings and `workspace-to-monitor-force-assignment`; an `appRules` map of bundle-ids → workspace derives the 17 `on-window-detected` rules. `launchd.enable = true` owns autostart (the module asserts on `start-at-login`/`after-login-command` and rewrites both), and the rendered `settings` are semantically identical to the previous hand-written `aerospace.toml`.
+- **AeroSpace is fully Nix-managed** (`./aerospace.nix`, HM `programs.aerospace`): a single `workspaces` list derives `persistent-workspaces`, the `alt-<key>` focus bindings, the `alt-shift-<key>` move bindings and `workspace-to-monitor-force-assignment`; an `appRules` map of bundle-ids → workspace derives the 17 `on-window-detected` rules. `launchd.enable = true` owns autostart (the module asserts on `start-at-login`/`after-login-command` and rewrites both), and the rendered `settings` are semantically identical to the previous hand-written `aerospace.toml`. `exec.env-vars.PATH` is set explicitly because AeroSpace derives its exec environment from launchd's PATH plus a hardcoded Homebrew prefix — never the Nix profile — which is what broke the `sketchybar --trigger` callbacks.
+- **sketchybar is fully Nix-managed** (`./sketchybar.nix`, HM `programs.sketchybar`): `configType = "lua"` with `pkgs.sbarlua` supplies the SbarLua C module and pins the Lua interpreter through `passthru.luaModule`, and the module writes a `gui/$UID` launchd agent. The generated wrapper is the single source of truth for the bar's `PATH` — only `extraPackages` plus the system/Homebrew dirs — so every external CLI the Lua config shells out to must be listed there. The Lua tree itself is linked by `xdg.configFile."sketchybar"` as an out-of-store symlink, because `helpers/init.lua` runs `make` into the repo at startup.
 
 ## Flow
 
 1. `flake.nix` → `mkDarwin` → sets `homeImports = [ ./home ./home/darwin ... ]`.
 2. Shared `./home/default.nix` runs first, establishing common programs and packages.
-3. `nix/home/darwin/default.nix` imports `../../modules/home/gui.nix`, `./aerospace.nix`, `./packages.nix`, and `./gui.nix`.
+3. `nix/home/darwin/default.nix` imports `../../modules/home/gui.nix`, `./aerospace.nix`, `./packages.nix`, `./gui.nix`, and `./sketchybar.nix`.
 4. `gui.nix` overrides `programs.ghostty.package` to `ghostty-bin`.
 5. `packages.nix` adds Darwin-only packages and neovim extras.
 6. `aerospace.nix` enables `programs.aerospace` (config → `~/.aerospace.toml`, launchd agent → autostart).
-7. `default.nix` appends `"macos"` to the shared Oh My Zsh plugin list.
+7. `sketchybar.nix` enables `programs.sketchybar` (launchd agent + wrapped binary), links `~/dotfiles/sketchybar` to `~/.config/sketchybar`, and creates `~/Library/Logs/sketchybar/`.
+8. `default.nix` appends `"macos"` to the shared Oh My Zsh plugin list.
 
 ## Integration
 

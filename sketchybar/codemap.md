@@ -34,5 +34,6 @@ sketchybarrc
 
 - **Consumed by**: Items under `items/` and `items/widgets/` via `require("colors")`, `require("icons")`, `require("settings")`.
 - **Depends on**: `helpers/init.lua` (cpath + C build), SbarLua (`sketchybar.so`), sketchybar daemon (Mach IPC bootstrap service).
+- **Managed by**: Home Manager `programs.sketchybar` (`nix/home/darwin/sketchybar.nix`). It supplies the binary, the `lua` interpreter, the SbarLua module (via `LUA_CPATH`) and the launchd agent, and links this directory to `~/.config/sketchybar` out-of-store so the runtime `make` can still write `helpers/**/bin`. The generated wrapper also owns the bar's `PATH` — see `helpers/codemap.md`.
 - **API surface**: Global `sbar` object with methods `bar()`, `default()`, `add()`, `begin_config()`, `end_config()`, `event_loop()`, `exec()`, `animate()`, `delay()`, `trigger()`, `remove()`, `set()`, `query()`.
 - **Environment variables**: `$CONFIG_DIR` (set by sketchybar to this directory), `$NAME` (set per-item during click_scripts), `$USER` (used by helpers/init.lua for cpath).

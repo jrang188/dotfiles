@@ -58,11 +58,13 @@ sudo nixos-rebuild dry-run --flake .#kirby       # NixOS
 
 ## Stow / symlinking
 
-`.stowrc` targets `~/.config` and ignores `nix/`, `archive/`, and `.stowrc`. The `nvim/` and `sketchybar/` directories stow into `~/.config`:
+`.stowrc` targets `~/.config` and ignores `nix/`, `archive/`, and `.stowrc`. Only `nvim/` is stowed:
 
 ```bash
-stow nvim sketchybar
+stow nvim
 ```
+
+`sketchybar/` is no longer stowed — Home Manager links it to `~/.config/sketchybar` (`xdg.configFile."sketchybar"`, an out-of-store symlink back into this repo), so no manual step is needed.
 
 ## Flake architecture
 

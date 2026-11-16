@@ -28,7 +28,7 @@ Host-specific nix-darwin module for the **Sterling-MBP** machine (Apple Silicon 
 | `homebrew.onActivation.cleanup` | `"none"` — bundle cleanup is disabled; uninstall unwanted formulae/casks manually |
 | `homebrew.onActivation.extraEnv` | not set — the deprecated `HOMEBREW_NO_REQUIRE_TAP_TRUST` escape hatch was replaced by nix-darwin's first-class `trusted` option |
 | `homebrew.taps` | `nikitabobko/tap`, `felixkratz/formulae` |
-| `homebrew.brews` | `felixkratz/formulae/sketchybar` (trusted), `felixkratz/formulae/borders` (trusted), lua, kafka, mole, media-control, scrcpy, nss |
+| `homebrew.brews` | `felixkratz/formulae/borders` (trusted), kafka, mole, media-control, scrcpy, nss — sketchybar and `lua` were removed 2026-11 (both now come from Home Manager via `programs.sketchybar`) |
 | `homebrew.casks` | raycast, scroll-reverser, warp, karabiner-elements, sf-symbols, font-sf-mono, font-sf-pro, orbstack, localsend, intellij-idea, zed, google-drive, adobe-acrobat-reader, android-platform-tools, kde-connect |
 
 ## Flake-level Configuration (in `mkDarwin`, not in this module)

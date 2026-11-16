@@ -10,7 +10,9 @@ Bar item definition and registration. Each Lua module in this directory declares
 - **Observer Pattern via Event Subscriptions**: Items subscribe to sketchybar events using `item:subscribe(event_names, callback)`. The sketchybar daemon delivers events asynchronously via Mach IPC; callbacks receive an `env` table with event-specific keys. Multiple items can subscribe to the same event.
 - **Bracket Wrapping for Borders**: Several items (`apple.lua`, `calendar.lua`) use a bracket containing a single item to achieve a **double-border** visual effect — the bracket provides an outer border, the item provides an inner border.
 - **Padding Items for Layout**: Spacer items (zero-width or fixed-width) are inserted before/after bracketed groups to maintain consistent spacing. This is a consequence of brackets consuming their children's outer margins.
-- **Orchestrated Registration**: `items/init.lua` requires modules in order: `apple` → `workspaces` → `front_app` → `calendar` → `widgets` → `media`. This determines left-to-right bar layout order.
+- **Orchestrated Registration**: `items/init.lua` requires modules in order: `apple` → `workspaces` → `front_app` → `calendar` → `widgets` → `media` → `service_mode`. This determines left-to-right bar layout order.
+- **Polling over deprecated events**: `media.lua` polls `nowplaying-cli` every 2s instead of subscribing to `media_change`, which macOS 26 no longer delivers (it also fed the built-in `media.artwork` provider). Artwork is fetched only when the track changes, base64-decoded to `$TMPDIR/sketchybar-artwork-<hash>.png`, and set as `background.image`.
+- **Global-state indicator**: `service_mode.lua` tints `/workspace\..*/` via `sbar.set` on AeroSpace's enter/leave events, subscribed through `root` — sketchybar does not dispatch events to items with `drawing = false`, so a dedicated hidden subscriber receives nothing.
 
 ## Flow
 
@@ -27,8 +29,10 @@ Bar startup (init.lua → sbar.begin_config() block):
     ├─ items.calendar    → sbar.add("item", date/time + bracket + spacer
     │                      ← subscribe(forced|routine|system_woke) → os.date update
     ├─ items.widgets     → items/widgets/init.lua (battery, volume, wifi, cpu)
-    └─ items.media       → now-playing: cover art, artist, title + popup controls
-                           ← subscribe(media_change, mouse.entered/exited/clicked)
+    ├─ items.media       → now-playing: cover art, artist, title + popup controls
+    │                      ← polls nowplaying-cli every 2s; subscribe(mouse.entered/exited/clicked)
+    └─ items.service_mode → tints the workspace items while AeroSpace service mode is active
+                           ← subscribe(aerospace_enter/leave_service_mode) on `root`
 ```
 
 **Event-to-Callback Map**:
@@ -40,7 +44,7 @@ Bar startup (init.lua → sbar.begin_config() block):
 | `aerospace_workspace_change` (aerospace) | each workspace item | Highlight focused workspace, update border |
 | `aerospace_focus_change` (aerospace) | `root` item | Refresh all window icons |
 | `display_change` (built-in) | `root` item | Update workspace→monitor mapping |
-| `media_change` (built-in) | `media_cover` | Show/hide media artwork, artist, title |
+| `aerospace_enter_service_mode` / `aerospace_leave_service_mode` (aerospace) | `root` item | Tint/restore workspace item backgrounds |
 | `mouse.clicked` | `media_cover` | Toggle popup |
 | `mouse.entered` / `mouse.exited` | `media_cover` | Animate detail expand/collapse |
 | `mouse.exited.global` | `media_title` | Close media popup |

@@ -29,7 +29,7 @@ Host-specific nix-darwin module for the **Sterling-MBP** machine (Apple Silicon 
 | `homebrew.onActivation.extraEnv` | not set — the deprecated `HOMEBREW_NO_REQUIRE_TAP_TRUST` escape hatch was replaced by nix-darwin's first-class `trusted` option |
 | `homebrew.taps` | none — `felixkratz/formulae` was dropped 2026-11 once `borders` and `sketchybar` both moved to Nix |
 | `homebrew.brews` | kafka, mole, media-control, scrcpy, nss — `sketchybar`, `lua` and `borders` were removed 2026-11: the first two come from Home Manager via `programs.sketchybar`, and `borders` is `pkgs.jankyborders` from `home/darwin/packages.nix` (same 1.9.0 CLI). `media-control` is the one deliberate brew dependency. |
-| `homebrew.casks` | raycast, scroll-reverser, warp, karabiner-elements, sf-symbols, font-sf-mono, font-sf-pro, orbstack, localsend, intellij-idea, zed, google-drive, adobe-acrobat-reader, android-platform-tools, kde-connect |
+| `homebrew.casks` | raycast, scroll-reverser, sf-symbols, font-sf-mono, font-sf-pro, orbstack, localsend, intellij-idea, zed, google-drive, adobe-acrobat-reader, android-platform-tools, kde-connect — `warp` and `karabiner-elements` were dropped 2026-11 |
 
 ## Flake-level Configuration (in `mkDarwin`, not in this module)
 - Nix daemon binary is Lix (`nix.package` from shared `modules/common/nix-daemon.nix`); `nix.enable` is not set (Determinate Nix no longer used)

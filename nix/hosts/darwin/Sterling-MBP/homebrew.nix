@@ -31,8 +31,6 @@ _: {
     casks = [
       "raycast"
       "scroll-reverser"
-      "warp"
-      "karabiner-elements"
       "sf-symbols" # font for sketchybar
       "font-sf-mono"
       "font-sf-pro"

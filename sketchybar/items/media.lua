@@ -3,7 +3,7 @@ local colors = require("colors")
 
 local whitelist = { ["Spotify"] = true, ["Music"] = true }
 
-local media_cover = sbar.add("item", {
+local media_cover = sbar.add("item", "media.cover", {
 	position = "right",
 	background = {
 		image = {
@@ -22,7 +22,7 @@ local media_cover = sbar.add("item", {
 	},
 })
 
-local media_artist = sbar.add("item", {
+local media_artist = sbar.add("item", "media.artist", {
 	position = "right",
 	drawing = false,
 	padding_left = 3,
@@ -38,7 +38,7 @@ local media_artist = sbar.add("item", {
 	},
 })
 
-local media_title = sbar.add("item", {
+local media_title = sbar.add("item", "media.title", {
 	position = "right",
 	drawing = false,
 	padding_left = 3,
@@ -52,19 +52,19 @@ local media_title = sbar.add("item", {
 	},
 })
 
-sbar.add("item", {
+sbar.add("item", "media.popup.previous", {
 	position = "popup." .. media_cover.name,
 	icon = { string = icons.media.back },
 	label = { drawing = false },
 	click_script = "nowplaying-cli previous",
 })
-sbar.add("item", {
+sbar.add("item", "media.popup.play_pause", {
 	position = "popup." .. media_cover.name,
 	icon = { string = icons.media.play_pause },
 	label = { drawing = false },
 	click_script = "nowplaying-cli togglePlayPause",
 })
-sbar.add("item", {
+sbar.add("item", "media.popup.next", {
 	position = "popup." .. media_cover.name,
 	icon = { string = icons.media.forward },
 	label = { drawing = false },

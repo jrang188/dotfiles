@@ -70,7 +70,7 @@ local wifi_bracket = sbar.add("bracket", "widgets.wifi.bracket", {
   popup = { align = "center", height = 30 }
 })
 
-local ssid = sbar.add("item", {
+local ssid = sbar.add("item", "widgets.wifi.popup.ssid", {
   position = "popup." .. wifi_bracket.name,
   icon = {
     font = {
@@ -95,7 +95,7 @@ local ssid = sbar.add("item", {
   }
 })
 
-local hostname = sbar.add("item", {
+local hostname = sbar.add("item", "widgets.wifi.popup.hostname", {
   position = "popup." .. wifi_bracket.name,
   icon = {
     align = "left",
@@ -110,7 +110,7 @@ local hostname = sbar.add("item", {
   }
 })
 
-local ip = sbar.add("item", {
+local ip = sbar.add("item", "widgets.wifi.popup.ip", {
   position = "popup." .. wifi_bracket.name,
   icon = {
     align = "left",
@@ -124,7 +124,7 @@ local ip = sbar.add("item", {
   }
 })
 
-local mask = sbar.add("item", {
+local mask = sbar.add("item", "widgets.wifi.popup.mask", {
   position = "popup." .. wifi_bracket.name,
   icon = {
     align = "left",
@@ -138,7 +138,7 @@ local mask = sbar.add("item", {
   }
 })
 
-local router = sbar.add("item", {
+local router = sbar.add("item", "widgets.wifi.popup.router", {
   position = "popup." .. wifi_bracket.name,
   icon = {
     align = "left",
@@ -152,7 +152,7 @@ local router = sbar.add("item", {
   },
 })
 
-sbar.add("item", { position = "right", width = settings.group_paddings })
+sbar.add("item", "widgets.wifi.padding_right", { position = "right", width = settings.group_paddings })
 
 wifi_up:subscribe("network_update", function(env)
   local up_color = (env.upload == "000 Bps") and colors.grey or colors.red
@@ -218,9 +218,16 @@ wifi_down:subscribe("mouse.clicked", toggle_details)
 wifi:subscribe("mouse.clicked", toggle_details)
 wifi:subscribe("mouse.exited.global", hide_details)
 
+-- Quote a string for /bin/sh as a single argument. A WiFi SSID may contain
+-- quotes, `$` or backticks; interpolating it into double quotes would let the
+-- shell expand it.
+local function shell_quote(value)
+  return "'" .. value:gsub("'", "'\\''") .. "'"
+end
+
 local function copy_label_to_clipboard(env)
-  local label = sbar.query(env.NAME).label.value
-  sbar.exec("echo \"" .. label .. "\" | pbcopy")
+  local label = sbar.query(env.NAME).label.value or ""
+  sbar.exec("printf '%s' " .. shell_quote(label) .. " | pbcopy")
   sbar.set(env.NAME, { label = { string = icons.clipboard, align="center" } })
   sbar.delay(1, function()
     sbar.set(env.NAME, { label = { string = label, align = "right" } })

@@ -10,7 +10,7 @@ let
   debugpy = pkgs.python314Packages.debugpy.overrideAttrs (old: {
     disabledTestPaths =
       (old.disabledTestPaths or [ ])
-      ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+      ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
         "tests/debugpy/server/test_add_code_to_python_process.py::test_lldb_command"
       ];
   });

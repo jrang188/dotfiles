@@ -20,6 +20,14 @@
       # Follow Darwin nixpkgs (the SBCL 2.6.0 build failure was
       # closed as cannot-repro; the pin was removed 2026-07).
       inputs.nixpkgs.follows = "nixpkgs-darwin";
+      # cl-nix-lite's flake-parts pins `nix-community/nixpkgs.lib` at a
+      # 2025-12 rev whose lib/trivial.nix and lib/options.nix still use `or`
+      # as an identifier, so Lix warns "using or as an identifier is
+      # deprecated" on every Darwin evaluation. Neither mac-app-util nor
+      # cl-nix-lite has moved past it upstream, so point that transitive input
+      # at Darwin nixpkgs (which quotes `"or"`); flake-parts only needs
+      # `nixpkgs-lib.lib`, which nixpkgs also exports.
+      inputs.cl-nix-lite.inputs.flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-darwin";
     };
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";

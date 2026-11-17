@@ -45,7 +45,13 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v1.1.0";
+      # v1.2.0 (2026-09-26) over v1.1.0: its rust-overlay pin (1fb104a) uses
+      # `stdenv.hostPlatform.is*` where 8534567 still used the deprecated
+      # `stdenv.isLinux`/`isDarwin`, which was the last source of Lix's
+      # `stdenv.is… is deprecated` warnings on kirby. The 1.2.0 Measured Boot
+      # changes (PCR4 locking, 8→4 generations) only affect
+      # `boot.lanzaboote.measuredBoot`, which kirby does not enable.
+      url = "github:nix-community/lanzaboote/v1.2.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

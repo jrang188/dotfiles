@@ -2,20 +2,20 @@
 {
   programs.rofi = {
     enable = true;
-    # Use the absolute Nix store path for the terminal
-    terminal = "${lib.getExe pkgs.ghostty}";
-    modes = [
-      "drun"
-      "window"
-      "run"
-      "emoji"
-      "calc"
-    ];
-    plugins = with pkgs; [
-      rofi-calc
-      rofi-emoji
-    ];
-    extraConfig = {
+    # Rasi settings, by native name. Current Home Manager models these under
+    # `settings`; the older `modes`, `terminal` and `extraConfig` options are
+    # deprecated aliases that warn on every evaluation.
+    settings = {
+      # Use the absolute Nix store path for the terminal
+      terminal = "${lib.getExe pkgs.ghostty}";
+      modes = [
+        "drun"
+        "window"
+        "run"
+        "emoji"
+        "calc"
+      ];
+
       icon-theme = "Papirus-Dark";
       show-icons = true;
       drun-display-format = "{icon} {name}";
@@ -44,6 +44,11 @@
       kb-move-char-forward = "Control+f";
       kb-mode-complete = "Control+o";
     };
+
+    plugins = with pkgs; [
+      rofi-calc
+      rofi-emoji
+    ];
 
     # Theme configuration
     # If your theme file is in the same folder as your nix file:

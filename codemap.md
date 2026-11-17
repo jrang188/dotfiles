@@ -24,7 +24,7 @@ Declarative, reproducible system configuration for two personal machines — **`
 Only two hosts are exported from `flake.nix`:
 
 - **`Sterling-MBP`** — macOS (Darwin), `aarch64-darwin`. Uses Lix (`nix.package = pkgs.lixPackageSets.stable.lix` from the shared `modules/common/nix-daemon.nix`), `mac-app-util` (follows `nixpkgs-darwin`), nix-homebrew, and Home Manager (`home-manager-darwin`).
-- **`kirby`** — NixOS, `x86_64-linux`. Secure boot via lanzaboote (pinned `v1.1.0`), Hyprland (lua config, built-in `dwindle` layout, `withUWSM = true`), KDE Plasma 6, `pkgs-stable` from `nixos-26.05`.
+- **`kirby`** — NixOS, `x86_64-linux`. Secure boot via lanzaboote (pinned `v1.2.0`), Hyprland (lua config, built-in `dwindle` layout, `withUWSM = true`), KDE Plasma 6, `pkgs-stable` from `nixos-26.05`.
 
 > **Hostname gotcha:** the `kirby` flake attribute passes `hostname = "kirby-machine"` to `mkSystem`. The `hostname` specialArg seen inside NixOS modules is `"kirby-machine"`; the flake attribute is `"kirby"`.
 
@@ -41,7 +41,7 @@ Only two hosts are exported from `flake.nix`:
 - **Input pinning / follow-edges**:
   - `nixpkgs` is **unpinned** and tracks `nixos-unstable` (the brief `e2587ca` pin was dropped 2026-08-29 once the ex-hy3 constraint was gone).
   - `darwin`, `mac-app-util`, and `home-manager-darwin` follow `nixpkgs-darwin`; `home-manager` and `lanzaboote` follow `nixpkgs`.
-  - `lanzaboote` is pinned to tag `v1.1.0`.
+  - `lanzaboote` is pinned to tag `v1.2.0` (bumped 2026-11-16 from v1.1.0 for its rust-overlay `stdenv.hostPlatform` fix).
   - **`typescript-language-server` overlay is gone:** the temporary `pnpmDeps` hash override in `hosts/nixos/kirby/default.nix` was **removed 2026-11-11** once `nixpkgs` moved past merge `eabfbbcf`. Keep it out — the hash is version-pinned and re-breaking the build.
   - **`debugpy` test-skip override (Darwin):** `nix/home/neovim.nix` wraps `pkgs.python314Packages.debugpy` to append `test_add_code_to_python_process.py::test_lldb_command` to `disabledTestPaths` on Darwin — debugpy 1.8.22's bare-`lldb` assertion fails against nixpkgs' `hardcode-lldb.patch` store-path rewrite. Fixed upstream in [nixpkgs#572564](https://github.com/NixOS/nixpkgs/pull/572564) (merged 2026-10-11); remove once `nixpkgs-darwin` (`nixpkgs-unstable`) contains it.
   - **hy3 is gone.** The Hyprland plugin was removed 2026-08-29 in favour of Hyprland's built-in `dwindle` layout; the `hy3` flake input and extraArg no longer exist.

@@ -42,6 +42,19 @@
     };
 
     llm-agents.url = "github:numtide/llm-agents.nix";
+
+    # HEX local-first voice dictation. Linux-only (x86_64-/aarch64-linux), so
+    # only kirby consumes it. Its nixpkgs must follow kirby's: upstream warns
+    # that a Hex built against its own older pin can link an older glibc than
+    # the graphics drivers need, find no Vulkan adapter and never open a
+    # window (see upstream docs/nix.md).
+    hex = {
+      url = "github:anomalyco/hex";
+      inputs.nixpkgs.follows = "nixpkgs";
+      # Hex declares a home-manager input but never references it in its
+      # outputs; follow ours so the lock file carries no second Home Manager.
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs =

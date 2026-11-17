@@ -11,10 +11,15 @@ _: {
       cleanup = "none";
     };
 
-    # Every remaining install is from homebrew-core, so no taps are needed:
+    # Every remaining install is from homebrew-core, except `anomalyco/tap`
+    # below (`hex` predates its Nix package on macOS-only hosts):
     # `felixkratz/formulae` was dropped 2026-11 when `sketchybar` moved to
     # `programs.sketchybar` and `borders` became `pkgs.jankyborders`.
-    taps = [ ];
+    taps = [
+      # Hex's cask tap (`brew install --cask anomalyco/tap/hex`). Hex's Nix
+      # package is Linux-only, so on Darwin the cask is the supported install.
+      "anomalyco/tap"
+    ];
 
     brews = [
       "kafka"
@@ -42,6 +47,16 @@ _: {
       "adobe-acrobat-reader"
       "android-platform-tools"
       "kde-connect"
+      "anomalyco/tap/hex"
     ];
   };
+
+  # Homebrew (since 6.0 via HOMEBREW_REQUIRE_TAP_TRUST) refuses to load casks
+  # from an untrusted third-party tap: `brew install --cask anomalyco/tap/hex`
+  # fails with "Refusing to load cask ... from untrusted tap". No extra option
+  # is needed here -- nix-darwin's `homebrew.casks` entries default to
+  # `trusted = true`, so activation writes
+  # `cask "anomalyco/tap/hex", trusted: true` into the Brewfile, which both
+  # installs the cask and records it in `brew trust` (verified 2026-11-16).
+  # The tap itself stays untrusted, which is narrower than `trust.taps`.
 }

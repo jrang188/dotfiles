@@ -221,6 +221,29 @@
         "type": "github"
       }
     },
+    "hex": {
+      "inputs": {
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794886322,
+        "narHash": "sha256-F0qqnUTlB7JPWSUC2AVsINXv1FZlbsGjuV1zLC2KJ6o=",
+        "owner": "anomalyco",
+        "repo": "hex",
+        "rev": "9a79a25475170fe3d6fe80b14d8366a5c3667c0f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anomalyco",
+        "repo": "hex",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -556,6 +579,7 @@
     "root": {
       "inputs": {
         "darwin": "darwin",
+        "hex": "hex",
         "home-manager": "home-manager",
         "home-manager-darwin": "home-manager-darwin",
         "lanzaboote": "lanzaboote",

@@ -57,7 +57,7 @@ Only two hosts are exported from `flake.nix`:
 | `nix/home/ai/` | AI/agent Home Manager modules: `claude-code`, `opencode`, `codex` (CLI + ChatGPT desktop), `antigravity-cli`, plus the MCP server registry. | [View Map](nix/home/ai/codemap.md) |
 | `nix/home/darwin/` | Darwin Home Manager overlay: `ghostty-bin` override, `macos` oh-my-zsh plugin, audio tools, GUI apps, the `aerospace.nix` / `sketchybar.nix` program modules, shared `modules/home/gui.nix`. | [View Map](nix/home/darwin/codemap.md) |
 | `nix/home/nixos/` | NixOS Home Manager namespace (no `default.nix`); contains only `kirby/`. | [View Map](nix/home/nixos/codemap.md) |
-| `nix/home/nixos/kirby/` | Kirby Home Manager config: Hyprland (lua, `dwindle`), ashell, rofi, swaync, theme, apps, packages, zen-browser, kde. | [View Map](nix/home/nixos/kirby/codemap.md) |
+| `nix/home/nixos/kirby/` | Kirby Home Manager config: Hyprland (lua, `dwindle`), ashell, rofi, swaync, theme, apps, packages, zen-browser, kde, hex (Linux-only dictation via flake input). | [View Map](nix/home/nixos/kirby/codemap.md) |
 | `nix/hosts/` | Host system config namespace; dispatch happens in `flake.nix` via `mkDarwin`/`mkSystem`. | [View Map](nix/hosts/codemap.md) |
 | `nix/hosts/darwin/` | Darwin host namespace; single active host `Sterling-MBP`. | [View Map](nix/hosts/darwin/codemap.md) |
 | `nix/hosts/darwin/Sterling-MBP/` | Sterling-MBP macOS host: host identity/user, `mac-app-util` app trampolining, homebrew taps/brews/casks, dock apps. (Lix itself comes from the shared `modules/common/nix-daemon.nix`.) | [View Map](nix/hosts/darwin/Sterling-MBP/codemap.md) |

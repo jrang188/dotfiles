@@ -4,8 +4,30 @@
   inputs = {
     # Main nixpkgs for NixOS (requires NixOS tests)
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # Darwin-specific nixpkgs (faster, no NixOS tests required)
-    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # Darwin-specific nixpkgs (faster, no NixOS tests required).
+    #
+    # TEMPORARILY pinned to the commit that fixes swift-collections on Darwin:
+    # NixOS/nixpkgs@5b0748384e "swiftPackages.swift-collections: ensure there is
+    # enough room for install names on Darwin" (2026-11-20). The pinned channel
+    # rev (b758f162, 2026-11-20 06:23) links the SWIFT dylibs without header
+    # padding, so `install_name_tool` aborts with "larger updated load commands
+    # do not fit" and takes down swift-collections → swiftpm → swift → dockutil
+    # → mac-app-util, i.e. the entire Darwin system build.
+    #
+    # A host-level `nixpkgs.overlays` entry cannot fix this: mac-app-util builds
+    # its package from its own evaluation of this input (`self.packages` in its
+    # darwinModules/homeManagerModules), not from our overlaid `pkgs`. Pinning
+    # the input is the only lever.
+    #
+    # A plain `nix flake update` did NOT fix this: nixpkgs-unstable's head was
+    # still 9996594 (2026-11-20 15:12 UTC), which predates the fix commit.
+    #
+    # Revert to `github:NixOS/nixpkgs/nixpkgs-unstable` once that branch contains
+    # 5b0748384e, then `nix flake update nixpkgs-darwin`. Check with:
+    #   curl -s https://raw.githubusercontent.com/NixOS/nixpkgs/nixpkgs-unstable/\
+    #   pkgs/development/compilers/swift/by-name/sw/swift-collections/package.nix \
+    #   | grep NIX_LDFLAGS
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/5b0748384e8e2011c7c3fb508e01c3da0a27def8";
     # Stable references for each system type
     nixpkgs-stable-nixos.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-stable-darwin.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
